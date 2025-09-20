@@ -1,0 +1,32 @@
+@{ ViewData["Title"] = "Chat"; }
+<h2>Live Chat</h2>
+<div class="card">
+    <div class="card-body">
+        <div id="messagesList" style="height:300px; overflow:auto; border:1px solid #ddd; padding:10px;"></div>
+        <div class="input-group mt-2">
+            <input id="userInput" class="form-control" placeholder="Your name" />
+            <input id="messageInput" class="form-control" placeholder="Your message" />
+            <button id="sendBtn" class="btn btn-primary">Send</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const connection = new signalR.HubConnectionBuilder().withUrl('/chatHub').build();
+    connection.on('ReceiveMessage', (user, message) => {
+        const list = document.getElementById('messagesList');
+        const el = document.createElement('div');
+        el.innerHTML = '<strong>' + user + ':</strong> ' + message;
+        list.appendChild(el);
+        list.scrollTop = list.scrollHeight;
+    });
+    connection.start();
+    document.getElementById('sendBtn').addEventListener('click', () => {
+        const user = document.getElementById('userInput').value || 'Anonymous';
+        const msg = document.getElementById('messageInput').value;
+        connection.invoke('SendMessage', user, msg);
+        document.getElementById('messageInput').value = '';
+    });
+</script>
+}

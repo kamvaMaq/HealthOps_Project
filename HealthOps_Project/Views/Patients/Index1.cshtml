@@ -1,0 +1,21 @@
+﻿@* @model IEnumerable<HealthOps_Project.Models.Patient>
+@{ ViewData["Title"] = "Patient"; }
+<h2>Patients</h2>
+<p><a class="btn btn-primary" href="/Patients/Create">Create new</a></p>
+<table class="table">
+    <thead><tr><th>Id</th><th>Name</th><th>Email</th><th></th></tr></thead>
+    <tbody>
+    @foreach(var p in Model){
+        <tr>
+            <td>@p.Id</td>
+            <td>@p.FirstName @p.LastName</td>
+            <td>@p.Email</td>
+            <td>
+                <a class="btn btn-sm btn-info" href="/Patients/Details/@p.Id">Details</a>
+                <a class="btn btn-sm btn-warning" href="/Patients/Edit/@p.Id">Edit</a>
+                <a class="btn btn-sm btn-danger" href="/Patients/Delete/@p.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table> *@

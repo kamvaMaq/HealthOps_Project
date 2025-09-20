@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "_DashboardLayout";
+}
+
+<h2>Welcome, @User.Identity.Name (Patient)</h2>
+<p>Book appointments, view your medical history, and check visitations:</p>
+<div class="row mt-4">
+    <div class="col-md-4 mb-3">
+        <a class="btn btn-primary w-100" href="@Url.Action("Book", "Appointments")">Book Appointment</a>
+    </div>
+    <div class="col-md-4 mb-3">
+        <a class="btn btn-success w-100" href="@Url.Action("Index", "PatientHistory")">Medical History</a>
+    </div>
+    <div class="col-md-4 mb-3">
+        <a class="btn btn-info w-100" href="@Url.Action("Index", "Visitations")">Visitations</a>
+    </div>
+</div>
+ 

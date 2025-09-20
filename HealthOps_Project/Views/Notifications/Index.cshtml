@@ -1,0 +1,6 @@
+@model IEnumerable<HealthOps_Project.Models.Notification>
+<h2>Notification List</h2>
+<p><a class="btn btn-primary" href="/Notifications/Create">Create new</a></p>
+<table class="table"><thead><tr><th>Id</th><th></th></tr></thead><tbody>
+@foreach(var it in Model){ <tr><td>@it.Id</td><td><a class="btn btn-sm btn-info" href="/Notifications/Details/@it.Id">Details</a></td></tr> }
+</tbody></table>

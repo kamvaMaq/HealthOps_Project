@@ -1,0 +1,9 @@
+@model HealthOps_Project.Models.Patient
+@{ ViewData["Title"] = "Delete Patient"; }
+<h2>Delete patient</h2>
+<p>Are you sure to delete <strong>@Model.FirstName @Model.LastName</strong>?</p>
+<form method="post" asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Delete</button>
+    <a class="btn btn-secondary" href="/Patients">Cancel</a>
+</form>

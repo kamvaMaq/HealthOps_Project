@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Stock Manager Dashboard";
+}
+
+<h2>Welcome, Stock Manager!</h2>
+<p>Use the sidebar to manage orders, monitor stock levels, and view reports.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <a class="btn btn-primary w-100 mb-3" href="@Url.Action("Index", "Orders")">Manage Orders</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-info w-100 mb-3" href="@Url.Action("Index", "Stock")">Stock Levels</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-success w-100 mb-3" href="@Url.Action("Index", "Reports")">Reports</a>
+    </div>
+</div>

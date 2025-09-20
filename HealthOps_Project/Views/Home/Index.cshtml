@@ -1,0 +1,43 @@
+@using HealthOps_Project.Models
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="homepage-bg">
+    <div class="container text-center homepage-content">
+        <h1 class="display-3 text-white">Welcome to HealthOps</h1>
+        <p class="lead mb-4 text-white">
+            Book appointments, manage patients, and track healthcare operations efficiently.
+        </p>
+        <a href="@Url.Action("Index", "Appointment")" class="btn btn-primary btn-lg">
+            Book Appointment
+        </a>
+    </div>
+</div>
+
+<section id="about-section" class="py-5 bg-light">
+    <div class="container text-center">
+        <h2>About Us</h2>
+        <p>
+            HealthOps is a modern healthcare management system that allows patients to book appointments easily,
+            helps doctors track patient visits, and streamlines hospital operations.
+        </p>
+    </div>
+</section>
+
+<section id="contact-section" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Contact Us</h4>
+                <p>Email: info@healthops.com<br />Phone: +27 123 456 789</p>
+            </div>
+            <div class="col-md-6">
+                <h4>Our Location</h4>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3310.611390293837!2d25.567125075262148!3d-33.92539997320493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e7ad3e2ff7c38df%3A0xca86c39bb0ff373f!2sLivingstone%20Hospital!5e0!3m2!1sen!2sza!4v1758047557908!5m2!1sen!2sza"
+                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>

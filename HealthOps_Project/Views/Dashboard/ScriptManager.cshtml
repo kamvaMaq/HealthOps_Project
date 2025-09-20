@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Script Manager Dashboard";
+}
+
+<h2>Welcome, Script Manager!</h2>
+<p>Use the sidebar to process prescriptions, manage ward consumables, and generate reports.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <a class="btn btn-primary w-100 mb-3" href="@Url.Action("Index", "Prescriptions")">Prescriptions</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-info w-100 mb-3" href="@Url.Action("Index", "Consumables")">Ward Consumables</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-success w-100 mb-3" href="@Url.Action("Index", "Reports")">Reports</a>
+    </div>
+</div>
+ 

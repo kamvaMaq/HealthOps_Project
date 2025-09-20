@@ -1,0 +1,10 @@
+@model HealthOps_Project.Models.Patient
+@{ ViewData["Title"] = "Edit Patient"; }
+<h2>Edit Patient</h2>
+<form method="post" asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3"><label>First name</label><input asp-for="FirstName" class="form-control"/></div>
+    <div class="mb-3"><label>Last name</label><input asp-for="LastName" class="form-control"/></div>
+    <div class="mb-3"><label>Email</label><input asp-for="Email" class="form-control"/></div>
+    <button class="btn btn-primary">Save</button>
+</form>

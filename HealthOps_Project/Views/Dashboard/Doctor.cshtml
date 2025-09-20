@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2>Welcome, Doctor!</h2>
+<p>Use the sidebar to view appointments, patient history, and vital signs.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <a class="btn btn-primary w-100 mb-3" href="@Url.Action("Index", "Appointments")">Appointments</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-info w-100 mb-3" href="@Url.Action("Index", "PatientHistory")">Patient History</a>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-success w-100 mb-3" href="@Url.Action("Index", "Vitals")">Vitals</a>
+    </div>
+</div>

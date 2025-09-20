@@ -1,0 +1,7 @@
+@model HealthOps_Project.Models.Script
+<h2>Delete Script</h2>
+<form method="post" asp-action="Delete">
+    <input type="hidden" asp-for="Id"/>
+    <p>Delete @Model.Name?</p>
+    <button class="btn btn-danger">Delete</button>
+</form>

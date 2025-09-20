@@ -1,0 +1,128 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Patient>
+
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<h2 class="mb-4 text-center">👥 Patients</h2>
+
+<div class="mb-3 d-flex justify-content-between">
+    <input type="text" id="searchBox" placeholder="Search patients by name..." class="form-control w-50" />
+    <a asp-action="Create" class="btn btn-primary shadow">
+        <i class="bi bi-plus-circle"></i> Add New Patient
+    </a>
+</div>
+
+<!-- Back Button  do for all views-->
+<a asp-action="Index" asp-controller="" class="btn btn-secondary mb-3">
+    &larr; Back
+</a>
+
+<!-- Info Section -->
+<div class="alert alert-info d-flex align-items-center shadow-sm rounded-pill" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <span>
+        Use the search bar to filter patients quickly. Click an action button to view, edit, or delete a patient.
+    </span>
+</div>
+
+<!-- Patients Table -->
+<div class="table-responsive">
+    <table class="table table-hover table-bordered shadow-lg rounded-4 overflow-hidden" id="patientsTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Full Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th class="text-center" style="width: 220px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FirstName @item.LastName</td>
+                    <td>@item.Gender</td>
+                    <td>@item.Age</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.Address</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info action-btn flex-fill">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning action-btn flex-fill">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger action-btn flex-fill">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Live search for patients
+            $("#searchBox").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#patientsTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        thead th:first-child {
+            border-top-left-radius: 0.75rem;
+        }
+
+        thead th:last-child {
+            border-top-right-radius: 0.75rem;
+        }
+
+        tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 0.75rem;
+        }
+
+        tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 0.75rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .action-btn {
+            border-radius: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 8px 0;
+            font-weight: 600;
+        }
+
+        .d-flex > .action-btn:not(:last-child) {
+            border-right: 1px solid #ddd;
+        }
+    </style>
+}

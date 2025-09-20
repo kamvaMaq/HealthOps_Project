@@ -1,0 +1,192 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<HealthOps_Project.Models.ApplicationUser> UserManager
+@inject SignInManager<HealthOps_Project.Models.ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - HealthOps</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <style>
+        /* Dashboard Layout CSS */
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .sidebar h4 {
+            color: #fff;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .sidebar .nav-link {
+            color: #fff;
+            margin-bottom: 10px;
+            display: block;
+            padding: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+            text-decoration: none;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 60px;
+            background-color: #007bff;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .topbar-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar-right span {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            padding: 20px;
+            background-color: #f1f3f5;
+            flex-grow: 1;
+        }
+
+        .sidebar .nav-link.btn-custom {
+            text-align: center;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 8px;
+        }
+
+        /* Buttons */
+        .btn-primary { background-color: #007bff; border-color: #007bff; }
+        .btn-success { background-color: #28a745; border-color: #28a745; }
+        .btn-info { background-color: #17a2b8; border-color: #17a2b8; }
+        .btn-warning { background-color: #ffc107; border-color: #ffc107; color: #212529; }
+        .btn-secondary { background-color: #6c757d; border-color: #6c757d; }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="text-center">
+                <img src="~/images/icon.jpeg" class="sidebar-logo" />
+                <h4>HealthOps</h4>
+            </div>
+            <ul class="nav flex-column mt-4">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Staff")">Manage Staff</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Patients")">Manage Patients</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Appointments")">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Reports")">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Consumables")">Consumables</a></li>
+                }
+                else if (User.IsInRole("Doctor"))
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Appointments")">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "PatientHistory")">Patient History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Vitals")">Vitals</a></li>
+                }
+                else if (User.IsInRole("Nurse"))
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Vitals")">Vitals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Admissions")">Admissions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Consumables")">Consumables</a></li>
+                }
+                else if (User.IsInRole("ScriptManager"))
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Prescriptions")">Prescriptions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Consumables")">Ward Consumables</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Reports")">Reports</a></li>
+                }
+                else if (User.IsInRole("StockManager"))
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Orders")">Manage Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Stock")">Stock Levels</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Reports")">Reports</a></li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left d-flex align-items-center">
+                    <img src="~/images/icon.jpeg" class="topbar-logo" />
+                    <span class="ms-2 fw-bold">HealthOps</span>
+                </div>
+                <div class="topbar-right d-flex align-items-center">
+                    <span>
+                        @User.Identity.Name
+                        (@UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)).Result.FirstOrDefault())
+                    </span>
+                    <form asp-action="Logout" asp-controller="Account" method="post" class="ms-2">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                    </form>
+                </div>
+            </header>
+
+            <div class="content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+ 

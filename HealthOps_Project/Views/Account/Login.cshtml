@@ -1,0 +1,67 @@
+﻿@model HealthOps_Project.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img src="~/images/icon.jpeg" alt="HealthOps" style="height:50px; width:auto;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about-section">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact-section">Contact</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/Account/Login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Account/Register">Register</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Login Form Section -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Login</h2>
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label"></label>
+                        </div>
+
+                        <!-- Hidden ReturnUrl Field -->
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <button type="submit" class="btn btn-success w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

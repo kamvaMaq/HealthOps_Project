@@ -1,0 +1,9 @@
+@model HealthOps_Project.Models.Patient
+@{ ViewData["Title"] = "Patient Details"; }
+<h2>@Model.FirstName @Model.LastName</h2>
+<dl class="row">
+    <dt class="col-sm-2">Email</dt><dd class="col-sm-10">@Model.Email</dd>
+    <dt class="col-sm-2">PhoneNumber</dt>
+    <dd class="col-sm-10">@Model.PhoneNumber</dd>
+</dl>
+<a class="btn btn-secondary" href="/Patients">Back</a>

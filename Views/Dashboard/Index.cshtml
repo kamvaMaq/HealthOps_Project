@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "WardAdmin Dashboard";
+}
+
+<div class="dashboard-container">
+    <h2><i class="bi bi-shield-lock me-2"></i>Welcome, Ward Admininstrator!</h2>
+    <p>Use the cards below or sidebar to manage patients, rooms, beds, and wards efficiently.</p>
+
+    <div class="row mt-4 g-4">
+      @*   <div class="col-md-4">
+            <a class="dashboard-card gradient-1" href="@Url.Action("Index", "Doctor")">
+                <i class="bi bi-person-badge-fill card-icon"></i>
+                <span>Doctor</span>
+            </a>
+        </div> *@
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-2" href="@Url.Action("Index", "Patients")">
+                <i class="bi bi-people-fill card-icon"></i>
+                <span>Manage Patients</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-2" href="@Url.Action("Index", "PatientMovements")">
+                <i class="bi bi-people-fill card-icon"></i>
+                <span>Move Patients</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-5" href="@Url.Action("Index", "Admissions")">
+                <i class="bi bi-box-arrow-in-right card-icon"></i>
+                <span>Admissions</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-3" href="@Url.Action("Index", "Discharges")">
+                <i class="bi bi-calendar2-check-fill card-icon"></i>
+                <span>Discharge</span>
+            </a>
+        </div>
+@* 
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-3" href="@Url.Action("Index", "Appointments")">
+                <i class="bi bi-calendar-event-fill card-icon"></i>
+                <span>Appointments</span>
+            </a>
+        </div> *@
+
+      @*   <div class="col-md-4">
+            <a class="dashboard-card gradient-4" href="@Url.Action("Index", "Room")">
+                <i class="bi bi-door-open-fill card-icon"></i>
+                <span>Rooms</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-5" href="@Url.Action("Index", "Beds")">
+                <i class="bi bi-hdd-stack-fill card-icon"></i>
+                <span>Beds</span>
+            </a>
+        </div> *@
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-6" href="@Url.Action("Index", "Wards")">
+                <i class="bi bi-hospital-fill card-icon"></i>
+                <span>Wards</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* --- Overall Layout --- */
+    .dashboard-container {
+        background: linear-gradient(135deg, #fff7d6, #ffe6a7);
+        min-height: 100vh;
+        padding: 50px 20px;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 2.3rem;
+        margin-bottom: 10px;
+        display: inline-block;
+        border-bottom: 4px solid #ffcc00;
+        padding-bottom: 8px;
+    }
+
+    p {
+        color: #6c757d;
+        font-size: 1.15rem;
+        margin-bottom: 40px;
+    }
+
+    /* --- Card Style Buttons --- */
+    .dashboard-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+        padding: 25px 20px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        height: 150px;
+        color: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-card .card-icon {
+        font-size: 2.8rem;
+        margin-bottom: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+
+    .dashboard-card:hover .card-icon {
+        transform: scale(1.15);
+    }
+
+    /* --- Gradient Themes --- */
+    .gradient-1 {
+        background: linear-gradient(135deg, #4e73df, #3b5bdb);
+    }
+
+    .gradient-2 {
+        background: linear-gradient(135deg, #1cc88a, #17a673);
+    }
+
+    .gradient-3 {
+        background: linear-gradient(135deg, #36b9cc, #2c9faf);
+    }
+
+    .gradient-4 {
+        background: linear-gradient(135deg, #f6c23e, #dda20a);
+    }
+
+    .gradient-5 {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+    }
+
+    .gradient-6 {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    }
+
+    /* --- Responsive Adjustments --- */
+    @@media (max-width: 768px) {
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        .dashboard-card {
+            height: 130px;
+            font-size: 1rem;
+        }
+
+        .dashboard-card .card-icon {
+            font-size: 2.2rem;
+        }
+    }
+</style>

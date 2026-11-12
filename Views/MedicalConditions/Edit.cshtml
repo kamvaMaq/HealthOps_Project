@@ -1,0 +1,151 @@
+﻿@model HealthOps_Project.Models.MedicalCondition
+@{
+    ViewData["Title"] = "Edit Medical Condition";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">✏️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Medical Condition</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Update medical condition information</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ConditionId" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <div class="row g-4">
+                        <!-- Basic Information -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📋</span>
+                                    Basic Information
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="ConditionName" class="professional-form-label">Condition Name</label>
+                                    <input asp-for="ConditionName" class="form-control professional-form-control" />
+                                    <span asp-validation-for="ConditionName" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Category" class="professional-form-label">Category</label>
+                                    <select asp-for="Category" class="form-control professional-form-control"
+                                            asp-items="Html.GetEnumSelectList<HealthOps_Project.Models.ConditionCategory>()">
+                                        <option value="">-- Select Category --</option>
+                                    </select>
+                                    <span asp-validation-for="Category" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="ICD10Code" class="professional-form-label">ICD-10 Code</label>
+                                    <input asp-for="ICD10Code" class="form-control professional-form-control" />
+                                    <span asp-validation-for="ICD10Code" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Dates -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">⚙️</span>
+                                    Status & Dates
+                                </h6>
+                                <div class="form-check form-switch mb-3">
+                                    <input asp-for="RequiresMonitoring" class="form-check-input" type="checkbox" role="switch" style="transform: scale(1.3); margin-right: 10px;">
+                                    <label asp-for="RequiresMonitoring" class="form-check-label fw-semibold">Requires Monitoring</label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" style="transform: scale(1.3); margin-right: 10px;">
+                                    <label asp-for="IsActive" class="form-check-label fw-semibold">Active Condition</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="professional-form-label">Created Date</label>
+                                    <input asp-for="CreatedDate" class="form-control professional-form-control" readonly />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="professional-form-label">Modified Date</label>
+                                    <input asp-for="ModifiedDate" class="form-control professional-form-control" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📝</span>
+                                    Condition Description
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="professional-form-label">Description</label>
+                                    <textarea asp-for="Description" class="form-control professional-form-control" rows="3"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Treatment Guidelines -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">💊</span>
+                                    Treatment Guidelines
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="TreatmentGuidelines" class="professional-form-label">Treatment Guidelines</label>
+                                    <textarea asp-for="TreatmentGuidelines" class="form-control professional-form-control" rows="3"></textarea>
+                                    <span asp-validation-for="TreatmentGuidelines" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Symptoms -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">🤒</span>
+                                    Common Symptoms
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="CommonSymptoms" class="professional-form-label">Common Symptoms</label>
+                                    <textarea asp-for="CommonSymptoms" class="form-control professional-form-control" rows="3"></textarea>
+                                    <span asp-validation-for="CommonSymptoms" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Save Changes</span>
+                            </button>
+                            <a asp-action="Index" class="btn-professional-secondary">
+                                <span>↩️</span>
+                                <span>Cancel</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -1,0 +1,252 @@
+﻿@model IEnumerable<HealthOps_Project.Models.PrescriptionDelivery>
+
+@{
+    ViewData["Title"] = "Prescription Delivery Report";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">
+                                    <i class="fas fa-file-pdf me-3"></i>Prescription Delivery Report
+                                </h1>
+                                <p class="lead mb-0">Comprehensive delivery tracking and analytics</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="professional-icon-wrapper">
+                                    <i class="fas fa-chart-bar fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Statistics -->
+                    <div class="row px-4 mt-4 professional-stagger">
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                                <p class="text-muted mb-0">Total Deliveries</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h3 class="fw-bold text-success">@Model.Count(d => d.Status == "Delivered")</h3>
+                                <p class="text-muted mb-0">Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3 class="fw-bold text-warning">@Model.Count(d => d.Status == "Pending")</h3>
+                                <p class="text-muted mb-0">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="fw-bold text-info">@Model.Select(d => d.Prescription?.PatientId).Distinct().Count()</h3>
+                                <p class="text-muted mb-0">Unique Patients</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Timeline -->
+                    <div class="px-4 mt-4">
+                        <div class="professional-info-card">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-chart-line me-2"></i>Delivery Timeline
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table professional-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Delivery ID</th>
+                                            <th>Patient</th>
+                                            <th>Medication</th>
+                                            <th>Requested Date</th>
+                                            <th>Delivered Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var delivery in Model.OrderByDescending(d => d.RequestedAt))
+                                        {
+                                            <tr class="professional-table-row">
+                                                <td><strong>#@delivery.Id</strong></td>
+                                                <td>
+                                                    @delivery.Prescription?.Patient?.FirstName
+                                                    @delivery.Prescription?.Patient?.LastName
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">@delivery.Prescription?.MedicationName</div>
+                                                    <div class="text-muted small">@delivery.Prescription?.Dosage</div>
+                                                </td>
+                                                <td>
+                                                    <div class="small text-muted">@delivery.RequestedAt.ToString("MMM dd, yyyy")</div>
+                                                    <div class="small">@delivery.RequestedAt.ToString("HH:mm")</div>
+                                                </td>
+                                                <td>
+                                                    @if (delivery.DeliveredAt.HasValue)
+                                                    {
+                                                        <div class="small text-muted">@delivery.DeliveredAt.Value.ToString("MMM dd, yyyy")</div>
+                                                        <div class="small">@delivery.DeliveredAt.Value.ToString("HH:mm")</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted fst-italic">Not delivered</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (delivery.Status == "Delivered")
+                                                    {
+                                                        <span class="professional-status-badge professional-badge-active">
+                                                            <i class="fas fa-check me-1"></i>Delivered
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="professional-status-badge professional-badge-warning professional-pulse">
+                                                            <i class="fas fa-clock me-1"></i>Pending
+                                                        </span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Section -->
+                    <div class="px-4 mt-4">
+                        <div class="professional-info-card">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-list-alt me-2"></i>Report Summary
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Report Generated:</strong>
+                                        <div>@DateTime.Now.ToString("MMMM dd, yyyy 'at' hh:mm tt")</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Total Records:</strong>
+                                        <div>@Model.Count() deliveries</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Date Range:</strong>
+                                        <div>
+                                            @{
+                                                var dates = Model.Select(d => d.RequestedAt).ToList();
+                                                if (dates.Any())
+                                                {
+                                                    var minDate = dates.Min();
+                                                    var maxDate = dates.Max();
+                                                    <text>@minDate.ToString("MMM dd, yyyy") - @maxDate.ToString("MMM dd, yyyy")</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>No delivery dates available</text>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Completion Rate:</strong>
+                                        <div>
+                                            @{
+                                                var total = Model.Count();
+                                                var completed = Model.Count(d => d.Status == "Delivered");
+                                                var completionRate = total > 0 ? (completed * 100.0 / total) : 0;
+                                            }
+                                            <span class="fw-bold @(completionRate >= 80 ? "text-success" : completionRate >= 60 ? "text-warning" : "text-danger")">
+                                                @completionRate.ToString("F1")%
+                                            </span>
+                                            (@completed of @total)
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Pending Deliveries:</strong>
+                                        <div>
+                                            @Model.Count(d => d.Status == "Pending") awaiting delivery
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted">Average Processing Time:</strong>
+                                        <div>
+                                            @{
+                                                var deliveryTimes = Model
+                                                .Where(d => d.Status == "Delivered" && d.DeliveredAt.HasValue)
+                                                .Select(d => (d.DeliveredAt.Value - d.RequestedAt).TotalDays)
+                                                .ToList();
+                                                if (deliveryTimes.Any())
+                                                {
+                                                    <text>@deliveryTimes.Average().ToString("F1") days</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>No data available</text>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="px-4 py-4 text-center">
+                        <a asp-action="Index" class="btn btn-professional-secondary me-2">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Deliveries
+                        </a>
+                        <button onclick="window.print()" class="btn btn-professional-primary me-2">
+                            <i class="fas fa-print me-2"></i> Print Report
+                        </button>
+                        <a asp-action="DownloadPdfReport" class="btn btn-professional-success">
+                            <i class="fas fa-download me-2"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize any report-specific functionality
+            console.log('Delivery report loaded with @Model.Count() records');
+
+            // Add animation to table rows
+            const tableRows = document.querySelectorAll('.professional-table-row');
+            tableRows.forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+            });
+        });
+    </script>
+}

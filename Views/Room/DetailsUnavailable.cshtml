@@ -1,0 +1,31 @@
+﻿@model HealthOps_Project.Models.Room
+
+@{
+    ViewData["Title"] = "Unavailable Room Details";
+}
+
+<h2 class="mb-4 text-center text-danger">🚫 Unavailable Room Details</h2>
+
+<div class="card shadow p-4 border-danger">
+    <dl class="row">
+        <dt class="col-sm-3">Room Number</dt>
+        <dd class="col-sm-9">@Model.RoomNumber</dd>
+
+        <dt class="col-sm-3">Capacity</dt>
+        <dd class="col-sm-9">@Model.Capacity</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+            <span class="badge bg-danger">Unavailable</span>
+        </dd>
+    </dl>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+        <a asp-action="EditUnavailable" asp-route-id="@Model.RoomId" class="btn btn-warning">
+            ✏️ Edit
+        </a>
+    </div>
+</div>

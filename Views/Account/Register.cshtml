@@ -1,0 +1,347 @@
+﻿@model HealthOps_Project.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = null; // This ensures no layout is used, preventing navbar from appearing
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - HealthOps</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Completely hide any navbar */
+        nav, .navbar, header nav, [class*="navbar"], [class*="nav-bar"] {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            opacity: 0 !important;
+        }
+
+        /* Body styling with perfect centering */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('@Url.Content("~/images/Health-bg.jpg")') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            /* Background overlay */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 0;
+            }
+
+        /* Form container - perfectly centered */
+        .form-container {
+            width: 400px;
+            border-radius: 0.75rem;
+            background-color: rgba(17, 24, 39, 0.95);
+            padding: 2.5rem;
+            color: rgba(243, 244, 246, 1);
+            z-index: 10;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 0.8s ease-in-out;
+            margin: 0 auto;
+        }
+
+        /* Header with back to home */
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-home {
+            color: rgba(156, 163, 175, 1);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.2s;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+            .back-home:hover {
+                color: rgba(167, 139, 250, 1);
+                background-color: rgba(55, 65, 81, 0.3);
+            }
+
+        /* Title styling */
+        .title {
+            text-align: center;
+            font-size: 1.75rem;
+            line-height: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.875rem;
+            color: rgba(156, 163, 175, 1);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form styling */
+        .form {
+            margin-top: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+            .input-group label {
+                display: block;
+                color: rgba(156, 163, 175, 1);
+                margin-bottom: 0.5rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100%;
+                border-radius: 0.375rem;
+                border: 1px solid rgba(55, 65, 81, 1);
+                outline: 0;
+                background-color: rgba(17, 24, 39, 1);
+                padding: 0.75rem 1rem;
+                color: rgba(243, 244, 246, 1);
+                transition: border-color 0.3s;
+                font-size: 0.875rem;
+            }
+
+                .input-group input:focus,
+                .input-group select:focus {
+                    border-color: rgba(167, 139, 250);
+                    box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
+                }
+
+            .input-group select {
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+                background-position: right 0.5rem center;
+                background-repeat: no-repeat;
+                background-size: 1.5em 1.5em;
+                padding-right: 2.5rem;
+            }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .sign {
+            display: block;
+            width: 100%;
+            background-color: rgba(167, 139, 250, 1);
+            padding: 0.75rem;
+            text-align: center;
+            color: rgba(17, 24, 39, 1);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.875rem;
+        }
+
+            .sign:hover {
+                background-color: rgba(187, 159, 255, 1);
+            }
+
+        /* Login link */
+        .login {
+            text-align: center;
+            font-size: 0.875rem;
+            color: rgba(156, 163, 175, 1);
+            margin-top: 1.5rem;
+        }
+
+            .login a {
+                color: rgba(167, 139, 250, 1);
+                text-decoration: none;
+                font-weight: 500;
+                margin-left: 0.25rem;
+            }
+
+                .login a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Validation styling */
+        .text-danger {
+            color: #f87171;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .validation-summary-errors {
+            background-color: rgba(127, 29, 29, 0.2);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+            .validation-summary-errors ul {
+                margin: 0;
+                padding-left: 1rem;
+            }
+
+        /* Animation */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Ensure no scrollbars and perfect centering */
+        .register-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* Scrollable form for smaller screens */
+        .form-container {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+            /* Custom scrollbar */
+            .form-container::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .form-container::-webkit-scrollbar-track {
+                background: rgba(55, 65, 81, 0.3);
+                border-radius: 3px;
+            }
+
+            .form-container::-webkit-scrollbar-thumb {
+                background: rgba(167, 139, 250, 0.5);
+                border-radius: 3px;
+            }
+
+                .form-container::-webkit-scrollbar-thumb:hover {
+                    background: rgba(167, 139, 250, 0.7);
+                }
+    </style>
+</head>
+<body>
+    <div class="register-wrapper">
+        <div class="form-container">
+            <div class="form-header">
+                <div></div> <!-- Empty div for spacing -->
+                <p class="title">Create Account</p>
+                <a href="@Url.Action("Index", "Home")" class="back-home">
+                    <span>←</span> Home
+                </a>
+            </div>
+
+            <p class="subtitle">Join HealthOps today</p>
+
+            <form asp-action="Register" method="post" class="form">
+                <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+                <div class="input-group">
+                    <label asp-for="FirstName">First Name</label>
+                    <input asp-for="FirstName" type="text" placeholder="Enter your first name" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="LastName">Last Name</label>
+                    <input asp-for="LastName" type="text" placeholder="Enter your last name" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="text" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" type="password" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Role">Role</label>
+                    <select asp-for="Role">
+                        <option value="">Select role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="WardAdmin">Ward Admin</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="NursingSister">Nursing Sister</option>
+                        <option value="ScriptManager">Script Manager</option>
+                        <option value="StockManager">Stock Manager</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+
+                
+
+                <div class="button-group">
+                    <button type="submit" class="sign">Create Account</button>
+                </div>
+            </form>
+
+            <p class="login">
+                Already have an account?
+                <a asp-action="Login">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Validation Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

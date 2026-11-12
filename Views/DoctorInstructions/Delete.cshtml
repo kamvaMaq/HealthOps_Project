@@ -1,0 +1,25 @@
+﻿@model HealthOps_Project.Models.DoctorInstruction
+@{
+    ViewData["Title"] = "Delete Doctor Instruction";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h4>Are you sure you want to delete this instruction?</h4>
+            <p><strong>Patient:</strong> @Model.Patient.FirstName @Model.Patient.LastName (@Model.Patient.SouthAfricanID)</p>
+            <p><strong>Doctor:</strong> @Model.DoctorName</p>
+            <p><strong>Visit Date:</strong> @Model.VisitDate.ToString("yyyy-MM-dd")</p>
+            <p><strong>Instructions:</strong> @Model.Instructions</p>
+
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" asp-for="DoctorInstructionId" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+

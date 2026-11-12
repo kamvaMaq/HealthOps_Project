@@ -1,0 +1,234 @@
+﻿@model HealthOps_Project.Models.NurseInstruction
+
+@{
+    ViewData["Title"] = "Instruction Details";
+}
+
+<h1>Instruction Details</h1>
+
+<div class="details-container">
+    <dl class="row">
+        <div class="detail-row">
+            <dt class="detail-label">Patient Name</dt>
+            <dd class="detail-value">
+                @(Model.Patient?.FirstName ?? "Unknown") @(Model.Patient?.LastName ?? "Patient")
+            </dd>
+        </div>
+        <div class="detail-row">
+            <dt class="detail-label">Nurse Name</dt>
+            <dd class="detail-value instruction-text">@Model.NurseName</dd>
+        </div>
+
+        <div class="detail-row">
+            <dt class="detail-label">Instruction</dt>
+            <dd class="detail-value instruction-text">@Model.Instruction</dd>
+        </div>
+
+        <div class="detail-row">
+            <dt class="detail-label">Issued At</dt>
+            <dd class="detail-value">@Model.IssuedAt.ToString("g")</dd>
+        </div>
+
+        <div class="detail-row">
+            <dt class="detail-label">Status</dt>
+            <dd class="detail-value">
+                @if (Model.IsCompleted)
+                {
+                    <span class="badge bg-success">Completed</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">Pending</span>
+                }
+            </dd>
+        </div>
+    </dl>
+</div>
+
+<div class="action-buttons">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+<style>
+    /* Hide navbar */
+    .navbar {
+        display: none;
+    }
+
+    /* General page styling */
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c3e50;
+        line-height: 1.6;
+        padding: 20px;
+        margin: 0;
+    }
+
+    /* Header styling */
+    h1 {
+        color: #e53e3e;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        font-size: 2.2rem;
+        padding: 0 20px;
+    }
+
+    /* Content container */
+    .details-container {
+        max-width: 800px;
+        margin: 0 auto 30px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Detail row styling */
+    .detail-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        align-items: flex-start;
+    }
+
+        .detail-row:nth-child(odd) {
+            background-color: #f7fafc;
+        }
+
+        .detail-row:nth-child(even) {
+            background-color: #edf2f7;
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: #2d3748;
+        flex: 0 0 200px;
+        padding-right: 15px;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        flex: 1;
+        margin: 0;
+        color: #4a5568;
+        font-weight: 500;
+        min-width: 200px;
+    }
+
+    .instruction-text {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding-top: 25px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-warning {
+        background: linear-gradient(to right, #ed8936, #dd6b20);
+        color: white;
+        box-shadow: 0 4px 6px rgba(237, 137, 54, 0.3);
+    }
+
+        .btn-warning:hover {
+            background: linear-gradient(to right, #dd6b20, #c05621);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(237, 137, 54, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary {
+        background: linear-gradient(to right, #a0aec0, #718096);
+        color: white;
+        box-shadow: 0 4px 6px rgba(113, 128, 150, 0.3);
+    }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #718096, #4a5568);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(113, 128, 150, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Badge styling */
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .bg-success {
+        background-color: #38a169 !important;
+    }
+
+    .bg-warning {
+        background-color: #dd6b20 !important;
+        color: white;
+    }
+
+    /* Focus states for accessibility */
+    .btn:focus {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+    }
+
+    /* Responsive design */
+    @@media (max-width: 768px) {
+        .detail-row {
+            flex-direction: column;
+        }
+
+        .detail-label {
+            flex: 0 0 100%;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            flex: 0 0 100%;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .details-container {
+            padding: 20px 15px;
+        }
+    }
+</style>

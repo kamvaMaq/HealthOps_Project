@@ -1,0 +1,158 @@
+﻿@model HealthOps_Project.Models.Visitation
+@{
+    ViewData["Title"] = "Schedule New Visit";
+}
+<style>
+    .create-visitation-container {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 20px;
+        background: #f8fbff;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff, #00c6ff);
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+    }
+
+    .card {
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-select,
+    .form-control {
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #d4dbe5;
+    }
+
+        .form-select:focus,
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #00b4ff);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0062cc, #009ee0);
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+    textarea {
+        resize: none;
+    }
+
+</style>
+
+
+<div class="create-visitation-container">
+    <div class="card shadow-lg rounded-4 border-0">
+        <div class="card-header bg-gradient text-white text-center py-3">
+            <h3 class="mb-0">
+                <i class="bi bi-calendar-plus me-2"></i>Schedule New Visit
+            </h3>
+        </div>
+
+        <div class="card-body px-4 py-4">
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <!-- Patient Dropdown -->
+                    <div class="col-md-6">
+                        <label asp-for="PatientId" class="form-label">
+                            <i class="bi bi-person-badge me-1"></i>Patient *
+                        </label>
+                        <select asp-for="PatientId" asp-items="ViewBag.PatientList" class="form-select form-control-lg rounded-3 shadow-sm">
+                            <option value="">-- Select Patient --</option>
+                        </select>
+                        <span asp-validation-for="PatientId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Visitor Name -->
+                    <div class="col-md-6">
+                        <label asp-for="VisitorName" class="form-label">
+                            <i class="bi bi-person-lines-fill me-1"></i>Visitor (Doctor's Name) *
+                        </label>
+                        <input asp-for="VisitorName" class="form-control form-control-lg rounded-3 shadow-sm" placeholder="Enter visitor's name" />
+                        <span asp-validation-for="VisitorName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Visit Date -->
+                    <div class="col-md-6">
+                        <label asp-for="VisitDate" class="form-label">
+                            <i class="bi bi-clock me-1"></i>Visit Date & Time *
+                        </label>
+                        <input asp-for="VisitDate" type="datetime-local" class="form-control form-control-lg rounded-3 shadow-sm" />
+                        <span asp-validation-for="VisitDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Purpose -->
+                    <div class="col-md-6">
+                        <label asp-for="Purpose" class="form-label">
+                            <i class="bi bi-clipboard2-check me-1"></i>Purpose of Visit *
+                        </label>
+                        <input asp-for="Purpose" class="form-control form-control-lg rounded-3 shadow-sm" placeholder="Enter purpose of visit" />
+                        <span asp-validation-for="Purpose" class="text-danger"></span>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="col-12">
+                        <label asp-for="Notes" class="form-label">
+                            <i class="bi bi-journal-text me-1"></i>Additional Notes
+                        </label>
+                        <textarea asp-for="Notes" rows="3" class="form-control form-control-lg rounded-3 shadow-sm" placeholder="Any additional information..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <!-- Hidden Default Status -->
+                    <input type="hidden" asp-for="Status" value="Scheduled" />
+                </div>
+
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 me-3 shadow-sm">
+                        <i class="bi bi-check2-circle me-2"></i>Schedule Visit
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary btn-lg rounded-pill px-5 shadow-sm">
+                        <i class="bi bi-arrow-left-circle me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const datetimeInput = document.getElementById('VisitDate');
+            if (datetimeInput && !datetimeInput.value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                datetimeInput.value = now.toISOString().slice(0, 16);
+            }
+        });
+    </script>
+}

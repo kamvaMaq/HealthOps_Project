@@ -1,0 +1,156 @@
+﻿@model HealthOps_Project.Models.Allergy
+@{
+    ViewData["Title"] = "Allergy Details";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👁️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Allergy Details</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Complete allergy information and medical details</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Status Badge -->
+                <div class="professional-stat-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-dark mb-2">@Model.AllergyName</h4>
+                            <div class="d-flex flex-wrap gap-3">
+                                @{
+                                    var severityBadgeClass = "professional-badge-completed";
+                                    if (Model.SeverityLevel.ToString().Contains("Severe") || Model.SeverityLevel.ToString().Contains("High"))
+                                    {
+                                        severityBadgeClass = "professional-badge-urgent";
+                                    }
+                                    else if (Model.SeverityLevel.ToString().Contains("Moderate"))
+                                    {
+                                        severityBadgeClass = "professional-badge-warning";
+                                    }
+                                }
+                                <span class="professional-status-badge @severityBadgeClass">
+                                    @Model.SeverityLevel
+                                </span>
+                                <span class="professional-status-badge professional-badge-completed">
+                                    @Model.AllergenType
+                                </span>
+                                <span class="professional-status-badge @(Model.IsActive ? "professional-badge-completed" : "professional-badge-warning")">
+                                    @(Model.IsActive ? "✅ Active" : "⏳ Inactive")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="professional-entity-icon professional-pulse" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); margin: 0 auto;">
+                                ⚠️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="row g-4">
+                    <!-- Medical Information -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">🏥</span>
+                                Medical Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Common Reactions</small>
+                                    <div class="fw-bold text-dark">
+                                        @if (!string.IsNullOrEmpty(Model.CommonReactions))
+                                        {
+                                            @Model.CommonReactions
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No common reactions specified</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Description</small>
+                                    <div class="fw-bold text-dark">
+                                        @if (!string.IsNullOrEmpty(Model.Description))
+                                        {
+                                            @Model.Description
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No description provided</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Treatment Protocol</small>
+                                    <div class="fw-bold text-dark">
+                                        @if (!string.IsNullOrEmpty(Model.TreatmentProtocol))
+                                        {
+                                            @Model.TreatmentProtocol
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No treatment protocol specified</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timestamps -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📅</span>
+                                Record Information
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-semibold">Created Date</small>
+                                    <div class="fw-bold text-dark">@Model.CreatedDate.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt")</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-semibold">Modified Date</small>
+                                    <div class="fw-bold text-dark">
+                                        @if (Model.ModifiedDate.HasValue)
+                                        {
+                                            @Model.ModifiedDate.Value.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not modified</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a asp-action="Edit" asp-route-id="@Model.AllergyId" class="btn-professional-primary">
+                            <span>✏️</span>
+                            <span>Edit Allergy</span>
+                        </a>
+                        <a asp-action="Index" class="btn-professional-secondary">
+                            <span>📋</span>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

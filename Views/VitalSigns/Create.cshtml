@@ -1,0 +1,466 @@
+﻿@model HealthOps_Project.Models.VitalSign
+@{
+    ViewData["Title"] = "Record Vital Signs";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-heartbeat text-danger me-2"></i>Record Vital Signs</h2>
+        <a href="@Url.Action("Index", new { patientId = Model.PatientId })" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to List
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Patient Info Sidebar -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="avatar mx-auto">
+                            <div class="avatar-initial rounded-circle bg-primary text-white">
+                                @ViewBag.Patient.FirstName.Substring(0, 1)@ViewBag.Patient.LastName.Substring(0, 1)
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="text-center mb-3">@ViewBag.Patient.FirstName @ViewBag.Patient.LastName</h5>
+                    <hr>
+                    <div class="patient-info">
+                        <p>
+                            <small class="text-muted">Patient ID:</small><br>
+                            <strong>@ViewBag.Patient.PatientId</strong>
+                        </p>
+                        <p>
+                            <small class="text-muted">Room Number:</small><br>
+                            <strong>@(ViewBag.Patient.RoomNumber ?? "Not assigned")</strong>
+                        </p>
+                        <p>
+                            <small class="text-muted">Admission Date:</small><br>
+                            <strong>@ViewBag.Patient.AdmissionDate?.ToString("MMM dd, yyyy")</strong>
+                        </p>
+                        <p>
+                            <small class="text-muted">Recording Time:</small><br>
+                            <strong id="currentTime"></strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Reference Card -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Normal Ranges</h6>
+                </div>
+                <div class="card-body p-2">
+                    <small>
+                        <ul class="list-unstyled mb-0 reference-list">
+                            <li><strong>Temperature:</strong> 36.1-37.2°C</li>
+                            <li><strong>Blood Pressure:</strong> 90/60-120/80</li>
+                            <li><strong>Heart Rate:</strong> 60-100 bpm</li>
+                            <li><strong>O₂ Saturation:</strong> 95-100%</li>
+                            <li><strong>Blood Sugar:</strong> 70-140 mg/dL</li>
+                        </ul>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Record Form -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-medical me-2"></i>Enter Vital Signs Measurements</h5>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <form asp-controller="VitalSigns" asp-action="Create" method="post" id="vitalSignsForm">
+                        <input type="hidden" asp-for="PatientId" />
+
+                        <div class="row">
+                            <!-- Temperature -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Temperature" class="form-label">
+                                    <i class="fas fa-thermometer-half text-danger me-1"></i>Temperature (°C)
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="Temperature" class="form-control" placeholder="e.g., 36.5"
+                                           step="0.1" type="number" />
+                                    <span class="input-group-text">°C</span>
+                                </div>
+                                <span asp-validation-for="Temperature" class="text-danger small"></span>
+                                <small class="text-muted d-block">Range: 30-45°C</small>
+                            </div>
+
+                            <!-- Blood Pressure -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BloodPressure" class="form-label">
+                                    <i class="fas fa-heartbeat text-danger me-1"></i>Blood Pressure
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="BloodPressure" class="form-control"
+                                           placeholder="e.g., 120/80" maxlength="20" />
+                                    <span class="input-group-text">mmHg</span>
+                                </div>
+                                <span asp-validation-for="BloodPressure" class="text-danger small"></span>
+                                <small class="text-muted d-block">Format: Systolic/Diastolic</small>
+                            </div>
+
+                            <!-- Heart Rate -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="HeartRate" class="form-label">
+                                    <i class="fas fa-heart text-danger me-1"></i>Heart Rate (bpm)
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="HeartRate" class="form-control" placeholder="e.g., 75"
+                                           type="number" min="40" max="200" />
+                                    <span class="input-group-text">bpm</span>
+                                </div>
+                                <span asp-validation-for="HeartRate" class="text-danger small"></span>
+                                <small class="text-muted d-block">Range: 40-200 bpm</small>
+                            </div>
+
+                            <!-- Oxygen Saturation -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OxygenSaturation" class="form-label">
+                                    <i class="fas fa-lungs text-info me-1"></i>Oxygen Saturation
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="OxygenSaturation" class="form-control" placeholder="e.g., 98"
+                                           type="number" min="70" max="100" />
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <span asp-validation-for="OxygenSaturation" class="text-danger small"></span>
+                                <small class="text-muted d-block">Range: 70-100%</small>
+                            </div>
+
+                            <!-- Weight -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Weight" class="form-label">
+                                    <i class="fas fa-weight text-success me-1"></i>Weight
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="Weight" class="form-control" placeholder="e.g., 70.5"
+                                           type="number" step="0.1" min="20" max="300" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                                <span asp-validation-for="Weight" class="text-danger small"></span>
+                                <small class="text-muted d-block">Range: 20-300 kg</small>
+                            </div>
+
+                            <!-- Blood Sugar -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BloodSugar" class="form-label">
+                                    <i class="fas fa-tint text-primary me-1"></i>Blood Sugar
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="BloodSugar" class="form-control" placeholder="e.g., 95"
+                                           type="number" min="50" max="400" />
+                                    <span class="input-group-text">mg/dL</span>
+                                </div>
+                                <span asp-validation-for="BloodSugar" class="text-danger small"></span>
+                                <small class="text-muted d-block">Range: 50-400 mg/dL</small>
+                            </div>
+
+                            <!-- Recorded By -->
+                            <div class="col-md-12 mb-3">
+                                <label asp-for="RecordedBy" class="form-label">
+                                    <i class="fas fa-user-nurse text-secondary me-1"></i>Recorded By
+                                </label>
+                                <input asp-for="RecordedBy" class="form-control"
+                                       value="@(User.Identity?.Name ?? "System")" readonly />
+                                <span asp-validation-for="RecordedBy" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="col-12 mb-3">
+                                <label asp-for="Notes" class="form-label">
+                                    <i class="fas fa-notes-medical text-secondary me-1"></i>Notes (Optional)
+                                </label>
+                                <textarea asp-for="Notes" class="form-control" rows="4"
+                                          placeholder="Add any additional observations, symptoms, or relevant information..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-save me-1"></i>Save Vitals
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-redo me-1"></i>Reset
+                                </button>
+                            </div>
+                            <a href="@Url.Action("Index", new { patientId = Model.PatientId })"
+                               class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Avatar Styles */
+    .avatar {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+
+    .avatar-initial {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    /* Patient Info Styles */
+    .patient-info p {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .patient-info p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+    /* Reference List Styles */
+    .reference-list li {
+        padding: 0.25rem 0;
+        font-size: 0.875rem;
+    }
+
+    /* Card Styles */
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: none;
+        padding: 1rem 1.25rem;
+    }
+
+    /* Form Styles */
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        padding: 0.6rem 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+    /* Input Group Styles */
+    .input-group-text {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .input-group .form-control:focus + .input-group-text {
+        border-color: #dc3545;
+    }
+
+    /* Button Styles */
+    .btn-lg {
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.2);
+    }
+
+    /* Validation Styles */
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .text-muted {
+        font-size: 0.8125rem;
+        color: #6c757d !important;
+    }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 8px;
+        border: none;
+    }
+
+    /* Shadow Effects */
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    /* Sticky Sidebar */
+    @@media (min-width: 992px) {
+        .sticky-top {
+            position: sticky;
+            z-index: 1020;
+        }
+    }
+
+    /* Responsive Adjustments */
+    @@media (max-width: 767px) {
+        .btn-lg {
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .avatar,
+        .avatar-initial {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+        }
+
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .d-flex.justify-content-between > div {
+                width: 100%;
+            }
+
+            .d-flex.justify-content-between button,
+            .d-flex.justify-content-between a {
+                width: 100%;
+            }
+    }
+
+    /* Animation for form submission */
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .btn-success:active {
+        animation: pulse 0.3s ease-in-out;
+    }
+
+    /* Input focus animation */
+    .form-control:focus {
+        animation: inputFocus 0.3s ease;
+    }
+
+    @@keyframes inputFocus {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<script>
+    // Update current time display
+    function updateTime() {
+        const now = new Date();
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        document.getElementById('currentTime').textContent = now.toLocaleString('en-US', options);
+    }
+
+    // Update time immediately and then every second
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Form validation feedback
+    document.getElementById('vitalSignsForm').addEventListener('submit', function (e) {
+        const form = this;
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Auto-format blood pressure input
+    const bpInput = document.querySelector('input[name="BloodPressure"]');
+    if (bpInput) {
+        bpInput.addEventListener('blur', function () {
+            let value = this.value.trim();
+            // Basic validation for format xxx/xxx
+            if (value && !value.includes('/')) {
+                // If user entered just numbers, don't auto-format
+                // Let validation handle it
+            }
+        });
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

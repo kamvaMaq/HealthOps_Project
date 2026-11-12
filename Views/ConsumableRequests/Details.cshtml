@@ -1,0 +1,126 @@
+﻿@model HealthOps_Project.Models.ConsumableRequest
+
+@{
+    ViewData["Title"] = "Request Details";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-info-circle me-3"></i>Request Details
+                                </h1>
+                                <p class="mb-0">Complete request information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="professional-info-card mb-4">
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Request ID:</div>
+                                <div class="col-sm-8">
+                                    <strong class="fs-5">#@Model.Id</strong>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Consumable:</div>
+                                <div class="col-sm-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="professional-entity-icon me-3">
+                                            <i class="fas fa-cube"></i>
+                                        </div>
+                                        <div>
+                                            <strong>@Model.Consumable?.Name</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Ward Name:</div>
+                                <div class="col-sm-8">
+                                    <span class="professional-status-badge professional-badge-normal">
+                                        @Model.WardName
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Quantity:</div>
+                                <div class="col-sm-8">
+                                    <span class="fw-bold fs-5 text-primary">@Model.QuantityRequested</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Status:</div>
+                                <div class="col-sm-8">
+                                    <span class="professional-status-badge @GetStatusBadgeClass(Model.Status)">
+                                        @Model.Status
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Requested At:</div>
+                                <div class="col-sm-8">
+                                    <div>@Model.RequestedAt.ToString("MMMM dd, yyyy")</div>
+                                    <div class="text-muted small">@Model.RequestedAt.ToString("HH:mm tt")</div>
+                                </div>
+                            </div>
+
+                            @if (Model.ReceivedAt.HasValue)
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-sm-4 fw-bold">Received At:</div>
+                                    <div class="col-sm-8">
+                                        <div>@Model.ReceivedAt.Value.ToString("MMMM dd, yyyy")</div>
+                                        <div class="text-muted small">@Model.ReceivedAt.Value.ToString("HH:mm tt")</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i> Back to List
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-professional-primary">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+}
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "professional-badge-warning",
+            "Approved" => "professional-badge-normal",
+            "Received" => "professional-badge-active",
+            "Rejected" => "professional-badge-critical",
+            _ => "professional-badge-inactive"
+        };
+    }
+}

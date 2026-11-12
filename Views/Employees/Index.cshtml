@@ -1,0 +1,172 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👥</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Employee Management</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Manage hospital staff and employee information</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Search and Filter Form -->
+                <div class="professional-info-card mb-4">
+                    <h6 class="fw-bold text-dark mb-3">
+                        <span class="me-2">🔍</span>
+                        Search & Filter Employees
+                    </h6>
+                    <form method="get" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label class="professional-form-label">Search</label>
+                            <input type="text" name="searchString" class="form-control professional-form-control" placeholder="Search by name or email" value="@ViewBag.SearchString" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="professional-form-label">Role</label>
+                            <select name="role" class="form-control professional-form-control">
+                                <option value="">All Roles</option>
+                                @foreach (var role in Enum.GetValues(typeof(HealthOps_Project.Models.EmployeeRoleType)))
+                                {
+                                    <option value="@role" selected="@(ViewBag.Role == role.ToString())">@role</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="professional-form-label">Status</label>
+                            <select name="status" class="form-control professional-form-control">
+                                <option value="">All Statuses</option>
+                                @foreach (var status in Enum.GetValues(typeof(HealthOps_Project.Models.EmploymentStatus)))
+                                {
+                                    <option value="@status" selected="@(ViewBag.Status == status.ToString())">@status</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-grid">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>🔍</span>
+                                <span>Filter</span>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-2">
+                        <a href="@Url.Action("Index")" class="btn-professional-secondary" style="padding: 0.4rem 1rem; font-size: 0.875rem;">
+                            <span>🔄</span>
+                            <span>Clear Filters</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a asp-action="Create" class="btn-professional-success">
+                        <span>➕</span>
+                        <span>Create New Employee</span>
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="Admin" class="btn-professional-secondary">
+                        <span>📊</span>
+                        <span>Dashboard</span>
+                    </a>
+
+                </div>
+              
+
+                <!-- Employees Table -->
+                @if (Model != null && Model.Any())
+                {
+                    <div class="professional-table-container">
+                        <table class="table professional-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID Number</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Ward</th>
+                                    <th>Status</th>
+                                    <th style="width: 220px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="fw-bold">@item.FullName</td>
+                                        <td>
+                                            <code class="bg-light px-2 py-1 rounded">@item.IdNumber</code>
+                                        </td>
+                                        <td>
+                                            <a href="mailto:@item.Email" class="text-decoration-none">📧 @item.Email</a>
+                                        </td>
+                                        <td>
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                @item.Role
+                                            </span>
+                                        </td>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.WardName</td>
+                                        <td>
+                                            @{
+                                                var statusBadgeClass = "professional-badge-completed";
+                                                if (item.Status.ToString().Contains("Terminated") || item.Status.ToString().Contains("Suspended"))
+                                                {
+                                                    statusBadgeClass = "professional-badge-urgent";
+                                                }
+                                                else if (item.Status.ToString().Contains("Leave"))
+                                                {
+                                                    statusBadgeClass = "professional-badge-warning";
+                                                }
+                                            }
+                                            <span class="professional-status-badge @statusBadgeClass">
+                                                @item.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <a asp-action="Details" asp-route-id="@item.EmployeeId" class="btn-professional-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>👁️</span>
+                                                    <span>Details</span>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.EmployeeId" class="btn-professional-primary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>✏️</span>
+                                                    <span>Edit</span>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.EmployeeId" class="btn-professional-danger" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>🗑️</span>
+                                                    <span>Delete</span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <div class="professional-entity-icon" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); margin: 0 auto 1rem; width: 80px; height: 80px;">
+                            👥
+                        </div>
+                        <h4 class="fw-bold text-dark mb-3">No Employees Found</h4>
+                        <p class="text-muted mb-4">Get started by adding your first employee record.</p>
+                        <a asp-action="Create" class="btn-professional-success">
+                            <span>➕</span>
+                            <span>Add First Employee</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

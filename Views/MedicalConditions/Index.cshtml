@@ -1,0 +1,185 @@
+﻿@model IEnumerable<HealthOps_Project.Models.MedicalCondition>
+@{
+    ViewData["Title"] = "Medical Conditions";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">🏥</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Medical Conditions</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Manage and track medical conditions database</p>
+            </div>
+
+            <a asp-controller="Dashboard" asp-action="Admin" class="btn-professional-secondary">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <div class="p-4">
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success rounded-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">✅</span>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-2">Success!</h5>
+                                <p class="mb-0">@TempData["SuccessMessage"]</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger rounded-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">❌</span>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-2">Error</h5>
+                                <p class="mb-0">@TempData["ErrorMessage"]</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a asp-action="Create" class="btn-professional-success">
+                        <span>➕</span>
+                        <span>Add New Condition</span>
+                    </a>
+                </div>
+
+                <!-- Search & Filter Form -->
+                <div class="professional-info-card mb-4">
+                    <h6 class="fw-bold text-dark mb-3">
+                        <span class="me-2">🔍</span>
+                        Search & Filter Conditions
+                    </h6>
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control professional-form-control" placeholder="Search by Name or Description" />
+                        </div>
+                        <div class="col-md-4">
+                            <select name="category" class="form-control professional-form-control">
+                                <option value="">All Categories</option>
+                                @foreach (var cat in Enum.GetValues(typeof(HealthOps_Project.Models.ConditionCategory)))
+                                {
+                                    <option value="@cat" selected="@(ViewBag.Category?.ToString() == cat.ToString())">@cat</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="icd10Code" value="@ViewBag.ICD10Code" class="form-control professional-form-control" placeholder="ICD-10 Code" />
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn-professional-primary me-2">
+                                <span>🔍</span>
+                                <span>Filter</span>
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn-professional-secondary">
+                                <span>🔄</span>
+                                <span>Reset</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Conditions Table -->
+                <div class="professional-table-container">
+                    <table class="table professional-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>ICD-10</th>
+                                <th>Description</th>
+                                <th>Active</th>
+                                <th style="width: 220px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var condition in Model)
+                                {
+                                    <tr>
+                                        <td class="fw-bold">@condition.ConditionName</td>
+                                        <td>
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                @condition.Category
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <code class="bg-light px-2 py-1 rounded">@condition.ICD10Code</code>
+                                        </td>
+                                        <td>@(condition.Description?.Length > 60 ? condition.Description.Substring(0, 60) + "..." : condition.Description)</td>
+                                        <td>
+                                            @if (condition.IsActive)
+                                            {
+                                                <span class="professional-status-badge professional-badge-completed">
+                                                    ✅ Active
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⏳ Inactive
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <a asp-action="Details" asp-route-id="@condition.ConditionId" class="btn-professional-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>👁️</span>
+                                                    <span>Details</span>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@condition.ConditionId" class="btn-professional-success" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>✏️</span>
+                                                    <span>Edit</span>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@condition.ConditionId" class="btn-professional-danger" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>🗑️</span>
+                                                    <span>Delete</span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="professional-entity-icon" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); margin: 0 auto 1rem; width: 80px; height: 80px;">
+                                            📝
+                                        </div>
+                                        <h4 class="fw-bold text-dark mb-3">No Medical Conditions Found</h4>
+                                        <p class="text-muted mb-4">Get started by adding your first medical condition.</p>
+                                        <a asp-action="Create" class="btn-professional-success">
+                                            <span>➕</span>
+                                            <span>Add First Condition</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="text-muted mb-0">© 2025 HealthOps. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

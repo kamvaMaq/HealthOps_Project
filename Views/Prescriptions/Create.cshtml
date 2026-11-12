@@ -1,0 +1,327 @@
+@model HealthOps_Project.Models.Prescription
+<partial name="_BackButton" />
+@{
+    ViewData["Title"] = "Create Prescription";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Hide navbar and footer */
+    nav.navbar, footer {
+        display: none !important;
+    }
+
+    /* Background with soft gradient and subtle medical image */
+    body {
+        background: linear-gradient(135deg, rgba(227, 242, 253, 0.95), rgba(245, 247, 250, 0.95)), url('https://cdn.pixabay.com/photo/2017/07/27/09/12/doctor-2548854_1280.jpg') no-repeat center center fixed;
+        background-size: cover;
+        backdrop-filter: blur(2px);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+    }
+
+    /* Card styling */
+    .prescription-card {
+        max-width: 850px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        animation: fadeIn 0.7s ease-in-out;
+        backdrop-filter: blur(4px);
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #00bcd4);
+        color: #fff;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+        .card-header h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .required::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #00bcd4;
+            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.2);
+        }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    .btn {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        padding: 0.6rem 1.2rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #28a745, #00c851);
+        border: none;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(90deg, #218838, #009e43);
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+    }
+
+
+    .alert-info {
+        background-color: #e3f7fc;
+        color: #046c8c;
+        border: 1px solid #b3ecff;
+    }
+
+</style>
+
+<div class="container py-5">
+    <div class="prescription-card">
+        <div class="card-header">
+            <h4><i class="fas fa-prescription-bottle-alt"></i> @ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+
+            <!-- Success Message -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success d-flex align-items-center">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                </div>
+            }
+
+            <!-- Error Messages -->
+            @if (ViewBag.ModelErrors != null)
+            {
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Please fix the following errors:</h5>
+                    <ul>
+                        @foreach (var error in ViewBag.ModelErrors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Notification Info -->
+            <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Notification:</strong> Once created, this prescription will automatically notify script managers for processing.
+            </div>
+
+            <form asp-action="Create" id="prescriptionForm">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Patient -->
+                <div class="mb-3">
+                    <label asp-for="PatientId" class="form-label required">
+                        <i class="fas fa-user-injured me-2 text-primary"></i>Patient
+                    </label>
+                    <select asp-for="PatientId" class="form-control" asp-items="ViewBag.PatientList" required>
+                        <option value="">-- Select Patient --</option>
+                    </select>
+                    <span asp-validation-for="PatientId" class="text-danger"></span>
+                </div>
+
+                <!-- Medication Details -->
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label asp-for="MedicationName" class="form-label required">
+                            <i class="fas fa-pills me-2 text-primary"></i>Medication Name
+                        </label>
+                        <input asp-for="MedicationName" class="form-control" placeholder="e.g., Amoxicillin 500mg" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Quantity" class="form-label required">
+                            <i class="fas fa-capsules me-2 text-primary"></i>Quantity
+                        </label>
+                        <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                    </div>
+                </div>
+
+                <!-- Dosage and Frequency -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Dosage" class="form-label required">
+                            <i class="fas fa-weight me-2 text-primary"></i>Dosage
+                        </label>
+                        <input asp-for="Dosage" class="form-control" placeholder="e.g., 500mg" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Frequency" class="form-label required">
+                            <i class="fas fa-clock me-2 text-primary"></i>Frequency
+                        </label>
+                        <select asp-for="Frequency" class="form-control" required>
+                            <option value="">-- Select Frequency --</option>
+                            <option value="Once daily">Once daily</option>
+                            <option value="Twice daily">Twice daily</option>
+                            <option value="Three times daily">Three times daily</option>
+                            <option value="Every 8 hours">Every 8 hours</option>
+                            <option value="As needed">As needed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="StartDate" class="form-label required">
+                            <i class="fas fa-calendar-day me-2 text-primary"></i>Start Date
+                        </label>
+                        <input asp-for="StartDate" class="form-control" type="date" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="EndDate" class="form-label">
+                            <i class="fas fa-calendar-check me-2 text-primary"></i>End Date
+                        </label>
+                        <input asp-for="EndDate" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="mb-3">
+                    <label asp-for="Instructions" class="form-label">
+                        <i class="fas fa-notes-medical me-2 text-primary"></i>Instructions
+                    </label>
+                    <textarea asp-for="Instructions" class="form-control" rows="3" placeholder="Special instructions for administration..."></textarea>
+                </div>
+
+                <!-- Status & Priority -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label required">
+                            <i class="fas fa-clipboard-check me-2 text-primary"></i>Status
+                        </label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Priority" class="form-label">
+                            <i class="fas fa-exclamation-circle me-2 text-primary"></i>Priority
+                        </label>
+                        <select asp-for="Priority" class="form-control">
+                            <option value="Routine">Routine</option>
+                            <option value="Urgent">Urgent</option>
+                            <option value="STAT">STAT</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label">
+                        <i class="fas fa-clipboard-list me-2 text-primary"></i>Notes
+                    </label>
+                    <textarea asp-for="Notes" class="form-control" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+
+                <!-- Prescribing Doctor -->
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-user-md me-2"></i>
+                    <strong>Prescribing Doctor:</strong> This prescription will be assigned to you
+                </div>
+
+                <!-- PDF Generation Note -->
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-file-pdf me-2"></i>
+                    <strong>PDF Generation:</strong> After creation, you can generate a printable PDF version of this prescription.
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Create Prescription
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(135deg, rgba(227,242,253,0.95), rgba(245,247,250,0.95)), url('../images/Health-bg.jpg') no-repeat center center fixed;
+        background-size: cover;
+        backdrop-filter: blur(2px);
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    nav.navbar, footer {
+        display: none !important;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.97);
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        backdrop-filter: blur(4px);
+    }
+</style>
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(function () {
+            const today = new Date().toISOString().split('T')[0];
+            $('#StartDate').val(today);
+
+            $('#StartDate').on('change', function () {
+                const start = new Date($(this).val());
+                if (!isNaN(start)) {
+                    const end = new Date(start);
+                    end.setDate(start.getDate() + 30);
+                    $('#EndDate').val(end.toISOString().split('T')[0]);
+                }
+            }).trigger('change');
+        });
+    </script>
+}

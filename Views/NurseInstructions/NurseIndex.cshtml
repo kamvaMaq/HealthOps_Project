@@ -1,0 +1,321 @@
+﻿@model IEnumerable<HealthOps_Project.Models.NurseInstruction>
+
+@{
+    ViewData["Title"] = "Nurse Instruction List";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👩‍⚕️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Nurse Instructions</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Comprehensive management of nursing instructions and patient care directives</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search by patient, instruction, or nurse..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="@ViewData["DashboardUrl"]" class="btn-professional-secondary">
+                        <span>📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="professional-filter-section">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h6 class="mb-3 fw-bold text-dark">🎯 Quick Filters:</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">
+                                <span>📋</span> All Instructions
+                            </button>
+                            <button class="professional-filter-btn" data-filter="pending">
+                                <span>🟡</span> Pending
+                            </button>
+                            <button class="professional-filter-btn" data-filter="completed">
+                                <span>✅</span> Completed
+                            </button>
+                            <button class="professional-filter-btn" data-filter="today">
+                                <span>📅</span> Today
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 px-4 pb-4 professional-stagger">
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-primary fw-bold" style="font-size: 2.4rem;">@Model.Count()</div>
+                        <div class="text-muted fw-semibold mb-2">Total Instructions</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: 100%"></div>
+                        </div>
+                        <small class="text-success">📈 All Records</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var pendingCount = Model.Count(m => !m.IsCompleted);
+                            var pendingPercent = Model.Any() ? (pendingCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-warning fw-bold" style="font-size: 2.4rem;">@pendingCount</div>
+                        <div class="text-muted fw-semibold mb-2">Pending</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @pendingPercent%; background: linear-gradient(90deg, #f39c12, #e67e22);"></div>
+                        </div>
+                        <small class="text-warning">🟡 Action Required</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var completedCount = Model.Count(m => m.IsCompleted);
+                            var completedPercent = Model.Any() ? (completedCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-success fw-bold" style="font-size: 2.4rem;">@completedCount</div>
+                        <div class="text-muted fw-semibold mb-2">Completed</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @completedPercent%; background: linear-gradient(90deg, #27ae60, #2ecc71);"></div>
+                        </div>
+                        <small class="text-success">✅ Done</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var todayCount = Model.Count(m => m.IssuedAt.Date == DateTime.Today);
+                            var todayPercent = Model.Any() ? (todayCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-info fw-bold" style="font-size: 2.4rem;">@todayCount</div>
+                        <div class="text-muted fw-semibold mb-2">Today's</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @todayPercent%; background: linear-gradient(90deg, #3498db, #2980b9);"></div>
+                        </div>
+                        <small class="text-info">📅 Today</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions Table -->
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%">Patient Information</th>
+                            <th style="width: 35%">Instruction Details</th>
+                            <th style="width: 15%">Nurse & Timing</th>
+                            <th style="width: 10%">Status</th>
+                            <th style="width: 20%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professionalInstructionsTableBody">
+                        @if (Model.Any())
+                        {
+                            var animationDelay = 0.3;
+                            @foreach (var item in Model)
+                            {
+                                var isToday = item.IssuedAt.Date == DateTime.Today;
+                                var isRecent = item.IssuedAt.Date >= DateTime.Today.AddDays(-1);
+
+                                <tr class="professional-table-row @(isRecent ? "table-info" : "")" style="animation-delay: @(animationDelay)s;">
+                                    <!-- Patient Information -->
+                                    <td style="width:20%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon professional-pulse me-3">
+                                                👤
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">
+                                                    @(item.Patient != null
+                                                        ? $"{item.Patient.FirstName} {item.Patient.LastName}"
+                                                        : "No Patient Linked")
+                                                </div>
+                                                @if (item.Patient != null)
+                                                {
+                                                    <small class="text-muted">Patient ID: @item.Patient.PatientId</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Instruction Details -->
+                                    <td style="width:35%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon me-3" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
+                                                📝
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark professional-truncate-text" title="@item.Instruction">
+                                                    @(item.Instruction.Length > 80 ? item.Instruction.Substring(0, 80) + "..." : item.Instruction)
+                                                </div>
+                                                <small class="text-muted">Instruction ID: @item.Id</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Nurse & Timing -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="fw-bold text-dark mb-1">@item.NurseName</div>
+                                            <div class="text-muted">@item.IssuedAt.ToString("MMM dd, yyyy")</div>
+                                            <div class="text-muted small">@item.IssuedAt.ToString("HH:mm")</div>
+                                            @if (isToday)
+                                            {
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    📅 Today
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td style="width:10%;">
+                                        @if (item.IsCompleted)
+                                        {
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                ✅ Completed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="professional-status-badge professional-badge-warning">
+                                                ⏳ Pending
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td style="width:20%;" class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="NurseDetails" asp-route-id="@item.Id"
+                                               class="btn-professional-action @(item.IsCompleted ? "btn-professional-details" : "btn-professional-edit")">
+                                                <span>@(item.IsCompleted ? "👁️" : "📋")</span>
+                                                <span>@(item.IsCompleted ? "View" : "Review")</span>
+                                            </a>
+                                            @if (!item.IsCompleted)
+                                            {
+                                                <form asp-action="MarkComplete" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn-professional-action btn-professional-details"
+                                                            onclick="return confirm('Mark this instruction as completed?')">
+                                                        <span>✅</span>
+                                                        <span>Complete</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                                animationDelay += 0.1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <div class="professional-empty-state text-center py-5">
+                                        <div class="professional-empty-state-icon">👩‍⚕️</div>
+                                        <h3 class="fw-bold text-dark mb-3">No Nurse Instructions</h3>
+                                        <p class="text-muted fs-6 mb-4">No nursing instructions available for review</p>
+                                        <div class="d-flex justify-content-center gap-3">
+                                            <a href="@ViewData["DashboardUrl"]" class="btn-professional-secondary">
+                                                <span>📊</span>
+                                                <span>Back to Dashboard</span>
+                                            </a>
+                                            <a asp-action="Index" class="btn-professional-primary">
+                                                <span>📋</span>
+                                                <span>Main Instruction List</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Additional Action Buttons -->
+            <div class="text-center mt-4 px-4">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="@ViewData["DashboardUrl"]" class="btn-professional-secondary">
+                        <span>📊</span>
+                        <span>Back to Dashboard</span>
+                    </a>
+                    <a asp-action="Index" class="btn-professional-secondary">
+                        <span>📋</span>
+                        <span>Main Instruction List</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Filter functionality
+            document.querySelectorAll('.professional-filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.professional-filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    let visibleCount = 0;
+
+                    document.querySelectorAll('.professional-table-row').forEach(row => {
+                        const status = row.querySelector('.professional-status-badge').textContent.toLowerCase();
+                        const date = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                        const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toLowerCase();
+
+                        let shouldShow = false;
+
+                        switch (filter) {
+                            case 'all':
+                                shouldShow = true;
+                                break;
+                            case 'pending':
+                                shouldShow = status.includes('pending');
+                                break;
+                            case 'completed':
+                                shouldShow = status.includes('completed');
+                                break;
+                            case 'today':
+                                shouldShow = date.includes(today);
+                                break;
+                        }
+
+                        if (shouldShow) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    console.log(`🎯 Filter "${filter}": Showing ${visibleCount} instructions`);
+                });
+            });
+        });
+    </script>
+}
+
+

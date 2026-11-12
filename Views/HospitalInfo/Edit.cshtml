@@ -1,0 +1,207 @@
+﻿@model HealthOps_Project.Models.HospitalInfo
+@{
+    ViewData["Title"] = "Edit Hospital Information";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">✏️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Hospital Information</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Update hospital details and facility information</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="HospitalId" />
+                    <input type="hidden" asp-for="CreatedDate" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <div class="row g-4">
+                        <!-- Basic Information -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📋</span>
+                                    Basic Information
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="HospitalName" class="professional-form-label">Hospital Name</label>
+                                    <input asp-for="HospitalName" class="form-control professional-form-control" />
+                                    <span asp-validation-for="HospitalName" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Address" class="professional-form-label">Address</label>
+                                    <input asp-for="Address" class="form-control professional-form-control" />
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="City" class="professional-form-label">City</label>
+                                            <input asp-for="City" class="form-control professional-form-control" />
+                                            <span asp-validation-for="City" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Province" class="professional-form-label">Province</label>
+                                            <input asp-for="Province" class="form-control professional-form-control" />
+                                            <span asp-validation-for="Province" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="PostalCode" class="professional-form-label">Postal Code</label>
+                                    <input asp-for="PostalCode" class="form-control professional-form-control" />
+                                    <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📞</span>
+                                    Contact Information
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="MainPhone" class="professional-form-label">Main Phone</label>
+                                            <input asp-for="MainPhone" class="form-control professional-form-control" type="tel" />
+                                            <span asp-validation-for="MainPhone" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="EmergencyPhone" class="professional-form-label">Emergency Phone</label>
+                                            <input asp-for="EmergencyPhone" class="form-control professional-form-control" type="tel" />
+                                            <span asp-validation-for="EmergencyPhone" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Email" class="professional-form-label">Email</label>
+                                            <input asp-for="Email" class="form-control professional-form-control" type="email" />
+                                            <span asp-validation-for="Email" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Website" class="professional-form-label">Website</label>
+                                            <input asp-for="Website" class="form-control professional-form-control" type="url" />
+                                            <span asp-validation-for="Website" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Facility Details -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">🏢</span>
+                                    Facility Details
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label asp-for="TotalBeds" class="professional-form-label">Total Beds</label>
+                                            <input asp-for="TotalBeds" class="form-control professional-form-control" type="number" min="0" />
+                                            <span asp-validation-for="TotalBeds" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label asp-for="ICUBeds" class="professional-form-label">ICU Beds</label>
+                                            <input asp-for="ICUBeds" class="form-control professional-form-control" type="number" min="0" />
+                                            <span asp-validation-for="ICUBeds" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label asp-for="EmergencyBeds" class="professional-form-label">Emergency Beds</label>
+                                            <input asp-for="EmergencyBeds" class="form-control professional-form-control" type="number" min="0" />
+                                            <span asp-validation-for="EmergencyBeds" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label asp-for="OperatingHours" class="professional-form-label">Operating Hours</label>
+                                            <input asp-for="OperatingHours" class="form-control professional-form-control" required />
+                                            <span asp-validation-for="OperatingHours" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check form-switch mt-4 pt-3">
+                                            <input asp-for="Is24Hour" class="form-check-input" type="checkbox" role="switch" style="transform: scale(1.3); margin-right: 10px;">
+                                            <label asp-for="Is24Hour" class="form-check-label fw-semibold">24/7 Operation</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">🎯</span>
+                                    Additional Information
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="MissionStatement" class="professional-form-label">Mission Statement</label>
+                                    <textarea asp-for="MissionStatement" class="form-control professional-form-control" rows="3"></textarea>
+                                    <span asp-validation-for="MissionStatement" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Policies" class="professional-form-label">Policies</label>
+                                    <textarea asp-for="Policies" class="form-control professional-form-control" rows="3"></textarea>
+                                    <span asp-validation-for="Policies" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="LogoUrl" class="professional-form-label">Logo URL</label>
+                                    <input asp-for="LogoUrl" class="form-control professional-form-control" type="url" />
+                                    <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Update Hospital</span>
+                            </button>
+                            <a asp-action="Index" class="btn-professional-secondary">
+                                <span>↩️</span>
+                                <span>Cancel</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

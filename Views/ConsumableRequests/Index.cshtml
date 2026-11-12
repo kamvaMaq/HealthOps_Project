@@ -1,0 +1,287 @@
+﻿@model IEnumerable<HealthOps_Project.Models.ConsumableRequest>
+
+@{
+    ViewData["Title"] = "Consumable Requests";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <!-- Main Card -->
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">
+                                    <i class="fas fa-clipboard-list me-3"></i>Consumable Requests
+                                </h1>
+                                <p class="lead mb-0">Manage and track medical consumable requests</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="professional-icon-wrapper">
+                                    <i class="fas fa-hand-holding-medical fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="professional-action-bar">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control professional-search-box" placeholder="Search requests...">
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <a asp-action="Create" class="btn btn-professional-primary">
+                                    <i class="fas fa-plus"></i> Create New Request
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row px-4 mt-3 professional-stagger">
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                                <p class="text-muted mb-0">Total Requests</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3 class="fw-bold text-warning">@Model.Count(r => r.Status == "Pending")</h3>
+                                <p class="text-muted mb-0">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h3 class="fw-bold text-info">@Model.Count(r => r.Status == "Approved")</h3>
+                                <p class="text-muted mb-0">Approved</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <h3 class="fw-bold text-success">@Model.Count(r => r.Status == "Received")</h3>
+                                <p class="text-muted mb-0">Received</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Section -->
+                    <div class="professional-filter-section">
+                        <h5 class="fw-bold mb-3">Filter by Status</h5>
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">All Requests</button>
+                            <button class="professional-filter-btn" data-filter="Pending">Pending</button>
+                            <button class="professional-filter-btn" data-filter="Approved">Approved</button>
+                            <button class="professional-filter-btn" data-filter="Received">Received</button>
+                            <button class="professional-filter-btn" data-filter="Rejected">Rejected</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Table -->
+                    <div class="px-4 pb-4">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-check-circle me-1"></i>@TempData["Success"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-exclamation-circle me-1"></i>@TempData["Error"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            <table class="table professional-table">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Consumable</th>
+                                        <th>Ward Name</th>
+                                        <th>Quantity</th>
+                                        <th>Status</th>
+                                        <th>Requested At</th>
+                                        <th>Received At</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="professional-table-row" data-status="@item.Status">
+                                            <td>
+                                                <strong>#@item.Id</strong>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="professional-entity-icon me-3">
+                                                        <i class="fas fa-cube"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@item.Consumable?.Name</strong>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    @item.WardName
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold fs-6">@item.QuantityRequested</span>
+                                            </td>
+                                            <td>
+                                                <span class="professional-status-badge @GetStatusBadgeClass(item.Status)">
+                                                    @item.Status
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted">@item.RequestedAt.ToString("MMM dd, yyyy")</div>
+                                                <div class="small">@item.RequestedAt.ToString("HH:mm")</div>
+                                            </td>
+                                            <td>
+                                                @if (item.ReceivedAt.HasValue)
+                                                {
+                                                    <div class="small text-muted">@item.ReceivedAt.Value.ToString("MMM dd, yyyy")</div>
+                                                    <div class="small">@item.ReceivedAt.Value.ToString("HH:mm")</div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fst-italic">-</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center flex-wrap">
+                                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-details me-1 mb-1">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-edit me-1 mb-1">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+
+                                                    @if (item.Status == "Pending")
+                                                    {
+                                                        <form asp-action="MarkApproved" method="post" class="d-inline me-1 mb-1">
+                                                            <input type="hidden" name="id" value="@item.Id" />
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="btn btn-professional-action" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form asp-action="MarkRejected" method="post" class="d-inline me-1 mb-1">
+                                                            <input type="hidden" name="id" value="@item.Id" />
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="btn btn-professional-action btn-professional-delete">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+
+                                                    @if (item.Status == "Approved")
+                                                    {
+                                                        <form asp-action="MarkReceived" method="post" class="d-inline me-1 mb-1">
+                                                            <input type="hidden" name="id" value="@item.Id" />
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="btn btn-professional-action" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                                                                <i class="fas fa-check-double"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-delete mb-1">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        @if (!Model.Any())
+                        {
+                            <div class="professional-empty-state">
+                                <i class="fas fa-clipboard-list professional-empty-state-icon"></i>
+                                <h3 class="fw-bold text-muted">No Requests Found</h3>
+                                <p class="text-muted mb-4">Create your first consumable request to get started.</p>
+                                <a asp-action="Create" class="btn btn-professional-primary">
+                                    <i class="fas fa-plus me-2"></i> Create First Request
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Professional UI
+            if (typeof ProfessionalUI !== 'undefined') {
+                ProfessionalUI.init();
+            }
+
+            // Add custom functionality for requests
+            const tableRows = document.querySelectorAll('.professional-table-row');
+
+            // Add animation delay to each row
+            tableRows.forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+            });
+
+            // Add pulse animation to pending requests
+            const pendingBadges = document.querySelectorAll('.professional-badge-warning');
+            pendingBadges.forEach(badge => {
+                badge.classList.add('professional-pulse');
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "professional-badge-warning",
+            "Approved" => "professional-badge-normal",
+            "Received" => "professional-badge-active",
+            "Rejected" => "professional-badge-critical",
+            _ => "professional-badge-inactive"
+        };
+    }
+}

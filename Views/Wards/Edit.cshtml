@@ -1,0 +1,609 @@
+﻿@model HealthOps_Project.Models.Ward
+
+@{
+    ViewData["Title"] = "Edit Ward";
+}
+
+<style>
+    .ward-edit-container {
+        background: linear-gradient(135deg, #FF512F 0%, #F09819 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ward-edit-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(255, 81, 47, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 85% 80%, rgba(240, 152, 25, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        animation: floatBackground 15s ease-in-out infinite;
+    }
+
+    .professional-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow:
+            0 25px 50px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .professional-glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow:
+            0 35px 60px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .professional-header {
+        background: linear-gradient(135deg, #FF512F 0%, #F09819 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .professional-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: professionalShimmer 4s infinite;
+    }
+
+    .form-control-glow {
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 14px 20px;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .form-control-glow:focus {
+        border-color: #FF512F;
+        box-shadow: 0 12px 30px rgba(255, 81, 47, 0.25);
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 1);
+    }
+
+    .form-control-glow:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #FF512F 0%, #F09819 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 8px 25px rgba(255, 81, 47, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-glow::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+    }
+
+    .btn-primary-glow:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary-glow:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(255, 81, 47, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 25px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-secondary-glow:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(149, 165, 166, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-label:hover {
+        color: #FF512F;
+        transform: translateX(5px);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        border-left: 4px solid #FF512F;
+        transition: all 0.3s ease;
+    }
+
+    .form-section:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateX(5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-check {
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        margin: 15px 0;
+        transition: all 0.3s ease;
+        border-left: 3px solid #F09819;
+    }
+
+    .form-check:hover {
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateX(5px);
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .form-check-input:checked {
+        background-color: #FF512F;
+        border-color: #FF512F;
+        transform: scale(1.1);
+    }
+
+    .form-check-label {
+        font-weight: 600;
+        color: #2c3e50;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .form-check:hover .form-check-label {
+        color: #FF512F;
+    }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        margin-right: 15px;
+        transition: all 0.4s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .icon-wrapper:hover {
+        transform: rotate(15deg) scale(1.1);
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .floating {
+        animation: floating 4s ease-in-out infinite;
+    }
+
+    .pulse-animation {
+        animation: pulse 2.5s infinite;
+    }
+
+    /* Animations */
+    @@keyframes floatBackground {
+        0%, 100% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(20px, -15px) scale(1.02); }
+        66% { transform: translate(-15px, 10px) scale(0.98); }
+    }
+
+    @@keyframes professionalShimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    @@keyframes floating {
+        0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+        33% { transform: translate(25px, -20px) rotate(120deg); }
+        66% { transform: translate(-18px, 15px) rotate(240deg); }
+    }
+
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 81, 47, 0.6); }
+        70% { box-shadow: 0 0 0 12px rgba(255, 81, 47, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 81, 47, 0); }
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #FF512F;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-group-with-icon .form-control-glow {
+        padding-left: 50px;
+    }
+
+    .form-group-with-icon:hover .input-icon {
+        transform: translateY(-50%) scale(1.2);
+        color: #F09819;
+    }
+
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        animation: statusPulse 2s infinite;
+    }
+
+    .status-active {
+        background: #27ae60;
+        box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    }
+
+    .status-inactive {
+        background: #e74c3c;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    }
+
+    @@keyframes statusPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+
+    .character-counter {
+        font-size: 0.8rem;
+        text-align: right;
+        margin-top: 5px;
+        color: #7f8c8d;
+        transition: all 0.3s ease;
+    }
+
+    .character-counter.warning {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .character-counter.success {
+        color: #27ae60;
+        font-weight: bold;
+    }
+</style>
+
+<div class="ward-edit-container">
+    <div class="container">
+        <div class="professional-glass-card animate-slide-in">
+            <!-- Professional Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="icon-wrapper floating">
+                        <span style="font-size: 2rem;">✏️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Ward Information</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Update ward details and configuration settings</p>
+            </div>
+
+            <div class="p-5">
+                <form asp-action="Edit" method="post" id="wardEditForm">
+                    <input type="hidden" asp-for="WardId" />
+
+                    <!-- Ward Name Section -->
+                    <div class="form-section">
+                        <label asp-for="Name" class="form-label">
+                            <span class="pulse-animation">🏥</span>
+                            Ward Name
+                        </label>
+                        <div class="form-group form-group-with-icon">
+                            <span class="input-icon">🏥</span>
+                            <input asp-for="Name" class="form-control form-control-glow"
+                                   placeholder="Enter ward name..."
+                                   id="wardNameInput"
+                                   maxlength="50" />
+                        </div>
+                        <div class="character-counter" id="nameCounter">0/50 characters</div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div class="form-section">
+                        <label asp-for="Location" class="form-label">
+                            <span class="pulse-animation">📍</span>
+                            Ward Location
+                        </label>
+                        <div class="form-group form-group-with-icon">
+                            <span class="input-icon">📍</span>
+                            <input asp-for="Location" class="form-control form-control-glow"
+                                   placeholder="Enter ward location..."
+                                   id="locationInput"
+                                   maxlength="100" />
+                        </div>
+                        <div class="character-counter" id="locationCounter">0/100 characters</div>
+                        <span asp-validation-for="Location" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Status Section -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <span class="pulse-animation">📊</span>
+                            Ward Status
+                        </label>
+                        <div class="form-check">
+                            <input asp-for="IsActive" class="form-check-input" id="isActiveCheckbox" />
+                            <label asp-for="IsActive" class="form-check-label">
+                                <span class="status-indicator @(Model.IsActive ? "status-active" : "status-inactive")"></span>
+                                Ward is currently
+                                <span id="statusText" class="fw-bold">@(Model.IsActive ? "Active" : "Inactive")</span>
+                            </label>
+                        </div>
+                        <small class="text-muted">
+                            @if (Model.IsActive)
+                            {
+                                <span class="text-success">✅ This ward is currently accepting patients</span>
+                            }
+                            else
+                            {
+                                <span class="text-warning">⏸️ This ward is temporarily inactive</span>
+                            }
+                        </small>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <span class="pulse-animation">ℹ️</span>
+                            Additional Information
+                        </label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h6 class="fw-bold mb-2">📈 Ward Statistics</h6>
+                                    <small class="text-muted">
+                                        <div>• Total Beds: <strong>@(ViewBag.BedCount ?? 0)</strong></div>
+                                        <div>• Active Since: <strong>@DateTime.Now.AddMonths(-6).ToString("MMM yyyy")</strong></div>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <h6 class="fw-bold mb-2">⚙️ Configuration</h6>
+                                    <small class="text-muted">
+                                        <div>• Last Updated: <strong>@DateTime.Now.ToString("MMM dd, yyyy")</strong></div>
+                                        <div>• Ward ID: <strong>@Model.WardId.ToString("D3")</strong></div>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                        <button type="submit" class="btn-primary-glow" id="submitButton">
+                            <span>💾</span>
+                            <span>Update Ward</span>
+                        </button>
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            <span>⬅</span>
+                            <span>Back to Wards</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Character counters
+            const wardNameInput = document.getElementById('wardNameInput');
+            const locationInput = document.getElementById('locationInput');
+            const nameCounter = document.getElementById('nameCounter');
+            const locationCounter = document.getElementById('locationCounter');
+            const isActiveCheckbox = document.getElementById('isActiveCheckbox');
+            const statusText = document.getElementById('statusText');
+            const submitButton = document.getElementById('submitButton');
+
+            // Initialize character counters
+            function updateCharacterCounter(input, counter, maxLength) {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength} characters`;
+
+                if (length > maxLength * 0.8) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('success');
+                } else if (length > 0) {
+                    counter.classList.add('success');
+                    counter.classList.remove('warning');
+                } else {
+                    counter.classList.remove('warning', 'success');
+                }
+            }
+
+            // Set initial counter values
+            updateCharacterCounter(wardNameInput, nameCounter, 50);
+            updateCharacterCounter(locationInput, locationCounter, 100);
+
+            // Add event listeners for character counters
+            wardNameInput.addEventListener('input', () => updateCharacterCounter(wardNameInput, nameCounter, 50));
+            locationInput.addEventListener('input', () => updateCharacterCounter(locationInput, locationCounter, 100));
+
+            // Status toggle animation
+            isActiveCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    statusText.textContent = 'Active';
+                    statusText.className = 'fw-bold text-success';
+                } else {
+                    statusText.textContent = 'Inactive';
+                    statusText.className = 'fw-bold text-warning';
+                }
+
+                // Add pulse animation
+                statusText.style.animation = 'none';
+                setTimeout(() => {
+                    statusText.style.animation = 'pulse 0.5s ease-in-out';
+                }, 10);
+            });
+
+            // Form submission enhancement
+            const form = document.getElementById('wardEditForm');
+            form.addEventListener('submit', function(e) {
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = `
+                    <span class="professional-loading"></span>
+                    <span>Updating Ward...</span>
+                `;
+                submitButton.disabled = true;
+
+                // Revert after 5 seconds if still on page
+                setTimeout(() => {
+                    if (submitButton.disabled) {
+                        submitButton.innerHTML = originalText;
+                        submitButton.disabled = false;
+                    }
+                }, 5000);
+            });
+
+            // Enhanced input interactions
+            document.querySelectorAll('.form-control-glow').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+
+                // Real-time validation feedback
+                input.addEventListener('input', function() {
+                    if (this.value.trim().length > 0) {
+                        this.classList.add('has-value');
+                        this.classList.remove('is-invalid');
+                    } else {
+                        this.classList.remove('has-value');
+                    }
+                });
+            });
+
+            // Add CSS for loading animation
+            const style = document.createElement('style');
+            style.textContent = `
+                .professional-loading {
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    border-top-color: white;
+                    animation: professionalSpin 1s ease-in-out infinite;
+                    margin-right: 8px;
+                }
+
+                @@keyframes professionalSpin {
+                    to { transform: rotate(360deg); }
+                }
+
+                .info-card {
+                    background: rgba(255, 255, 255, 0.9);
+                    border-radius: 12px;
+                    padding: 15px;
+                    margin: 10px 0;
+                    border-left: 3px solid #FF512F;
+                    transition: all 0.3s ease;
+                }
+
+                .info-card:hover {
+                    transform: translateX(5px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+}

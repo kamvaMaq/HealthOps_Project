@@ -1,0 +1,398 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<HealthOps_Project.Models.ApplicationUser> UserManager
+@inject SignInManager<HealthOps_Project.Models.ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - HealthOps</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    <style>
+        .topbar {
+            background-color: #1f1f2e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #1f1f2e;
+            color: #fff;
+            padding: 15px 10px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .sidebar-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 10px;
+        }
+
+        .sidebar h4 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            color: #cfd8dc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+            .sidebar .nav-link i {
+                margin-right: 8px;
+                font-size: 1.1rem;
+                min-width: 20px;
+            }
+
+            .sidebar .nav-link:hover {
+                background-color: #3a3f58;
+                color: #fff;
+                text-decoration: none;
+            }
+
+            .sidebar .nav-link.active {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        .dashboard-wrapper {
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar ul {
+            padding-left: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+            background-color: #f8f9fa;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            padding: 0 10px;
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 350px;
+        }
+
+        .alert {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: none;
+            border-radius: 8px;
+        }
+
+        .alert-dismissible .btn-close {
+            padding: 0.75rem;
+        }
+    </style>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="text-center">
+                <img src="~/images/icon.jpeg" class="sidebar-logo" />
+                <h4>HealthOps</h4>
+                <div class="sidebar-subtitle">Hospital Management System</div>
+            </div>
+            <ul class="nav flex-column mt-4">
+                <!-- Dashboard Link for All Users -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Main Navigation</div>
+              @*   <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Dashboard")">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li> *@
+    </div>
+
+                @* Roles links with icons *@
+                @if (User.IsInRole("WardAdmin"))
+                {
+        <div class="nav-section">
+    @*         <div class="nav-section-title">Medical Care</div> *@
+   @*          <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Doctor")"><i class="bi bi-calendar-check"></i> Doctor</a></li> *@
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("PatientIndex", "Patients")"><i class="bi bi-person-lines-fill"></i>Manage Patients</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "PatientMovements")"><i class="bi bi-journal-medical"></i>Move Patients</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Admissions")"><i class="bi bi-hospital-fill"></i> Admissions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Discharges")"><i class="bi bi-prescription"></i> Discharges</a></li>
+@*             <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Room")"><i class="bi bi-plus-circle"></i> Rooms</a></li> *@
+           @*  <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Beds")"><i class="bi bi-file-earmark-pdf"></i> Beds</a></li> *@
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Wards")"><i class="bi bi-file-text"></i> Wards</a></li>
+        </div>
+                }
+                else if (User.IsInRole("Admin"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Administrator</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Beds")"><i class="bi bi-hdd-stack"></i> Manage Beds</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Room")"><i class="bi bi-door-open"></i> Manage Rooms</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Wards")"><i class="bi bi-hospital"></i> Manage Wards</a></li>
+
+            <div class="nav-section-title mt-3">Employee Management</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Employees")"><i class="bi bi-people"></i> Manage Employees</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Doctor")"><i class="bi bi-person-badge"></i> Doctors</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Nurse")"><i class="bi bi-person-lines-fill"></i> Nurses</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "NursingSister")"><i class="bi bi-person-gear"></i> Nursing Sisters</a></li>
+
+            <div class="nav-section-title mt-3">Stock Management</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Consumables")"><i class="bi bi-box-seam"></i> Manage Consumables</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Medications", "MedicationAdministration")"><i class="bi bi-capsule"></i> Manage Medication</a></li>
+
+            <div class="nav-section-title mt-3">Medical Records</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Allergies")"><i class="bi bi-exclamation-triangle"></i> Manage Allergies</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "MedicalConditions")"><i class="bi bi-heart-pulse"></i> Manage Conditions</a></li>
+
+            <div class="nav-section-title mt-3">System Information</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "HospitalInfo")"><i class="bi bi-building"></i> Manage Hospital Info</a></li>
+        </div>
+                }
+                else if (User.IsInRole("Doctor"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Medical Care</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Appointment")"><i class="bi bi-calendar-check"></i> Manage Appointments</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("PatientIndex", "Patients")"><i class="bi bi-person-lines-fill"></i> Patient's Folder</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "NurseInstructions")"><i class="bi bi-journal-medical"></i>Nurse Instructions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Visitation")"><i class="bi bi-hospital-fill"></i> Schedule Patient Visit</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Prescriptions")"><i class="bi bi-prescription"></i> All Prescriptions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Create", "Prescriptions")"><i class="bi bi-plus-circle"></i> Create Prescription</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("GenerateAllPdf", "Prescriptions")"><i class="bi bi-file-earmark-pdf"></i> Generate PDF</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("DoctorIndex", "DoctorInstructions")"><i class="bi bi-file-text"></i> View Instructions </a></li>
+        </div>
+                }
+                else if (User.IsInRole("Nurse"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Nursing Care</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "VitalSigns")"><i class="bi bi-activity"></i> Record Patient Vitals</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Treatments")"><i class="bi bi-clipboard-plus"></i> Treat Patient</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("NonScheduled", "MedicationAdministration")"><i class="bi bi-journal-medical"></i> Administer Non-Scheduled Med</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "DoctorInstructions")"><i class="bi bi-file-text"></i> Add Doctor Instructions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("NurseIndex", "NurseInstructions")"><i class="bi bi-file-text"></i> View Doctor Instructions</a></li>
+        </div>
+                }
+                else if (User.IsInRole("NursingSister"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Nursing Management</div>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Scheduled", "MedicationAdministration")"><i class="bi bi-capsule"></i> Administer Scheduled Medication</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("NurseIndex", "NurseInstructions")"><i class="bi bi-person-lines-fill"></i> View doctor Instructions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Prescriptions")"><i class="bi bi-prescription"></i> View active Prescriptions</a></li>
+            <li class="nav-item"><a class="nav-link" href="@Url.Action("Medications", "MedicationAdministration")"><i class="bi bi-box-seam"></i> Medication Inventory</a></li>
+        </div>
+                }
+
+                @if (User.IsInRole("ScriptManager"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Script Management</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ScriptManager" ? "active" : "")"
+               href="@Url.Action("Index", "ScriptManager")">
+                <i class="bi bi-prescription2"></i> All Scripts
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Prescriptions" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Prescriptions" ? "active" : "")"
+               href="@Url.Action("Index", "Prescriptions")">
+                <i class="bi bi-hourglass-split"></i> Manage Prescriptions
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "PendingScripts" && ViewContext.RouteData.Values["Controller"]?.ToString() == "ScriptManager" ? "active" : "")"
+               href="@Url.Action("PendingScripts", "ScriptManager")">
+                <i class="bi bi-hourglass-split"></i> Pending Scripts
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PrescriptionDeliveries" ? "active" : "")"
+               href="@Url.Action("Index", "PrescriptionDeliveries")">
+                <i class="bi bi-truck"></i> Deliveries
+            </a>
+            <a class="nav-link" href="@Url.Action("GenerateAllPdf", "ScriptManager")">
+                <i class="bi bi-file-earmark-pdf"></i> Generate PDF
+            </a>
+        </div>
+                }
+                else if (User.IsInRole("StockManager"))
+                {
+        <div class="nav-section">
+            <div class="nav-section-title">Stock Management</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Consumables" ? "active" : "")"
+               href="@Url.Action("Index", "Consumables")">
+                <i class="bi bi-box-seam"></i> Consumables
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ConsumableRequests" ? "active" : "")"
+               href="@Url.Action("Index", "ConsumableRequests")">
+                <i class="bi bi-clipboard-check"></i> Stock Requests
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "WardStocks" ? "active" : "")"
+               href="@Url.Action("Index", "WardStocks")">
+                <i class="bi bi-building"></i> Ward Stocks
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Stocktakes" ? "active" : "")"
+               href="@Url.Action("Index", "Stocktakes")">
+                <i class="bi bi-clipboard-data"></i> Stocktakes
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "LowStock" && ViewContext.RouteData.Values["Controller"]?.ToString() == "WardStocks" ? "active" : "")"
+               href="@Url.Action("LowStock", "WardStocks")">
+                <i class="bi bi-exclamation-triangle"></i> Low Stock Alert
+            </a>
+            <a class="nav-link" href="@Url.Action("GenerateReport", "Stocktakes")">
+                <i class="bi bi-file-earmark-pdf"></i> Stock Report
+            </a>
+        </div>
+                }
+
+    <!-- Account Section for All Users -->
+    <div class="nav-section">
+      @*   <div class="nav-section-title">Account</div>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Profile", "Account")">
+                <i class="bi bi-person"></i> Profile
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Settings", "Account")">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </li> *@
+    </div>
+    </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left d-flex align-items-center">
+                <span><i class="bi bi-hospital"></i> HealthOps HMS</span>
+            </div>
+            <div class="topbar-right d-flex align-items-center">
+                    @{
+                        var currentUser = await UserManager.GetUserAsync(User);
+                        var firstName = currentUser?.FirstName ?? "User";
+                        var role = (await UserManager.GetRolesAsync(currentUser)).FirstOrDefault() ?? "User";
+                    }
+                <span><i class="bi bi-person-circle"></i> @firstName (@role)</span>
+                <form asp-action="Logout" asp-controller="Account" method="post" class="ms-3">
+                        @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                </form>
+            </div>
+        </header>
+
+        <!-- Notification Container -->
+        <div class="notification-container">
+                @if (TempData["Success"] != null)
+                {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                        @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                }
+
+                @if (TempData["Warning"] != null)
+                {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        @TempData["Warning"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                }
+
+                @if (TempData["Info"] != null)
+                {
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                        @TempData["Info"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                }
+        </div>
+
+        <div class="content">
+                @RenderBody()
+        </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // Active link highlighting
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

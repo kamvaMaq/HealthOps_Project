@@ -1,0 +1,136 @@
+﻿@model HealthOps_Project.Models.DoctorInstruction
+@{
+    ViewData["Title"] = "Add Doctor Instruction";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👨‍⚕️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Add Doctor Instruction</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Create new medical instructions for patient care</p>
+            </div>
+
+            <div class="p-4">
+                <div asp-validation-summary="All" class="alert alert-danger rounded-3"></div>
+
+                <form asp-action="Create" method="post">
+                    <div class="row g-4">
+                        <!-- Patient Selection -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">👤</span>
+                                    Patient Information
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="PatientId" class="professional-form-label">Select Patient</label>
+                                    <select asp-for="PatientId" class="form-control professional-form-control" asp-items="ViewBag.PatientList">
+                                        <option value="">-- Select Patient --</option>
+                                    </select>
+                                    <span asp-validation-for="PatientId" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Doctor Information -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">👨‍⚕️</span>
+                                    Doctor Details
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="DoctorName" class="professional-form-label">Doctor Name</label>
+                                    <input asp-for="DoctorName" class="form-control professional-form-control" placeholder="Enter doctor name" />
+                                    <span asp-validation-for="DoctorName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visit Information -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Visit Details
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="VisitDate" class="professional-form-label">Visit Date</label>
+                                    <input asp-for="VisitDate" type="date" class="form-control professional-form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="VisitDate" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Priority" class="professional-form-label">Priority</label>
+                                    <select asp-for="Priority" class="form-control professional-form-control">
+                                        <option value="Normal">Normal</option>
+                                        <option value="High">High</option>
+                                        <option value="Urgent">Urgent</option>
+                                    </select>
+                                    <span asp-validation-for="Priority" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📝</span>
+                                    Medical Instructions
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="Instructions" class="professional-form-label">Instructions</label>
+                                    <textarea asp-for="Instructions" class="form-control professional-form-control" rows="6" placeholder="Enter detailed medical instructions..."></textarea>
+                                    <span asp-validation-for="Instructions" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completion Status -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">✅</span>
+                                    Completion Status
+                                </h6>
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsCompleted" class="form-check-input" type="checkbox" role="switch" style="transform: scale(1.3); margin-right: 10px;">
+                                    <input type="hidden" asp-for="IsCompleted" value="false" />
+                                    <label asp-for="IsCompleted" class="form-check-label fw-semibold">Mark as Completed</label>
+                                </div>
+                                <small class="text-muted">Check this box if the instruction has already been completed</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Save Instruction</span>
+                            </button>
+                            <a asp-action="Index" class="btn-professional-secondary">
+                                <span>↩️</span>
+                                <span>Cancel</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

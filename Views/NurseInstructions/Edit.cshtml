@@ -1,0 +1,225 @@
+﻿@model HealthOps_Project.Models.NurseInstruction
+
+@{
+    ViewData["Title"] = "Edit Instruction";
+}
+
+<h1>Edit Instruction</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="PatientId" class="control-label">Patient</label>
+        <select asp-for="PatientId" class="form-control" asp-items="ViewBag.PatientList">
+            <option value="">-- Select Patient --</option>
+        </select>
+        <span asp-validation-for="PatientId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="NurseName" class="form-label">Nurse</label>
+        <input asp-for="NurseName" class="form-control" placeholder="Enter Nurse's' name" />
+        <span asp-validation-for="NurseName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Instruction" class="control-label"></label>
+        <textarea asp-for="Instruction" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Instruction" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IssuedAt" class="control-label">Issued At</label>
+        <input asp-for="IssuedAt" class="form-control" readonly />
+        <span asp-validation-for="IssuedAt" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsCompleted" class="form-check-input" />
+        <label asp-for="IsCompleted" class="form-check-label">Completed</label>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<style>
+    /* Hide navbar */
+    .navbar {
+        display: none;
+    }
+
+    /* General styling */
+    body {
+        background-color: #f0f7fd;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c3e50;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #2c5282;
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #bee3f8;
+        font-weight: 600;
+    }
+
+    /* Form container */
+    form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Form groups */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    /* Labels */
+    .control-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c5282;
+        font-size: 16px;
+    }
+
+    /* Input fields and select */
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+            background-color: white;
+        }
+
+    /* Textarea specific styling */
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    /* Readonly input styling */
+    .form-control[readonly] {
+        background-color: #edf2f7;
+        color: #718096;
+        cursor: not-allowed;
+    }
+
+    /* Checkbox styling */
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        accent-color: #4299e1;
+        cursor: pointer;
+    }
+
+    .form-check-label {
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #4299e1, #3182ce);
+        color: white;
+        box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3182ce, #2b6cb0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(66, 153, 225, 0.4);
+        }
+
+    .btn-secondary {
+        background: linear-gradient(to right, #a0aec0, #718096);
+        color: white;
+        margin-left: 10px;
+        box-shadow: 0 4px 6px rgba(113, 128, 150, 0.3);
+    }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #718096, #4a5568);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(113, 128, 150, 0.4);
+        }
+
+    /* Form actions container */
+    .form-group:last-child {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Validation messages */
+    .text-danger {
+        color: #e53e3e;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* Validation summary */
+    .validation-summary-errors {
+        color: #e53e3e;
+        background-color: #fed7d7;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 4px solid #f56565;
+    }
+
+
+
+    /* Focus states for accessibility */
+    .btn:focus,
+    .form-check-input:focus,
+    .form-control:focus {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+    }
+</style>

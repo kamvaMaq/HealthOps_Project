@@ -1,0 +1,29 @@
+﻿@* @model HealthOps_Project.Models.Appointment
+
+@{
+    ViewData["Title"] = "Delete Appointment";
+}
+
+<h2 class="text-danger">Delete Appointment</h2>
+
+<h4>Are you sure you want to delete this appointment?</h4>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Id Number</dt>
+        <dd class="col-sm-10">@Model.PatientIdNumber</dd>
+
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.PatientName</dd>
+
+        <dt class="col-sm-2">Date & Time</dt>
+        <dd class="col-sm-10">@Model.AppointmentDate.ToShortDateString() @Model.AppointmentTime</dd>
+    </dl>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="AppointmentId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form> *@

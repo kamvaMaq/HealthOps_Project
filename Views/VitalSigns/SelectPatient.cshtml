@@ -1,0 +1,119 @@
+﻿@model List<HealthOps_Project.Models.Patient>
+@{
+    ViewData["Title"] = "Select Patient - Record Vitals";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-heartbeat text-danger me-2"></i>Record Patient Vitals</h2>
+                <a href="@Url.Action("Index", "VitalSigns")" class="btn btn-secondary">
+                    <i class="fas fa-list me-1"></i>View All Vitals
+                </a>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No patients available for vital signs recording.
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Select a Patient</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var patient in Model)
+                            {
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <div class="card h-100 patient-card">
+                                        <div class="card-body text-center">
+                                            <div class="avatar mx-auto mb-3">
+                                                <div class="avatar-initial rounded-circle bg-danger text-white">
+                                                    @patient.FirstName.Substring(0, 1)@patient.LastName.Substring(0, 1)
+                                                </div>
+                                            </div>
+                                            <h5 class="card-title">@patient.FirstName @patient.LastName</h5>
+                                            <p class="card-text">
+                                                <small class="text-muted">Patient ID: @patient.PatientId</small><br>
+                                                <span class="badge bg-info">
+                                                    Room: @(patient.RoomNumber ?? "Not assigned")
+                                                </span>
+                                            </p>
+                                            <a href="@Url.Action("Create", "VitalSigns", new { patientId = patient.PatientId })"
+                                               class="btn btn-danger btn-sm">
+                                                <i class="fas fa-heartbeat me-1"></i>Record Vitals
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Search -->
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6><i class="fas fa-search me-2"></i>Quick Search</h6>
+                            <input type="text" id="patientSearch" class="form-control"
+                                   placeholder="Type patient name to filter...">
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .patient-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+        .patient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    .avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatar-initial {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+</style>
+
+<script>
+    // Quick search functionality
+    document.getElementById('patientSearch').addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase();
+        const patientCards = document.querySelectorAll('.patient-card');
+
+        patientCards.forEach(card => {
+            const patientName = card.querySelector('.card-title').textContent.toLowerCase();
+            const parentCol = card.closest('.col-lg-4');
+
+            if (patientName.includes(searchTerm)) {
+                parentCol.style.display = '';
+            } else {
+                parentCol.style.display = 'none';
+            }
+        });
+    });
+</script>

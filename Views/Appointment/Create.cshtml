@@ -1,0 +1,139 @@
+﻿@model HealthOps_Project.Models.Appointment
+@{
+    ViewData["Title"] = "Book Appointment";
+    var ImageUrl = Url.Content("~/images/Health-bg.jpg");
+    var doctors = ViewBag.Doctors as List<HealthOps_Project.Models.ApplicationUser> ?? new List<HealthOps_Project.Models.ApplicationUser>();
+}
+
+<div style="background: url('@ImageUrl') center/cover no-repeat; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:2rem;">
+    <div class="card shadow-lg rounded-4 p-4" style="width:100%; max-width:600px; background-color: rgba(255,255,255,0.95);">
+        <h2 class="mb-4 text-center text-primary">📅 Schedule Your Appointment</h2>
+
+        <form asp-action="Create" method="post" class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Select Doctor</label>
+                <select class="form-select" id="DoctorId" asp-for="DoctorId" required>
+                    <option value="">-- Select Doctor --</option>
+                    @foreach (var doc in doctors)
+                    {
+                        <option value="@doc.Id">@doc.FullName</option>
+                    }
+                </select>
+                <span asp-validation-for="DoctorId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Select Date</label>
+                <input type="text" id="appointmentDate" class="form-control" asp-for="AppointmentDate" placeholder="Select a date" required />
+                <span asp-validation-for="AppointmentDate" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label>Time</label>
+                <select class="form-select" asp-for="AppointmentTime" required>
+                    <option value="">Select Time...</option>
+                    @{
+                        var timeSlots = new List<TimeSpan>();
+                        var startTime = new TimeSpan(9, 0, 0); // 9:00 AM
+                        var endTime = new TimeSpan(17, 0, 0);  // 5:00 PM
+
+                        for (var time = startTime; time <= endTime; time = time.Add(new TimeSpan(0, 30, 0)))
+                        {
+                            timeSlots.Add(time);
+                        }
+                    }
+                    @foreach (var t in timeSlots)
+                    {
+                        <option value="@t">@t.ToString(@"hh\:mm")</option>
+                    }
+                </select>
+                <span asp-validation-for="AppointmentTime" class="text-danger"></span>
+            </div>
+
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Full Name</label>
+                    <input type="text" class="form-control" asp-for="PatientName" placeholder="John Doe" required />
+                    <span asp-validation-for="PatientName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">ID Number</label>
+                    <input type="text" class="form-control" asp-for="PatientIdNumber" placeholder="1234567890123" />
+                    <span asp-validation-for="PatientIdNumber" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" class="form-control" asp-for="PatientEmail" placeholder="example@email.com" />
+                    <span asp-validation-for="PatientEmail" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Phone</label>
+                    <input type="tel" class="form-control" asp-for="PatientPhone" placeholder="+27 71 234 5678" />
+                    <span asp-validation-for="PatientPhone" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label class="form-label fw-semibold">Notes</label>
+                <textarea class="form-control" asp-for="Notes" rows="3" placeholder="Additional details..."></textarea>
+            </div>
+
+            <div class="mt-4 text-center">
+                <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm">Confirm Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        // Available times
+        const allTimes = [];
+        for (let h = 8; h <= 17; h++) {
+            allTimes.push(`${h.toString().padStart(2,"0")}:00:00`);
+            allTimes.push(`${h.toString().padStart(2,"0")}:30:00`);
+        }
+
+        const timeSelect = document.getElementById("timeSlots");
+        const doctorSelect = document.getElementById("DoctorId");
+
+        async function updateTimeSlots(dateStr) {
+            if (!doctorSelect.value) return;
+            timeSelect.innerHTML = '<option value="">-- Select a Time --</option>';
+
+            const response = await fetch(`/Appointment/GetBookedTimes?doctorId=${doctorSelect.value}&date=${dateStr}`);
+            const bookedTimes = await response.json();
+
+            allTimes.forEach(t => {
+                if (!bookedTimes.includes(t)) {
+                    const opt = document.createElement("option");
+                    opt.value = t;
+                    opt.textContent = t.substring(0,5);
+                    timeSelect.appendChild(opt);
+                }
+            });
+        }
+
+        flatpickr("#appointmentDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disable: [d => d.getDay() === 0 || d.getDay() === 6],
+            onChange: (dates, dateStr) => updateTimeSlots(dateStr)
+        });
+
+        doctorSelect.addEventListener("change", () => {
+            const dateInput = document.getElementById("appointmentDate").value;
+            if (dateInput) updateTimeSlots(dateInput);
+        });
+    </script>
+}

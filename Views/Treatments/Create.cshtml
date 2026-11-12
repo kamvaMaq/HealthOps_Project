@@ -1,0 +1,227 @@
+﻿@model HealthOps_Project.Models.Treatment
+
+@{
+    ViewData["Title"] = "Create Treatment";
+}
+
+<!-- Trigger Button -->
+<div class="text-center mt-4">
+    <button type="button" class="btn-professional-primary" data-bs-toggle="modal" data-bs-target="#createTreatmentModal">
+        <span>➕</span>
+        <span>Add New Treatment</span>
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createTreatmentModal" tabindex="-1" aria-labelledby="createTreatmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content professional-glass-card border-0" style="max-width: 800px; margin: auto;">
+
+            <!-- Professional Header -->
+            <div class="professional-header rounded-top-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <div class="professional-icon-wrapper">
+                        <span style="font-size: 1.8rem;">💊</span>
+                    </div>
+                </div>
+                <h5 class="modal-title display-6 fw-bold text-white" id="createTreatmentModalLabel">Create New Treatment</h5>
+                <p class="lead mb-0 fs-6 opacity-90 text-white">Record medical treatment details</p>
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-4 bg-light">
+                <form asp-action="Create" method="post" id="createTreatmentForm" class="professional-stagger">
+                    <div asp-validation-summary="All" class="alert alert-danger rounded-3 mb-4"></div>
+
+                    <div class="row g-4">
+                        <!-- Patient Selection -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="PatientId" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👤</span>
+                                    Patient
+                                </label>
+                                <select asp-for="PatientId" class="form-control professional-search-box" asp-items="ViewBag.PatientId">
+                                    <option value="">-- Select Patient --</option>
+                                </select>
+                                <span asp-validation-for="PatientId" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Treatment Date -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="TreatmentDate" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Treatment Date & Time
+                                </label>
+                                <input asp-for="TreatmentDate" type="datetime-local" class="form-control professional-search-box" />
+                                <span asp-validation-for="TreatmentDate" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Treatment Type -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="TreatmentType" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">🏥</span>
+                                    Treatment Type
+                                </label>
+                                <select asp-for="TreatmentType" class="form-control professional-search-box" asp-items="ViewBag.TreatmentType">
+                                    <option value="">-- Select Treatment Type --</option>
+                                </select>
+                                <span asp-validation-for="TreatmentType" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Performed By -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="PerformedBy" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👨‍⚕️</span>
+                                    Performed By
+                                </label>
+                                <input asp-for="PerformedBy" class="form-control professional-search-box" placeholder="Enter staff name or ID" />
+                                <span asp-validation-for="PerformedBy" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Treatment Details -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <label asp-for="Details" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📝</span>
+                                    Treatment Details
+                                </label>
+                                <textarea asp-for="Details" class="form-control professional-search-box" rows="4"
+                                          placeholder="Describe the treatment procedure, medications administered, or specific care provided..."></textarea>
+                                <span asp-validation-for="Details" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Clinical Notes -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <label asp-for="Notes" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📋</span>
+                                    Clinical Notes (Optional)
+                                </label>
+                                <textarea asp-for="Notes" class="form-control professional-search-box" rows="3"
+                                          placeholder="Additional observations, patient response, follow-up instructions..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-3 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Save Treatment</span>
+                            </button>
+                            <button type="button" class="btn-professional-secondary" data-bs-dismiss="modal">
+                                <span>❌</span>
+                                <span>Cancel</span>
+                            </button>
+                            <a asp-action="Index" class="btn-professional-secondary">
+                                <span>📋</span>
+                                <span>Back to List</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Enhanced modal functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const treatmentModal = document.getElementById('createTreatmentModal');
+            const form = document.getElementById('createTreatmentForm');
+
+            // Reset form when modal closes
+            treatmentModal.addEventListener('hidden.bs.modal', () => {
+                form.reset();
+                // Clear validation errors
+                const validationErrors = form.querySelectorAll('.text-danger');
+                validationErrors.forEach(error => error.textContent = '');
+
+                const alert = form.querySelector('.alert');
+                if (alert) alert.style.display = 'none';
+            });
+
+            // Enhanced form submission
+            form.addEventListener('submit', function (e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Show loading state
+                submitBtn.innerHTML = '<span class="professional-loading"></span><span>Saving...</span>';
+                submitBtn.disabled = true;
+
+                // Re-enable after 3 seconds if still processing
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 3000);
+            });
+
+            // Add focus effects to form controls
+            const formControls = form.querySelectorAll('.form-control, .form-select');
+            formControls.forEach(control => {
+                control.addEventListener('focus', function () {
+                    this.parentElement.classList.add('focus-ring');
+                });
+
+                control.addEventListener('blur', function () {
+                    this.parentElement.classList.remove('focus-ring');
+                });
+            });
+        });
+
+        // Add some custom styles for the modal
+        const modalStyles = document.createElement('style');
+        modalStyles.textContent = `
+                    .focus-ring {
+                        border-left: 4px solid #6A11CB !important;
+                        transition: all 0.3s ease;
+                    }
+
+                    .modal-content {
+                        backdrop-filter: blur(20px);
+                    }
+
+                    .modal-body.bg-light {
+                        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+                    }
+
+                    .professional-info-card {
+                        transition: all 0.3s ease;
+                        border: 1px solid rgba(255, 255, 255, 0.5);
+                    }
+
+                    .professional-info-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .form-label {
+                        display: flex;
+                        align-items: center;
+                        font-size: 0.95rem;
+                    }
+                `;
+        document.head.appendChild(modalStyles);
+    </script>
+}
+
+
+

@@ -1,0 +1,323 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Medication>
+
+@{
+    ViewData["Title"] = "Medications";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">💊</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Medication Management</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Comprehensive medication inventory and tracking system</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mx-4 mt-4" role="alert" style="border-radius: 12px; border: none;">
+                    <strong>✅ @TempData["SuccessMessage"]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search medications by name, type, or schedule..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-action="CreateMedication" class="btn-professional-primary">
+                        <span>➕</span>
+                        <span>Add New Medication</span>
+                    </a>
+                    @if (User.IsInRole("Admin"))
+
+                    {
+                        <a asp-controller="Dashboard" asp-action="Admin" class="btn-professional-secondary">
+                            <span>📊</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+
+                    }
+
+                    else if (User.IsInRole("Nurse"))
+
+                    {
+                        <a asp-controller="Dashboard" asp-action="NursingSister" class="btn-professional-secondary">
+                            <span>📊</span>
+                            <span>Nursing Dashboard</span>
+                        </a>
+
+                    }
+
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="professional-filter-section">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h6 class="mb-3 fw-bold text-dark">🎯 Quick Filters:</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">
+                                <span>📋</span> All Medications
+                            </button>
+                            <button class="professional-filter-btn" data-filter="scheduled">
+                                <span>📅</span> Scheduled (5-7)
+                            </button>
+                            <button class="professional-filter-btn" data-filter="nonscheduled">
+                                <span>💊</span> Non-Scheduled (1-4)
+                            </button>
+                            <button class="professional-filter-btn" data-filter="lowstock">
+                                <span>⚠️</span> Low Stock
+                            </button>
+                            <button class="professional-filter-btn" data-filter="expired">
+                                <span>🚨</span> Expired
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 px-4 pb-4 professional-stagger">
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-primary fw-bold" style="font-size: 2.4rem;">@Model.Count()</div>
+                        <div class="text-muted fw-semibold mb-2">Total Medications</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: 100%"></div>
+                        </div>
+                        <small class="text-success">📈 Inventory</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var scheduledMeds = Model.Count(m => m.IsScheduledMedication());
+                            var scheduledPercent = Model.Any() ? (scheduledMeds * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-warning fw-bold" style="font-size: 2.4rem;">@scheduledMeds</div>
+                        <div class="text-muted fw-semibold mb-2">Scheduled (5-7)</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @scheduledPercent%; background: linear-gradient(90deg, #f39c12, #e67e22);"></div>
+                        </div>
+                        <small class="text-warning">📅 Controlled</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var lowStockMeds = Model.Count(m => m.Quantity < 10 && m.Quantity > 0);
+                            var lowStockPercent = Model.Any() ? (lowStockMeds * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-danger fw-bold" style="font-size: 2.4rem;">@lowStockMeds</div>
+                        <div class="text-muted fw-semibold mb-2">Low Stock</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @lowStockPercent%; background: linear-gradient(90deg, #e74c3c, #c0392b);"></div>
+                        </div>
+                        <small class="text-danger">⚠️ Need Reorder</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var expiredMeds = Model.Count(m => m.ExpiryDate < DateTime.Today);
+                            var expiredPercent = Model.Any() ? (expiredMeds * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-dark fw-bold" style="font-size: 2.4rem;">@expiredMeds</div>
+                        <div class="text-muted fw-semibold mb-2">Expired</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @expiredPercent%; background: linear-gradient(90deg, #95a5a6, #7f8c8d);"></div>
+                        </div>
+                        <small class="text-dark">🚨 Expired</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications Table -->
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%">Medication</th>
+                            <th style="width: 15%">Type & Schedule</th>
+                            <th style="width: 15%">Stock Status</th>
+                            <th style="width: 15%">Expiry Status</th>
+                            <th style="width: 20%">Description</th>
+                            <th style="width: 15%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professionalMedicationsTableBody">
+                        @if (Model.Any())
+                        {
+                            var animationDelay = 0.3;
+                            @foreach (var item in Model)
+                            {
+                                var isExpired = item.ExpiryDate < DateTime.Today;
+                                var isExpiringSoon = item.ExpiryDate <= DateTime.Today.AddMonths(3) && !isExpired;
+                                var isLowStock = item.Quantity < 10 && item.Quantity > 0;
+                                var isOutOfStock = item.Quantity == 0;
+
+                                <tr class="professional-table-row" style="animation-delay: @(animationDelay)s;">
+                                    <!-- Medication Name -->
+                                    <td style="width:20%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon professional-pulse me-3">
+                                                💊
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@item.Name</div>
+                                                <small class="text-muted">ID: @item.MedicationId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Type & Schedule -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <span class="fw-bold text-dark mb-1">@item.Type</span>
+                                            @if (item.IsScheduledMedication())
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    📅 @item.Schedule
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    💊 @item.Schedule
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Stock Status -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="professional-status-indicator @(isOutOfStock ? "professional-indicator-critical" : isLowStock ? "professional-indicator-warning" : "professional-indicator-normal")"></span>
+                                                <span class="fw-semibold ms-1">@item.Quantity units</span>
+                                            </div>
+                                            @if (isOutOfStock)
+                                            {
+                                                <span class="professional-status-badge professional-badge-critical">
+                                                    🚨 Out of Stock
+                                                </span>
+                                            }
+                                            else if (isLowStock)
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⚠️ Low Stock
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Expiry Status -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="fw-bold text-dark mb-1">@item.ExpiryDate.ToString("MMM dd, yyyy")</div>
+                                            @if (isExpired)
+                                            {
+                                                <span class="professional-status-badge professional-badge-critical">
+                                                    🚨 Expired
+                                                </span>
+                                            }
+                                            else if (isExpiringSoon)
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⚠️ Expiring Soon
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    ✅ Valid
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Description -->
+                                    <td style="width:20%;">
+                                        <div class="professional-truncate-text" title="@item.Description">
+                                            @if (!string.IsNullOrEmpty(item.Description))
+                                            {
+                                                @(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">No description</span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td style="width:15%;" class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="DetailsMedication" asp-route-id="@item.MedicationId"
+                                               class="btn-professional-action btn-professional-details">
+                                                <span>👁️</span>
+                                                <span>View</span>
+                                            </a>
+                                            <a asp-action="EditMedication" asp-route-id="@item.MedicationId"
+                                               class="btn-professional-action btn-professional-edit">
+                                                <span>✏️</span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a asp-action="DeleteMedication" asp-route-id="@item.MedicationId"
+                                               class="btn-professional-action btn-professional-delete">
+                                                <span>🗑️</span>
+                                                <span>Remove</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                animationDelay += 0.1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="professional-empty-state text-center py-5">
+                                        <div class="professional-empty-state-icon">💊</div>
+                                        <h3 class="fw-bold text-dark mb-3">No Medications Found</h3>
+                                        <p class="text-muted fs-6 mb-4">Start building your medication inventory by adding the first medication</p>
+                                        <a asp-action="CreateMedication" class="btn-professional-primary">
+                                            <span>🚀</span>
+                                            <span>Add First Medication</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Additional Action Buttons -->
+            <div class="text-center mt-4 px-4">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a asp-action="Scheduled" class="btn-professional-secondary">
+                        <span>📅</span>
+                        <span>View Scheduled Medications (5-7)</span>
+                    </a>
+                    <a asp-action="NonScheduled" class="btn-professional-secondary">
+                        <span>💊</span>
+                        <span>View Non-Scheduled Medications (1-4)</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

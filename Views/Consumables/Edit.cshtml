@@ -1,0 +1,72 @@
+﻿@model HealthOps_Project.Models.Consumable
+
+@{
+    ViewData["Title"] = "Edit Consumable";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-edit me-3"></i>Edit Consumable
+                                </h1>
+                                <p class="mb-0">Update consumable information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <form asp-action="Edit" method="post">
+                            <input type="hidden" asp-for="ConsumableId" />
+
+                            <div class="professional-info-card mb-4">
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label fw-bold">Consumable Name</label>
+                                    <input asp-for="Name" class="form-control professional-search-box" />
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                                    <textarea asp-for="Description" class="form-control professional-search-box" rows="4"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Unit" class="form-label fw-bold">Unit of Measurement</label>
+                                    <input asp-for="Unit" class="form-control professional-search-box" />
+                                    <span asp-validation-for="Unit" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                    <i class="fas fa-arrow-left me-2"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-professional-primary">
+                                    <i class="fas fa-save me-2"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

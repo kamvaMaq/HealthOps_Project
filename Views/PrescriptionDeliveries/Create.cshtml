@@ -1,0 +1,265 @@
+﻿@model HealthOps_Project.Models.PrescriptionDelivery
+
+@{
+    ViewData["Title"] = "Create Prescription Delivery";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-truck-medical me-3"></i>Create Delivery
+                                </h1>
+                                <p class="mb-0">Schedule new prescription delivery</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <form asp-action="Create" method="post">
+                            <div class="professional-info-card mb-4">
+                                <div class="mb-3">
+                                    <label asp-for="PrescriptionId" class="form-label fw-bold">
+                                        <i class="fas fa-prescription me-2"></i>Select Prescription
+                                    </label>
+                                    <select asp-for="PrescriptionId" class="form-control professional-search-box" asp-items="@(ViewData["PrescriptionId"] as SelectList)">
+                                        <option value="">-- Select Prescription --</option>
+                                    </select>
+                                    <span asp-validation-for="PrescriptionId" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Prescription Preview -->
+                            <div id="prescriptionPreview" class="professional-info-card mb-4" style="display: none;">
+                                <h6 class="fw-bold mb-3">
+                                    <i class="fas fa-eye me-2"></i>Prescription Preview
+                                </h6>
+                                <div id="previewContent">
+                                    <!-- Preview content will be loaded here -->
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                    <i class="fas fa-arrow-left me-2"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-professional-primary">
+                                    <i class="fas fa-truck me-2"></i> Schedule Delivery
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Professional UI
+            if (typeof ProfessionalUI !== 'undefined') {
+                ProfessionalUI.init();
+            }
+
+            // Prescription selection handler
+            const prescriptionSelect = document.querySelector('select[name="PrescriptionId"]');
+            const previewContainer = document.getElementById('prescriptionPreview');
+            const previewContent = document.getElementById('previewContent');
+
+            if (prescriptionSelect) {
+                prescriptionSelect.addEventListener('change', function () {
+                    const selectedValue = this.value;
+
+                    if (selectedValue) {
+                        // Show loading state
+                        previewContent.innerHTML = `
+                                    <div class="text-center py-3">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>Loading prescription details...
+                                    </div>
+                                `;
+                        previewContainer.style.display = 'block';
+
+                        // Simulate loading prescription details
+                        setTimeout(() => {
+                            loadPrescriptionDetails(selectedValue);
+                        }, 500);
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            }
+
+            function loadPrescriptionDetails(prescriptionId) {
+                // This is a simulation - replace with actual API call
+                const mockPrescriptions = {
+                    '1': {
+                        patient: 'John Smith',
+                        medication: 'Amoxicillin 500mg',
+                        dosage: '1 tablet every 8 hours',
+                        duration: '7 days',
+                        doctor: 'Dr. Sarah Johnson',
+                        date: '2024-01-15'
+                    },
+                    '2': {
+                        patient: 'Maria Garcia',
+                        medication: 'Lisinopril 10mg',
+                        dosage: '1 tablet daily',
+                        duration: '30 days',
+                        doctor: 'Dr. Michael Chen',
+                        date: '2024-01-16'
+                    },
+                    '3': {
+                        patient: 'Robert Wilson',
+                        medication: 'Metformin 850mg',
+                        dosage: '1 tablet twice daily',
+                        duration: '30 days',
+                        doctor: 'Dr. Emily Brown',
+                        date: '2024-01-14'
+                    }
+                };
+
+                const prescription = mockPrescriptions[prescriptionId] || {
+                    patient: 'Patient Information',
+                    medication: 'Medication Details',
+                    dosage: 'Dosage Information',
+                    duration: 'Treatment Duration',
+                    doctor: 'Prescribing Doctor',
+                    date: 'Prescription Date'
+                };
+
+                previewContent.innerHTML = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Patient:</strong>
+                                        <div class="fw-bold">${prescription.patient}</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Medication:</strong>
+                                        <div class="fw-bold text-primary">${prescription.medication}</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Dosage:</strong>
+                                        <div>${prescription.dosage}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Duration:</strong>
+                                        <div>${prescription.duration}</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Prescribing Doctor:</strong>
+                                        <div>${prescription.doctor}</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong class="text-muted">Date:</strong>
+                                        <div>${prescription.date}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                // Add fade-in animation
+                previewContainer.style.animation = 'professionalSlideIn 0.5s ease-out';
+            }
+
+            // Form validation enhancement
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('.btn-professional-primary');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function (e) {
+                    let isValid = true;
+
+                    // Validate prescription selection
+                    if (prescriptionSelect && !prescriptionSelect.value) {
+                        prescriptionSelect.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        prescriptionSelect.classList.remove('is-invalid');
+                        prescriptionSelect.classList.add('is-valid');
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+
+                        // Scroll to first error
+                        const firstError = document.querySelector('.is-invalid');
+                        if (firstError) {
+                            firstError.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    } else {
+                        // Add loading state
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Scheduling...';
+                    }
+                });
+            }
+
+            // Real-time validation feedback
+            const formInputs = document.querySelectorAll('.professional-search-box');
+            formInputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    if (this.value.trim() !== '') {
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                    } else if (this.hasAttribute('required')) {
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    if (this.value.trim() !== '') {
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .is-valid {
+            border-color: #28a745 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v2.5'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        /* Enhanced preview styling */
+        #prescriptionPreview {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #6A11CB;
+        }
+    </style>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

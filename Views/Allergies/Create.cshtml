@@ -1,0 +1,103 @@
+﻿@model HealthOps_Project.Models.Allergy
+@{
+    ViewData["Title"] = "Create Allergy";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 700px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">➕</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Create Allergy</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Add new allergy to the medical database</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <div class="row g-4">
+                        <!-- Basic Information -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📋</span>
+                                    Basic Information
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="AllergyName" class="professional-form-label">Allergy Name</label>
+                                    <input asp-for="AllergyName" class="form-control professional-form-control" placeholder="Enter allergy name" />
+                                    <span asp-validation-for="AllergyName" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="AllergenType" class="professional-form-label">Allergen Type</label>
+                                    <select asp-for="AllergenType" class="form-control professional-form-control" asp-items="Html.GetEnumSelectList<HealthOps_Project.Models.AllergenType>()">
+                                        <option value="">-- Select Allergen Type --</option>
+                                    </select>
+                                    <span asp-validation-for="AllergenType" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="SeverityLevel" class="professional-form-label">Severity Level</label>
+                                    <select asp-for="SeverityLevel" class="form-control professional-form-control" asp-items="Html.GetEnumSelectList<HealthOps_Project.Models.AllergySeverity>()">
+                                        <option value="">-- Select Severity Level --</option>
+                                    </select>
+                                    <span asp-validation-for="SeverityLevel" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Details -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">🏥</span>
+                                    Medical Details
+                                </h6>
+                                <div class="mb-3">
+                                    <label asp-for="CommonReactions" class="professional-form-label">Common Reactions</label>
+                                    <textarea asp-for="CommonReactions" class="form-control professional-form-control" rows="3" placeholder="Describe common allergic reactions"></textarea>
+                                    <span asp-validation-for="CommonReactions" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="professional-form-label">Description</label>
+                                    <textarea asp-for="Description" class="form-control professional-form-control" rows="3" placeholder="Provide detailed description of the allergy"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="TreatmentProtocol" class="professional-form-label">Treatment Protocol</label>
+                                    <textarea asp-for="TreatmentProtocol" class="form-control professional-form-control" rows="3" placeholder="Enter standard treatment procedures"></textarea>
+                                    <span asp-validation-for="TreatmentProtocol" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-success">
+                                <span>💾</span>
+                                <span>Create Allergy</span>
+                            </button>
+                            <a asp-action="Index" class="btn-professional-secondary">
+                                <span>↩️</span>
+                                <span>Back to List</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

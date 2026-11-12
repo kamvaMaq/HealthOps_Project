@@ -1,0 +1,686 @@
+﻿@model HealthOps_Project.Models.Admission
+@{
+    ViewData["Title"] = "Edit Admission";
+}
+
+<style>
+    .admissions-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+        animation: gradientShift 8s ease infinite;
+        background-size: 200% 200%;
+    }
+
+    @@keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #e67e22 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: headerGlow 3s ease-in-out infinite alternate;
+    }
+
+    @@keyframes headerGlow {
+        from { background: linear-gradient(135deg, #2c3e50 0%, #e67e22 100%); }
+        to { background: linear-gradient(135deg, #34495e 0%, #d35400 100%); }
+    }
+
+    .form-control-custom {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+        .form-control-custom:focus {
+            border-color: #e67e22;
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.2);
+            transform: translateY(-2px) scale(1.02);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+    .form-control-disabled {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px solid #dee2e6;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        color: #6c757d;
+        cursor: not-allowed;
+        animation: fadeInUp 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+
+    .btn-warning-glow {
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+        animation: pulse 2s infinite;
+    }
+
+        .btn-warning-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(230, 126, 34, 0.4);
+            color: white;
+            animation: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        animation: fadeInLeft 0.6s ease-out;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
+        border: 2px solid #f39c12;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        animation: slideInDown 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.2);
+        }
+
+    .locked-field {
+        position: relative;
+        animation: shake 0.5s ease-in-out;
+        transition: all 0.3s ease;
+    }
+
+        .locked-field::after {
+            content: '🔒';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            animation: lockBounce 2s infinite;
+        }
+
+    /* Enhanced Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    @@keyframes lockBounce {
+        0%, 100% { transform: translateY(-50%) scale(1); }
+        50% { transform: translateY(-50%) scale(1.1); }
+    }
+
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .form-group-animated {
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+        transition: all 0.3s ease;
+    }
+
+        .form-group-animated:hover {
+            transform: translateY(-2px);
+        }
+
+    .form-group-animated:nth-child(1) { animation-delay: 0.1s; }
+    .form-group-animated:nth-child(2) { animation-delay: 0.2s; }
+    .form-group-animated:nth-child(3) { animation-delay: 0.3s; }
+    .form-group-animated:nth-child(4) { animation-delay: 0.4s; }
+    .form-group-animated:nth-child(5) { animation-delay: 0.5s; }
+    .form-group-animated:nth-child(6) { animation-delay: 0.6s; }
+
+    .select-arrow {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px 12px;
+    }
+
+    .input-hover-effect {
+        transition: all 0.3s ease;
+    }
+
+        .input-hover-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .floating-labels .form-label {
+        position: relative;
+        padding-left: 10px;
+    }
+
+        .floating-labels .form-label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            border-radius: 2px;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+    .status-indicator {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-left: 10px;
+        animation: flipInX 0.6s ease-out;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .status-discharged {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+    }
+
+    @@keyframes flipInX {
+        from {
+            transform: perspective(400px) rotateX(90deg);
+            opacity: 0;
+        }
+        to {
+            transform: perspective(400px) rotateX(0deg);
+            opacity: 1;
+        }
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        color: white;
+        font-size: 1.8rem;
+        margin: 0 auto 15px;
+        animation: rotateIn 0.8s ease-out, float 3s ease-in-out infinite;
+    }
+
+    @@keyframes rotateIn {
+        from {
+            opacity: 0;
+            transform: rotate(-180deg) scale(0.3);
+        }
+        to {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .form-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+
+        .form-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .section-title {
+        color: #2c3e50;
+        border-bottom: 2px solid #e67e22;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .form-note {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+        font-style: italic;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .pulse-glow {
+        animation: pulseGlow 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulseGlow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(230, 126, 34, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.8);
+        }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    @@keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="admissions-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <div class="icon-wrapper">
+                    ✏️
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Admission</h1>
+                <p class="lead mb-0">Update patient admission details and discharge information</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Information Card -->
+                <div class="info-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="text-warning mb-2">📋 Editing Admission </h5>
+                           @*  <p class="mb-1"><strong>Patient:</strong> @ViewBag.PatientName</p> *@
+                            <p class="mb-1"><strong>Admission Date:</strong> @Model.AdmissionDate.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p class="mb-0">
+                                @* <strong>Status:</strong>  *@
+                               @*  <span class="status-indicator @(Model.IsActive && !Model.DischargeDate.HasValue ? "status-active" : "status-discharged")">
+                                    @(Model.IsActive && !Model.DischargeDate.HasValue ? "🟢 Active" : "🔴 Discharged")
+                                </span> *@
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="bg-light rounded-3 p-3 pulse-glow">
+                                <small class="text-muted">🔒 Locked fields cannot be modified</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Edit" method="post" class="floating-labels">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 bounce-in"></div>
+
+                    <!-- Patient & Location Section -->
+                    <div class="form-section">
+                        <h4 class="section-title">👤 Patient & Location Information</h4>
+                        <div class="row g-4">
+                            <div class="col-md-4 form-group-animated">
+                                <label class="form-label fw-bold">👤 Patient</label>
+                                <div class="form-control-disabled locked-field input-hover-effect">
+                                    @ViewBag.PatientName
+                                </div>
+                                <input type="hidden" asp-for="PatientId" />
+                                <div class="form-note">Patient cannot be changed after admission</div>
+                            </div>
+
+                            <div class="col-md-4 form-group-animated">
+                                <label asp-for="WardId" class="form-label fw-bold required-field">🏢 Ward</label>
+                                <select asp-for="WardId" class="form-control form-control-custom select-arrow input-hover-effect" asp-items="ViewBag.WardId">
+                                    <option value="">-- Select Ward --</option>
+                                </select>
+                                <span asp-validation-for="WardId" class="text-danger small mt-1"></span>
+                                <div class="form-note">Update patient's ward assignment</div>
+                            </div>
+
+                            <div class="col-md-4 form-group-animated">
+                                <label asp-for="BedId" class="form-label fw-bold required-field">🛏️ Bed</label>
+                                <select asp-for="BedId" class="form-control form-control-custom select-arrow input-hover-effect" asp-items="ViewBag.BedId">
+                                    <option value="">-- Select Bed --</option>
+                                </select>
+                                <span asp-validation-for="BedId" class="text-danger small mt-1"></span>
+                                <div class="form-note">Assign new bed if needed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admission Dates Section -->
+                    <div class="form-section">
+                        <h4 class="section-title">📅 Admission Dates</h4>
+                        <div class="row g-4">
+                            <div class="col-md-6 form-group-animated">
+                                <label class="form-label fw-bold">📅 Admission Date</label>
+                                <div class="form-control-disabled locked-field input-hover-effect">
+                                    @Model.AdmissionDate.ToString("dd/MM/yyyy")
+                                </div>
+                                <input type="hidden" asp-for="AdmissionDate" />
+                                <div class="form-note">Admission date cannot be modified</div>
+                            </div>
+
+                            <div class="col-md-6 form-group-animated">
+                                <label asp-for="DischargeDate" class="form-label fw-bold">📅 Discharge Date</label>
+                                <input asp-for="DischargeDate" type="datetime-local" class="form-control form-control-custom input-hover-effect pulse-glow" />
+                                <span asp-validation-for="DischargeDate" class="text-danger small mt-1"></span>
+                                <div class="form-note">Set discharge date when patient leaves</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Staff Section -->
+                    <div class="form-section">
+                        <h4 class="section-title">👨‍⚕️ Medical Staff</h4>
+                        <div class="row g-4">
+                            <div class="col-md-6 form-group-animated">
+                                <label asp-for="DoctorId" class="form-label fw-bold required-field">👨‍⚕️ Attending Doctor</label>
+                                <select asp-for="DoctorId" class="form-control form-control-custom select-arrow input-hover-effect" asp-items="ViewBag.DoctorId">
+                                    <option value="">-- Select Doctor --</option>
+                                </select>
+                                <span asp-validation-for="DoctorId" class="text-danger small mt-1"></span>
+                                <div class="form-note">Assign or change the attending doctor</div>
+                            </div>
+
+                            <div class="col-md-6 form-group-animated">
+                                <label class="form-label fw-bold">🩺 Current Doctor</label>
+                                <div class="form-control-disabled locked-field input-hover-effect">
+                                    @ViewBag.CurrentDoctorName
+                                </div>
+                                <div class="form-note">Currently assigned doctor</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information Section -->
+                @*     <div class="form-section">
+                        <h4 class="section-title">📝 Additional Information</h4>
+                        <div class="row g-4">
+                            <div class="col-12 form-group-animated">
+                                <label asp-for="Notes" class="form-label fw-bold">Admission Notes</label>
+                                <textarea asp-for="Notes" class="form-control form-control-custom input-hover-effect" rows="3" placeholder="Update any additional notes about this admission..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger small mt-1"></span>
+                                <div class="form-note">Update notes for medical staff</div>
+                            </div>
+                        </div>
+                    </div> *@
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <button type="submit" class="btn-warning-glow me-3">
+                            💾 Save Changes
+                        </button>
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            ↩️ Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Enhanced form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add focus effects to form controls
+            const formControls = document.querySelectorAll('.form-control-custom');
+            formControls.forEach(control => {
+                control.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                    this.style.animation = 'pulseGlow 1s ease-in-out';
+                });
+                
+                control.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                    this.style.animation = '';
+                });
+            });
+
+            // Add loading animation to submit button
+            const submitButton = document.querySelector('.btn-warning-glow');
+            const form = document.querySelector('form');
+            
+            form.addEventListener('submit', function() {
+                submitButton.innerHTML = '⏳ Saving Changes...';
+                submitButton.disabled = true;
+                submitButton.style.opacity = '0.8';
+                submitButton.style.animation = 'pulse 0.5s ease-in-out infinite';
+            });
+
+            // Add date validation
+            const admissionDate = new Date('@Model.AdmissionDate.ToString("yyyy-MM-ddTHH:mm")');
+            const dischargeDateInput = document.querySelector('#DischargeDate');
+            
+            if (dischargeDateInput) {
+                dischargeDateInput.addEventListener('change', function() {
+                    const dischargeDate = new Date(this.value);
+                    
+                    if (this.value && dischargeDate < admissionDate) {
+                        this.setCustomValidity('Discharge date cannot be before admission date');
+                        this.style.borderColor = '#e74c3c';
+                        this.parentElement.style.animation = 'shake 0.5s ease-in-out';
+                    } else {
+                        this.setCustomValidity('');
+                        this.style.borderColor = '';
+                        this.parentElement.style.animation = '';
+                    }
+                });
+            }
+
+            // Add hover effects to form groups
+            const formGroups = document.querySelectorAll('.form-group-animated');
+            formGroups.forEach(group => {
+                group.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                group.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Prevent interaction with disabled fields with enhanced feedback
+            document.querySelectorAll('.form-control-disabled').forEach(field => {
+                field.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 500);
+                    
+                    // Create ripple effect
+                    const ripple = document.createElement('div');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.backgroundColor = 'rgba(230, 126, 34, 0.3)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.width = '100px';
+                    ripple.style.height = '100px';
+                    ripple.style.top = (e.offsetY - 50) + 'px';
+                    ripple.style.left = (e.offsetX - 50) + 'px';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @@keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+                @@keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-5px); }
+                    75% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Real-time validation feedback
+            document.querySelectorAll('.form-control-custom').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.background = 'rgba(255, 255, 255, 0.95)';
+                    } else {
+                        this.style.background = 'rgba(255, 255, 255, 0.9)';
+                    }
+                });
+            });
+
+            // Add parallax effect to icon
+            const icon = document.querySelector('.icon-wrapper');
+            if (icon) {
+                document.addEventListener('mousemove', function(e) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                    icon.style.transform = `rotate(${x}deg) translate(${x}px, ${y}px)`;
+                });
+            }
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

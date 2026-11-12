@@ -1,0 +1,313 @@
+﻿@model IEnumerable<HealthOps_Project.Models.ScheduledMedication>
+
+@{
+    ViewData["Title"] = "Scheduled Medications (Schedule 5-7)";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">📅</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Scheduled Medications</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Schedule 5-7 medications planned for future administration</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mx-4 mt-4" role="alert" style="border-radius: 12px; border: none;">
+                    <strong>✅ @TempData["SuccessMessage"]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search by patient, medication, or status..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-action="CreateScheduled" class="btn-professional-primary">
+                        <span>➕</span>
+                        <span>Schedule Medication</span>
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="NursingSister" class="btn-professional-secondary">
+                        <span>📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="professional-filter-section">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h6 class="mb-3 fw-bold text-dark">🎯 Quick Filters:</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">
+                                <span>📋</span> All Scheduled
+                            </button>
+                            <button class="professional-filter-btn" data-filter="active">
+                                <span>🟢</span> Active
+                            </button>
+                            <button class="professional-filter-btn" data-filter="completed">
+                                <span>✅</span> Completed
+                            </button>
+                            <button class="professional-filter-btn" data-filter="cancelled">
+                                <span>❌</span> Cancelled
+                            </button>
+                            <button class="professional-filter-btn" data-filter="today">
+                                <span>📅</span> Today
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 px-4 pb-4 professional-stagger">
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-primary fw-bold" style="font-size: 2.4rem;">@Model.Count()</div>
+                        <div class="text-muted fw-semibold mb-2">Total Scheduled</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: 100%"></div>
+                        </div>
+                        <small class="text-success">📈 All Records</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var activeCount = Model.Count(m => m.ScheduledMedicationStatus == ScheduledMedicationStatus.Active);
+                            var activePercent = Model.Any() ? (activeCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-success fw-bold" style="font-size: 2.4rem;">@activeCount</div>
+                        <div class="text-muted fw-semibold mb-2">Active</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @activePercent%; background: linear-gradient(90deg, #27ae60, #2ecc71);"></div>
+                        </div>
+                        <small class="text-success">🟢 Pending</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var completedCount = Model.Count(m => m.ScheduledMedicationStatus == ScheduledMedicationStatus.Completed);
+                            var completedPercent = Model.Any() ? (completedCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-info fw-bold" style="font-size: 2.4rem;">@completedCount</div>
+                        <div class="text-muted fw-semibold mb-2">Completed</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @completedPercent%; background: linear-gradient(90deg, #3498db, #2980b9);"></div>
+                        </div>
+                        <small class="text-info">✅ Done</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var todayCount = Model.Count(m => m.AdministeredDate.Date == DateTime.Today);
+                            var todayPercent = Model.Any() ? (todayCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-warning fw-bold" style="font-size: 2.4rem;">@todayCount</div>
+                        <div class="text-muted fw-semibold mb-2">Due Today</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @todayPercent%; background: linear-gradient(90deg, #f39c12, #e67e22);"></div>
+                        </div>
+                        <small class="text-warning">📅 Today</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications Table -->
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">Patient Information</th>
+                            <th style="width: 20%">Medication Details</th>
+                            <th style="width: 15%">Dosage & Schedule</th>
+                            <th style="width: 15%">Scheduled Date</th>
+                            <th style="width: 15%">Administration</th>
+                            <th style="width: 10%">Status</th>
+                            <th style="width: 10%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professionalScheduledTableBody">
+                        @if (Model.Any())
+                        {
+                            var animationDelay = 0.3;
+                            @foreach (var item in Model)
+                            {
+                                var isToday = item.AdministeredDate.Date == DateTime.Today;
+                                var isPastDue = item.AdministeredDate.Date < DateTime.Today && item.ScheduledMedicationStatus == ScheduledMedicationStatus.Active;
+
+                                <tr class="professional-table-row @(isPastDue ? "table-warning" : "")" style="animation-delay: @(animationDelay)s;">
+                                    <!-- Patient Information -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon professional-pulse me-3">
+                                                👤
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@(item.Patient?.LastName ?? "N/A")</div>
+                                                @if (item.Patient != null)
+                                                {
+                                                    <small class="text-muted">ID: @item.Patient.PatientId</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Medication Details -->
+                                    <td style="width:20%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon me-3" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                                                💊
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@item.Medication?.Name</div>
+                                                <small class="text-muted">@item.Medication?.Type</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Dosage & Schedule -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <span class="fw-bold text-dark mb-1">@item.Dosage</span>
+                                            <span class="professional-status-badge professional-badge-warning">
+                                                📅 @item.Medication?.Schedule
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Scheduled Date -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="fw-bold text-dark mb-1 @(isToday ? "text-warning" : "")">@item.AdministeredDate.ToString("MMM dd, yyyy")</div>
+                                            @if (isToday)
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⚠️ Due Today
+                                                </span>
+                                            }
+                                            else if (isPastDue)
+                                            {
+                                                <span class="professional-status-badge professional-badge-critical">
+                                                    🚨 Past Due
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Administration -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            @if (!string.IsNullOrEmpty(item.AdministeredBy))
+                                            {
+                                                <div class="fw-bold text-dark mb-1">By: @item.AdministeredBy</div>
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    ✅ Administered
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-muted mb-1">Not yet administered</div>
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⏳ Pending
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td style="width:10%;">
+                                        @if (item.ScheduledMedicationStatus == ScheduledMedicationStatus.Active)
+                                        {
+                                            <span class="professional-status-badge professional-badge-normal">
+                                                🟢 Active
+                                            </span>
+                                        }
+                                        else if (item.ScheduledMedicationStatus == ScheduledMedicationStatus.Completed)
+                                        {
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                ✅ Completed
+                                            </span>
+                                        }
+                                        else if (item.ScheduledMedicationStatus == ScheduledMedicationStatus.Cancelled)
+                                        {
+                                            <span class="professional-status-badge professional-badge-critical">
+                                                ❌ Cancelled
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td style="width:10%;" class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="ScheduledDetails" asp-route-id="@item.Id"
+                                               class="btn-professional-action btn-professional-details">
+                                                <span>👁️</span>
+                                                <span>View</span>
+                                            </a>
+                                            <a asp-action="EditScheduled" asp-route-id="@item.Id"
+                                               class="btn-professional-action btn-professional-edit">
+                                                <span>✏️</span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a asp-action="DeleteScheduled" asp-route-id="@item.Id"
+                                               class="btn-professional-action btn-professional-delete">
+                                                <span>🗑️</span>
+                                                <span>Remove</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                animationDelay += 0.1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7">
+                                    <div class="professional-empty-state text-center py-5">
+                                        <div class="professional-empty-state-icon">📅</div>
+                                        <h3 class="fw-bold text-dark mb-3">No Scheduled Medications</h3>
+                                        <p class="text-muted fs-6 mb-4">No Schedule 5-7 medication schedules created yet</p>
+                                        <a asp-action="CreateScheduled" class="btn-professional-primary">
+                                            <span>🚀</span>
+                                            <span>Schedule First Medication</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Additional Action Buttons -->
+            <div class="text-center mt-4 px-4">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a asp-action="NonScheduled" class="btn-professional-secondary">
+                        <span>💊</span>
+                        <span>View Non-Scheduled Medications</span>
+                    </a>
+                    <a asp-action="Medications" class="btn-professional-secondary">
+                        <span>💊</span>
+                        <span>Manage Medications</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

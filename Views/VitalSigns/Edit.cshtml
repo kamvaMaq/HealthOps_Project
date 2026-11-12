@@ -1,0 +1,180 @@
+@model HealthOps_Project.Models.VitalSign
+@{
+    ViewData["Title"] = "Edit Vital Signs";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-edit text-warning me-2"></i>Edit Vital Signs</h2>
+        <a href="@Url.Action("Index", new { patientId = Model.PatientId })" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to List
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Patient Info Sidebar -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="avatar mx-auto">
+                            <div class="avatar-initial rounded-circle bg-primary text-white">
+                                @ViewBag.Patient.FirstName.Substring(0, 1)@ViewBag.Patient.LastName.Substring(0, 1)
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="text-center">@ViewBag.Patient.FirstName @ViewBag.Patient.LastName</h5>
+                    <hr>
+                    <p><small class="text-muted">Patient ID:</small><br><strong>@ViewBag.Patient.PatientId</strong></p>
+                    <p><small class="text-muted">Room:</small><br><strong>@(ViewBag.Patient.RoomNumber ?? "Not assigned")</strong></p>
+                    <p><small class="text-muted">Originally Recorded:</small><br><strong>@Model.RecordedDate.ToString("MMM dd, yyyy hh:mm tt")</strong></p>
+                    <p><small class="text-muted">Recorded By:</small><br><strong>@Model.RecordedBy</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Update Vital Signs</h5>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <form asp-controller="VitalSigns" asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="VitalId" />
+                        <input type="hidden" asp-for="PatientId" />
+                        <input type="hidden" asp-for="RecordedDate" />
+                        <input type="hidden" asp-for="RecordedBy" />
+
+                        <div class="row">
+                            <!-- Temperature -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Temperature" class="form-label">
+                                    <i class="fas fa-thermometer-half text-danger me-1"></i>Temperature (°C)
+                                </label>
+                                <input asp-for="Temperature" class="form-control" placeholder="e.g., 36.5" />
+                                <span asp-validation-for="Temperature" class="text-danger small"></span>
+                                <small class="text-muted">Range: 30-45°C</small>
+                            </div>
+
+                            <!-- Blood Pressure -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BloodPressure" class="form-label">
+                                    <i class="fas fa-heartbeat text-danger me-1"></i>Blood Pressure
+                                </label>
+                                <input asp-for="BloodPressure" class="form-control" placeholder="e.g., 120/80" />
+                                <span asp-validation-for="BloodPressure" class="text-danger small"></span>
+                                <small class="text-muted">Format: Systolic/Diastolic</small>
+                            </div>
+
+                            <!-- Heart Rate -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="HeartRate" class="form-label">
+                                    <i class="fas fa-heart text-danger me-1"></i>Heart Rate (bpm)
+                                </label>
+                                <input asp-for="HeartRate" class="form-control" placeholder="e.g., 75" />
+                                <span asp-validation-for="HeartRate" class="text-danger small"></span>
+                                <small class="text-muted">Range: 40-200 bpm</small>
+                            </div>
+
+                            <!-- Oxygen Saturation -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OxygenSaturation" class="form-label">
+                                    <i class="fas fa-lungs text-info me-1"></i>Oxygen Saturation (%)
+                                </label>
+                                <input asp-for="OxygenSaturation" class="form-control" placeholder="e.g., 98" />
+                                <span asp-validation-for="OxygenSaturation" class="text-danger small"></span>
+                                <small class="text-muted">Range: 70-100%</small>
+                            </div>
+
+                            <!-- Weight -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Weight" class="form-label">
+                                    <i class="fas fa-weight text-success me-1"></i>Weight (kg)
+                                </label>
+                                <input asp-for="Weight" class="form-control" placeholder="e.g., 70.5" />
+                                <span asp-validation-for="Weight" class="text-danger small"></span>
+                                <small class="text-muted">Range: 20-300 kg</small>
+                            </div>
+
+                            <!-- Blood Sugar -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="BloodSugar" class="form-label">
+                                    <i class="fas fa-tint text-primary me-1"></i>Blood Sugar (mg/dL)
+                                </label>
+                                <input asp-for="BloodSugar" class="form-control" placeholder="e.g., 95" />
+                                <span asp-validation-for="BloodSugar" class="text-danger small"></span>
+                                <small class="text-muted">Range: 50-400 mg/dL</small>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="col-12 mb-3">
+                                <label asp-for="Notes" class="form-label">
+                                    <i class="fas fa-notes-medical text-secondary me-1"></i>Notes
+                                </label>
+                                <textarea asp-for="Notes" class="form-control" rows="4"
+                                          placeholder="Add any additional observations or notes..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <div>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-save me-1"></i>Save Changes
+                                </button>
+                                <a href="@Url.Action("Index", new { patientId = Model.PatientId })"
+                                   class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times me-1"></i>Cancel
+                                </a>
+                            </div>
+                            <div>
+                                <a href="@Url.Action("Details", new { id = Model.VitalId })"
+                                   class="btn btn-info btn-lg">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .avatar-initial {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .form-control:focus {
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .card {
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

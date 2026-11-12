@@ -1,0 +1,206 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<div class="dashboard-container">
+    <h2><i class="bi bi-person-badge me-2"></i>Welcome, Doctor!</h2>
+    <p>Use the sidebar or the cards below to view appointments, patient history, prescriptions, and more.</p>
+
+    <div class="row mt-4 g-4">
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-1" asp-controller="Appointment" asp-action="Index">
+                <i class="bi bi-calendar-check-fill card-icon"></i>
+                <span>Manage Appointments</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-2" asp-controller="Patients" asp-action="PatientIndex">
+                <i class="bi bi-folder-fill card-icon"></i>
+                <span>Patient Folder</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-3" asp-controller="NurseInstructions" asp-action="Index">
+                <i class="bi bi-journal-medical card-icon"></i>
+                <span>Nurse Instructions</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-4" asp-controller="Visitation" asp-action="Index">
+                <i class="bi bi-person-lines-fill card-icon"></i>
+                <span>Schedule Patient Visit</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-5" asp-controller="Prescriptions" asp-action="Index">
+                <i class="bi bi-file-earmark-medical-fill card-icon"></i>
+                <span>All Prescriptions</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-6" asp-controller="Prescriptions" asp-action="Create">
+                <i class="bi bi-plus-circle-fill card-icon"></i>
+                <span>Create Prescription</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-7" asp-controller="Prescriptions" asp-action="GenerateAllPdf">
+                <i class="bi bi-file-earmark-pdf-fill card-icon"></i>
+                <span>Generate PDF</span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-5" asp-controller="DoctorInstructions" asp-action="DoctorIndex">
+                <i class="bi bi-eye-fill card-icon"></i>
+                <span>View Instructions From Nurse</span>
+            </a>
+        </div>
+
+        @* <!-- Additional actions from dashboard layout -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-8" href="@Url.Action("Index", "DoctorInstructions")">
+                <i class="bi bi-file-text-fill card-icon"></i>
+                <span>Doctor Instructions</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-9" href="@Url.Action("Index", "VitalSigns")">
+                <i class="bi bi-activity card-icon"></i>
+                <span>Patient Vitals</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-10" href="@Url.Action("Index", "Treatments")">
+                <i class="bi bi-clipboard-plus card-icon"></i>
+                <span>Patient Treatments</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-11" href="@Url.Action("Index", "Diagnoses")">
+                <i class="bi bi-clipboard2-pulse card-icon"></i>
+                <span>Patient Diagnoses</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-12" href="@Url.Action("Index", "Symptoms")">
+                <i class="bi bi-clipboard2-check card-icon"></i>
+                <span>Patient Symptoms</span>
+            </a>
+        </div> *@
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 40px 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+    }
+
+    /* Card-style buttons */
+    .dashboard-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+        padding: 25px 20px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        height: 150px;
+        color: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+        .dashboard-card .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+            .dashboard-card:hover .card-icon {
+                transform: scale(1.15);
+            }
+
+    /* Extended gradient colors */
+    .gradient-1 {
+        background: linear-gradient(135deg, #4e73df, #3b5bdb);
+    }
+
+    .gradient-2 {
+        background: linear-gradient(135deg, #1cc88a, #17a673);
+    }
+
+    .gradient-3 {
+        background: linear-gradient(135deg, #36b9cc, #2c9faf);
+    }
+
+    .gradient-4 {
+        background: linear-gradient(135deg, #f6c23e, #dda20a);
+    }
+
+    .gradient-5 {
+        background: linear-gradient(135deg, #e74a3b, #c0392b);
+    }
+
+    .gradient-6 {
+        background: linear-gradient(135deg, #6f42c1, #5a2d9c);
+    }
+
+    .gradient-7 {
+        background: linear-gradient(135deg, #fd7e14, #e55a00);
+    }
+
+    .gradient-8 {
+        background: linear-gradient(135deg, #20c997, #17a673);
+    }
+
+    .gradient-9 {
+        background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+    }
+
+    .gradient-10 {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+    }
+
+    .gradient-11 {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+    }
+
+    .gradient-12 {
+        background: linear-gradient(135deg, #6610f2, #520dc2);
+    }
+</style>

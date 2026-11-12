@@ -1,0 +1,155 @@
+﻿@model HealthOps_Project.Models.ProfileViewModel
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+<div class="settings-container">
+    <div class="settings-card shadow-lg p-5 mx-auto">
+        <h2 class="text-center mb-4">⚙️ Account Settings</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success text-center fw-bold">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <form asp-action="Settings" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-4">
+                <label asp-for="FirstName" class="form-label fw-bold">First Name</label>
+                <input asp-for="FirstName" class="form-control border-primary shadow-sm" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="LastName" class="form-label fw-bold">Last Name</label>
+                <input asp-for="LastName" class="form-control border-primary shadow-sm" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Email" class="form-label fw-bold">Email</label>
+                <input asp-for="Email" class="form-control border-primary shadow-sm" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-gradient-save me-2">
+                    💾 Save Changes
+                </button>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-gradient-back">
+                    ⬅️ Back to Dashboard
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* --- Container --- */
+    .settings-container {
+        background: linear-gradient(135deg, #fff7d6, #ffe6a7);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        padding: 50px 20px;
+    }
+
+    /* --- Card --- */
+    .settings-card {
+        background: #ffffff;
+        border-radius: 2rem;
+        padding: 40px 30px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .settings-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 2.3rem;
+        margin-bottom: 30px;
+        border-bottom: 4px solid #ffcc00;
+        padding-bottom: 8px;
+        display: inline-block;
+    }
+
+    label {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    input.form-control {
+        border-radius: 0.75rem;
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    /* --- Buttons --- */
+    .btn-gradient-save {
+        background: linear-gradient(135deg, #1cc88a, #17a673);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 10px 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-gradient-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .btn-gradient-back {
+        background: linear-gradient(135deg, #4e73df, #3b5bdb);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 10px 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-gradient-back:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        text-decoration: none;
+        color: #fff;
+    }
+
+    /* --- Responsive --- */
+    @@media (max-width: 768px) {
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        .settings-card {
+            padding: 30px 20px;
+        }
+
+        .btn-gradient-save, .btn-gradient-back {
+            padding: 8px 25px;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

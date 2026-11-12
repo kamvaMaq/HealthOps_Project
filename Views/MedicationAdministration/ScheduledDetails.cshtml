@@ -1,0 +1,196 @@
+﻿@model HealthOps_Project.Models.ScheduledMedication
+
+@{
+    ViewData["Title"] = "Scheduled Medication Details";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">📅</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Scheduled Medication Details</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Complete schedule record for Schedule 5-7 medication</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Summary Card -->
+                <div class="professional-stat-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-dark mb-2">@Model.Medication?.Name</h4>
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="professional-status-badge professional-badge-warning">
+                                    📅 @Model.Medication?.Type
+                                </span>
+                                <span class="text-muted">
+                                    👤 Patient: @(Model.Patient?.LastName ?? "N/A")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="professional-entity-icon professional-pulse" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); margin: 0 auto;">
+                                💊
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="row g-4">
+                    <!-- Patient Information -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">👤</span>
+                                Patient Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Patient Name</small>
+                                    <div class="fw-bold text-dark">@(Model.Patient?.LastName ?? "N/A")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Patient ID</small>
+                                    <div class="fw-bold text-dark">@Model.PatientId</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medication Information -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">💊</span>
+                                Medication Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Medication Name</small>
+                                    <div class="fw-bold text-dark">@Model.Medication?.Name</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Medication Type</small>
+                                    <div class="fw-bold text-dark">@Model.Medication?.Type</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Schedule</small>
+                                    <div>
+                                        <span class="professional-status-badge professional-badge-warning">
+                                            📅 @Model.Medication?.Schedule
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Schedule Details -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📋</span>
+                                Schedule Details
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Dosage</small>
+                                    <div class="fw-bold text-dark">@Model.Dosage</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Scheduled Date</small>
+                                    <div class="fw-bold text-dark">@Model.AdministeredDate.ToString("dddd, MMMM dd, yyyy")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Administered By</small>
+                                    <div class="fw-bold text-dark">@(Model.AdministeredBy ?? "Not Yet Administered")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Information -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📊</span>
+                                Status Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Current Status</small>
+                                    <div>
+                                        @if (Model.ScheduledMedicationStatus == ScheduledMedicationStatus.Active)
+                                        {
+                                            <span class="professional-status-badge professional-badge-normal">
+                                                🟢 Active
+                                            </span>
+                                        }
+                                        else if (Model.ScheduledMedicationStatus == ScheduledMedicationStatus.Completed)
+                                        {
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                ✅ Completed
+                                            </span>
+                                        }
+                                        else if (Model.ScheduledMedicationStatus == ScheduledMedicationStatus.Cancelled)
+                                        {
+                                            <span class="professional-status-badge professional-badge-critical">
+                                                ❌ Cancelled
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Record ID</small>
+                                    <div class="fw-bold text-dark">@Model.Id</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    @if (!string.IsNullOrEmpty(Model.Medication?.Description))
+                    {
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">📝</span>
+                                    Medication Description
+                                </h6>
+                                <div class="bg-light rounded-3 p-3">
+                                    <p class="mb-0 text-dark">@Model.Medication.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a asp-action="EditScheduled" asp-route-id="@Model.Id"
+                           class="btn-professional-action btn-professional-edit">
+                            <span>✏️</span>
+                            <span>Edit Schedule</span>
+                        </a>
+                        <a asp-action="DeleteScheduled" asp-route-id="@Model.Id"
+                           class="btn-professional-action btn-professional-delete">
+                            <span>🗑️</span>
+                            <span>Delete</span>
+                        </a>
+                        <a asp-action="Scheduled" class="btn-professional-secondary">
+                            <span>📋</span>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

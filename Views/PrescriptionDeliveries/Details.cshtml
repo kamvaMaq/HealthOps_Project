@@ -1,0 +1,60 @@
+﻿@model HealthOps_Project.Models.PrescriptionDelivery
+
+@{
+    ViewData["Title"] = "Delivery Details";
+}
+
+<h1>Delivery Details</h1>
+
+<div>
+    <h4>Prescription Delivery</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Patient Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prescription.Patient.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            Medication
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prescription.MedicationName)
+        </dd>
+        <dt class="col-sm-2">
+            Dosage
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prescription.Dosage)
+        </dd>
+        <dt class="col-sm-2">
+            Instructions
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prescription.Instructions)
+        </dd>
+        <dt class="col-sm-2">
+            Status
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-2">
+            Requested At
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestedAt)
+        </dd>
+        <dt class="col-sm-2">
+            Delivered At
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeliveredAt)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

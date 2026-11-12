@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Nurse Dashboard";
+}
+
+<div class="dashboard-container">
+    <h2><i class="bi bi-person-fill me-2"></i>Welcome, Nurse!</h2>
+    <p>
+        Use this dashboard to record vitals, administer treatments, document non-scheduled medications,
+        and stay updated with doctor instructions for your patients.
+    </p>
+
+    <div class="row mt-4 g-4">
+        <!-- Record Patient Vitals -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-1" asp-controller="VitalSigns" asp-action="Index">
+                <i class="bi bi-activity card-icon"></i>
+                <span>Record Patient Vitals</span>
+            </a>
+        </div>
+
+        <!-- Treat Patient -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-2" asp-controller="Treatments" asp-action="Index">
+                <i class="bi bi-clipboard-plus card-icon"></i>
+                <span>Treat Patient</span>
+            </a>
+        </div>
+
+        <!-- Administer Non-Scheduled Medication -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-3" asp-controller="MedicationAdministration" asp-action="NonScheduled">
+                <i class="bi bi-capsule-pill card-icon"></i>
+                <span>Administer Non-Scheduled Medication</span>
+            </a>
+        </div>
+
+        <!-- Record Doctor Instructions -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-4" asp-controller="DoctorInstructions" asp-action="Index">
+                <i class="bi bi-journal-medical card-icon"></i>
+                <span>Record Doctor Instructions</span>
+            </a>
+        </div>
+
+        <!-- View Doctor Instructions -->
+        <div class="col-md-4">
+            <a class="dashboard-card gradient-5" asp-controller="NurseInstructions" asp-action="NurseIndex">
+                <i class="bi bi-eye-fill card-icon"></i>
+                <span>View Doctor Instructions</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 40px 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+    }
+
+    /* Card-style buttons */
+    .dashboard-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+        padding: 25px 20px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        height: 150px;
+        color: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+        .dashboard-card .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+            .dashboard-card:hover .card-icon {
+                transform: scale(1.15);
+            }
+
+    .gradient-1 {
+        background: linear-gradient(135deg, #4e73df, #3b5bdb);
+    }
+
+    .gradient-2 {
+        background: linear-gradient(135deg, #1cc88a, #17a673);
+    }
+
+    .gradient-3 {
+        background: linear-gradient(135deg, #36b9cc, #2c9faf);
+    }
+
+    .gradient-4 {
+        background: linear-gradient(135deg, #f6c23e, #dda20a);
+    }
+
+    .gradient-5 {
+        background: linear-gradient(135deg, #e74a3b, #c0392b);
+    }
+</style>

@@ -1,0 +1,708 @@
+﻿@using HealthOps_Project.Models
+
+@{
+
+    ViewData["Title"] = "Home";
+
+    var ImageUrl = Url.Content("~/images/Health-bg.jpg");
+
+}
+
+<div class="homepage-bg">
+    <div style="background: url('@ImageUrl') center/cover no-repeat; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:2rem;">
+        <div class="container text-center homepage-content">
+            <h1 class="display-3 text-white">Welcome to HealthOps</h1>
+            <p class="lead mb-4 text-white">
+
+                Book appointments, manage patients, and track healthcare operations efficiently.
+            </p>
+            <a href="@Url.Action("Create", "Appointment")" class="btn btn-primary btn-lg">
+
+                Book Appointment
+            </a>
+        </div>
+    </div>
+</div>
+
+<section id="about-section" class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-3 text-primary fw-bold">About Us</h2>
+        <p class="lead">
+            At <strong>HealthOps Hospital</strong>, we are committed to redefining healthcare through compassion,
+            innovation, and excellence. Our goal is to make every patient’s journey simple, comfortable, and informed —
+            from booking an appointment to receiving world-class medical care.
+        </p>
+        <p>
+            With a dedicated team of highly skilled doctors, nurses, and healthcare professionals, we combine
+            cutting-edge technology with a personal touch to ensure that every patient receives
+            the highest standard of care. Whether you’re visiting for a routine check-up, a specialized consultation,
+            or ongoing treatment, you can count on us to put your health first.
+        </p>
+        <p class="mb-0">
+            <em>HealthOps — modern care, human connection.</em>
+        </p>
+    </div>
+</section>
+
+<section id="team-section" class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="fw-bold text-primary mb-3">Our Doctors</h2>
+        <p class="text-muted mb-5">
+            Our team of qualified medical professionals is dedicated to providing compassionate care and
+            expert medical support to every patient.
+        </p>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Doctor 1 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="doctor-card p-3 bg-white rounded-4 shadow-sm">
+                    <img src="~/images/kamva.jpeg" alt="Dr. Kamva Maqinana" class="doctor-img mb-3">
+                    <h5 class="fw-bold mb-1">Dr. Kamva Maqinana</h5>
+                    <p class="text-muted mb-2">Chief Medical Officer</p>
+                    <p class="small text-secondary">
+                        Specialist in internal medicine with over 15 years of patient care excellence.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 2 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="doctor-card p-3 bg-white rounded-4 shadow-sm">
+                    <img src="~/images/Shezi.jpeg" alt="Dr. Shezi" class="doctor-img mb-3">
+                    <h5 class="fw-bold mb-1">Dr. Sphesihle Shezi</h5>
+                    <p class="text-muted mb-2">Cardiologist</p>
+                    <p class="small text-secondary">
+                        Focused on advanced heart care and promoting healthy lifestyles.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 3 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="doctor-card p-3 bg-white rounded-4 shadow-sm">
+                    <img src="~/images/me.png" alt="Dr. Khwezi" class="doctor-img mb-3">
+                    <h5 class="fw-bold mb-1">Dr.Khwezi Soks</h5>
+                    <p class="text-muted mb-2">Pediatrician</p>
+                    <p class="small text-secondary">
+                        Dedicated to the health and wellness of children and families.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Doctor 4 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="doctor-card p-3 bg-white rounded-4 shadow-sm">
+                    <img src="~/images/bongi.jpeg" alt="Dr. Bongiwe" class="doctor-img mb-3">
+                    <h5 class="fw-bold mb-1">Dr. Bongiwe Mabasa</h5>
+                    <p class="text-muted mb-2">Orthopedic Surgeon</p>
+                    <p class="small text-secondary">
+                        Expert in musculoskeletal health and advanced surgical care.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="contact-section" class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary">Get in Touch</h2>
+            <p class="text-muted">
+                We’re here to support your health and well-being. Reach out to us for appointments, inquiries, or assistance —
+                our team is always ready to help.
+            </p>
+        </div>
+
+        <div class="row align-items-center">
+            <!-- Contact Info -->
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="p-4 rounded-4 shadow-sm bg-light h-100">
+                    <h4 class="text-success mb-3"><i class="fas fa-headset me-2"></i>Contact Us</h4>
+                    <p class="mb-2"><i class="fas fa-envelope text-primary me-2"></i><strong>Email:</strong> info@healthops.com</p>
+                    <p class="mb-2"><i class="fas fa-phone text-primary me-2"></i><strong>Phone:</strong> +27 123 456 789</p>
+                    <p><i class="fas fa-clock text-primary me-2"></i><strong>Hours:</strong> Mon–Fri: 8:00 AM – 5:00 PM</p>
+                    <hr>
+                    <p class="text-muted mb-0">
+                        For emergencies, please visit your nearest hospital or call our 24/7 emergency line.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="col-md-6">
+                <div class="rounded-4 overflow-hidden shadow-sm border">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3310.611390293837!2d25.567125075262148!3d-33.92539997320493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e7ad3e2ff7c38df%3A0xca86c39bb0ff373f!2sLivingstone%20Hospital!5e0!3m2!1sen!2sza!4v1758047557908!5m2!1sen!2sza"
+                            width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Floating Open Chat Button -->
+<button id="open-chat-btn" class="btn btn-success btn-lg floating-btn">
+    <i class="fas fa-robot me-2"></i>Ask Bonfire
+</button>
+
+
+<!-- Bonfire AI Assistant -->
+<div id="healthops-assistant" class="glassy-chat hidden">
+    <div class="chat-header neon-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-robot me-2 robot-icon"></i>
+            <h5 class="mb-0 text-glow">Bonfire Assistant</h5>
+        </div>
+        <div class="chat-controls">
+            <button id="minimize-chat" class="btn btn-sm btn-outline-light">
+                <i class="fas fa-window-minimize"></i>
+            </button>
+            <button id="close-chat" class="btn btn-sm btn-outline-light ms-1">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+        <div class="bot-message welcome-message d-flex">
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+                <p><strong>Hello! I'm <span class="text-primary">Bonfire</span>, your HealthOps Assistant 🤖</strong></p>
+                <p>I can help you with:</p>
+                <ul class="mb-2">
+                    <li>📅 Booking & managing appointments</li>
+                    <li>⏰ Clinic hours & availability</li>
+                    <li>💊 Prescription refills</li>
+                    <li>📋 Medical records access</li>
+                    <li>💰 Billing & insurance</li>
+                </ul>
+                <p class="mb-0">How can I assist you today?</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input-container">
+        <div class="quick-actions mb-2">
+            <button class="quick-action-btn" data-question="How do I make an appointment?">
+                <i class="fas fa-calendar-plus"></i> Appointment
+            </button>
+            <button class="quick-action-btn" data-question="What are the booking hours?">
+                <i class="fas fa-clock"></i> Hours
+            </button>
+            <button class="quick-action-btn" data-question="How to refill prescription?">
+                <i class="fas fa-prescription-bottle"></i> Refill
+            </button>
+        </div>
+        <div class="input-group">
+            <input type="text" id="user-input" class="form-control" placeholder="Ask about appointments, prescriptions..." maxlength="500">
+            <button id="send-btn" class="btn btn-primary btn-send-glow">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-footer text-center py-2">
+        <small class="text-muted">⚙️ AI-powered assistance • 24/7 Support</small>
+    </div>
+</div>
+
+<!-- 💠 ROBOT STYLE CSS -->
+
+<style>
+
+
+
+
+    /* Floating Button */
+    .floating-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 22px;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+        transition: all 0.3s ease-in-out;
+    }
+
+        .floating-btn:hover {
+            background: #0b5ed7;
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+            transform: translateY(-2px);
+        }
+
+    /* Hide by default */
+    .hidden {
+        display: none !important;
+    }
+
+    /* Chat Box */
+    #healthops-assistant {
+        width: 370px;
+        position: fixed;
+        bottom: 95px;
+        right: 30px;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border: 1px solid #e2e6ea;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+        font-family: "Segoe UI", Roboto, sans-serif;
+        z-index: 2000;
+    }
+
+    /* Header */
+    .neon-header {
+        background: linear-gradient(90deg, #0d6efd, #20c997);
+        color: white;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .neon-header h5 {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+    /* Chat area */
+    .chat-messages {
+        max-height: 360px;
+        overflow-y: auto;
+        padding: 14px;
+        background: #f8f9fa;
+    }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(13, 110, 253, 0.3);
+            border-radius: 3px;
+        }
+
+    /* Bot Message */
+    .bot-message {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 14px;
+    }
+
+    .message-avatar {
+        background: #20c997;
+        border-radius: 50%;
+        padding: 8px;
+        margin-right: 10px;
+        color: white;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message-content {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: #212529;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Quick Action Buttons */
+    .quick-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .quick-action-btn {
+        flex: 1;
+        margin: 2px;
+        background: #e9f5ff;
+        border: 1px solid #b6d9ff;
+        color: #0d6efd;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+        .quick-action-btn:hover {
+            background: #d9ecff;
+            border-color: #91c4ff;
+        }
+
+    /* Input Area */
+    .chat-input-container {
+        padding: 8px;
+        background: #ffffff;
+        border-top: 1px solid #e9ecef;
+    }
+
+    #user-input {
+        border-radius: 8px 0 0 8px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+        #user-input:focus {
+            border-color: #20c997;
+            box-shadow: 0 0 4px rgba(32, 201, 151, 0.3);
+            outline: none;
+        }
+
+    .btn-send-glow {
+        background: linear-gradient(45deg, #0d6efd, #20c997);
+        border: none;
+        border-radius: 0 8px 8px 0;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+        transition: all 0.3s;
+    }
+
+        .btn-send-glow:hover {
+            background: linear-gradient(45deg, #0b5ed7, #198754);
+        }
+
+    /* Footer */
+    .chat-footer {
+        background: #f8f9fa;
+        font-size: 0.8rem;
+        text-align: center;
+        border-top: 1px solid #e9ecef;
+        padding: 8px 0;
+        color: #6c757d;
+    }
+
+    #open-chat-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        background: linear-gradient(135deg, #0d6efd, #20c997);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 14px 26px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 0 20px rgba(32, 201, 151, 0.4), 0 0 40px rgba(13, 110, 253, 0.2);
+        animation: soft-glow 3s infinite ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+
+        /* Icon */
+        #open-chat-btn i {
+            font-size: 1.3rem;
+            color: #fff;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Hover effect */
+        #open-chat-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 25px rgba(13, 110, 253, 0.5), 0 0 50px rgba(32, 201, 151, 0.3);
+        }
+
+/*Doctors*/
+    #team-section .doctor-card {
+        transition: all 0.3s ease-in-out;
+    }
+
+        #team-section .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.15);
+        }
+
+    #team-section .doctor-img {
+        width: 160px;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #0d6efd;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    #team-section .doctor-card:hover .doctor-img {
+        transform: scale(1.05);
+        border-color: #20c997;
+    }
+
+
+</style>
+
+
+
+
+@section Scripts {
+    <script>
+                document.getElementById('open-chat-btn').addEventListener('click', () => {
+            document.getElementById('healthops-assistant').classList.remove('hidden');
+            document.getElementById('open-chat-btn').classList.add('hidden');
+        });
+
+        document.getElementById('close-chat').addEventListener('click', () => {
+            document.getElementById('healthops-assistant').classList.add('hidden');
+            document.getElementById('open-chat-btn').classList.remove('hidden');
+        });
+
+        document.getElementById('minimize-chat').addEventListener('click', () => {
+            document.getElementById('healthops-assistant').classList.add('hidden');
+            document.getElementById('open-chat-btn').classList.remove('hidden');
+        });
+        class HealthOPSAssistant {
+            constructor() {
+                this.isMinimized = false;
+                this.isOpen = false;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.setupMessageHandling();
+            }
+
+            bindEvents() {
+                // Open chat button
+                document.getElementById('open-chat-btn').addEventListener('click', () => {
+                    this.openChat();
+                });
+
+                // Minimize chat
+                document.getElementById('minimize-chat').addEventListener('click', () => {
+                    this.toggleMinimize();
+                });
+
+                // Close chat
+                document.getElementById('close-chat').addEventListener('click', () => {
+                    this.closeChat();
+                });
+
+                // Send message on button click
+                document.getElementById('send-btn').addEventListener('click', () => {
+                    this.sendMessage();
+                });
+
+                // Send message on Enter key
+                document.getElementById('user-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+                });
+
+                // Quick action buttons in chat
+                document.querySelectorAll('.quick-action-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const question = e.target.getAttribute('data-question');
+                        document.getElementById('user-input').value = question;
+                        this.sendMessage();
+                    });
+                });
+            }
+
+            openChat() {
+                const assistant = document.getElementById('healthops-assistant');
+                assistant.classList.remove('assistant-minimized');
+                this.isOpen = true;
+                this.isMinimized = false;
+                document.getElementById('user-input').focus();
+            }
+
+            closeChat() {
+                const assistant = document.getElementById('healthops-assistant');
+                assistant.classList.add('assistant-minimized');
+                this.isOpen = false;
+                this.isMinimized = true;
+            }
+
+            toggleMinimize() {
+                const assistant = document.getElementById('healthops-assistant');
+                if (this.isMinimized) {
+                    assistant.classList.remove('assistant-minimized');
+                    this.isMinimized = false;
+                } else {
+                    assistant.classList.add('assistant-minimized');
+                    this.isMinimized = true;
+                }
+            }
+
+            async sendMessage() {
+                const userInput = document.getElementById('user-input');
+                const message = userInput.value.trim();
+
+                if (!message) return;
+
+                // Add user message to chat
+                this.addMessage(message, 'user');
+                userInput.value = '';
+
+                // Show typing indicator
+                this.showTypingIndicator();
+
+                try {
+                    // Try to get AI response first
+                    const response = await this.getAIResponse(message);
+                    this.hideTypingIndicator();
+                    this.addMessage(response, 'bot');
+                } catch (error) {
+                    // If AI fails, use fallback responses
+                    this.hideTypingIndicator();
+                    const fallbackResponse = this.getFallbackResponse(message);
+                    this.addMessage(fallbackResponse, 'bot');
+                }
+            }
+
+            async getAIResponse(userMessage) {
+                try {
+                    const response = await fetch('@Url.Action("Chat", "Home")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: userMessage,
+                            context: 'HealthOPS Healthcare System - appointments, bookings, medical records, prescriptions, billing'
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+
+                    // If the backend returns an error, use fallback
+                    if (!data.success) {
+                        return this.getFallbackResponse(userMessage);
+                    }
+
+                    return data.reply;
+                } catch (error) {
+                    // If fetch fails completely, use fallback
+                    return this.getFallbackResponse(userMessage);
+                }
+            }
+
+            getFallbackResponse(message) {
+                const lowerMessage = message.toLowerCase();
+
+                // Appointment related questions
+                if (lowerMessage.includes('appointment') || lowerMessage.includes('book') || lowerMessage.includes('schedule')) {
+                    return "You can book appointments in three ways:\n\n1. **Online**: Use our patient portal 24/7\n2. **Phone**: Call (555) 123-HEAL during business hours\n3. **In-person**: Visit our reception desk\n\nOur booking hours are Monday-Friday 8:00 AM - 6:00 PM, Saturday 9:00 AM - 1:00 PM.";
+                }
+
+                // Hours related questions
+                if (lowerMessage.includes('hour') || lowerMessage.includes('time') || lowerMessage.includes('when')) {
+                    return "**Clinic Hours:**\n• Monday-Friday: 8:00 AM - 6:00 PM\n• Saturday: 9:00 AM - 1:00 PM\n• Sunday: Closed\n\n**Emergency Services:** Available 24/7\n**Online Booking:** Available 24/7";
+                }
+
+                // Prescription related questions
+                if (lowerMessage.includes('prescription') || lowerMessage.includes('refill') || lowerMessage.includes('medication')) {
+                    return "For prescription refills:\n\n1. **Contact your doctor** for renewal authorization\n2. **Use our online portal** for existing prescriptions\n3. **Visit our pharmacy** during business hours\n4. **Emergency refills** may be available - call pharmacy first\n\nPlease allow 24-48 hours for prescription processing.";
+                }
+
+                // Billing questions
+                if (lowerMessage.includes('bill') || lowerMessage.includes('payment') || lowerMessage.includes('insurance')) {
+                    return "For billing inquiries:\n\n• **Online Payments**: Available through patient portal\n• **Insurance Claims**: Processed within 14 business days\n• **Payment Plans**: Available upon request\n• **Billing Department**: Open Mon-Fri 9AM-5PM\n\nContact: billing@healthops.com or (555) 123-BILL";
+                }
+
+                // Medical records
+                if (lowerMessage.includes('record') || lowerMessage.includes('medical') || lowerMessage.includes('history')) {
+                    return "Medical records access:\n\n• **Online**: Available through patient portal\n• **In-person**: Submit request at reception\n• **Turnaround**: 3-5 business days\n• **Emergency**: Same-day access available for urgent care\n\nNote: Signed consent may be required for record releases.";
+                }
+
+                // General help
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('help')) {
+                    return "Hello! I'm Bonfire, here to help with HealthOps services. You can ask me about:\n\n• Booking appointments\n• Clinic hours\n• Prescription refills\n• Medical records\n• Billing and insurance\n\nWhat would you like to know?";
+                }
+
+                // Default response for unknown questions
+                return "I'm Bonfire, and I can help you with appointment booking, clinic hours, prescription refills, medical records, and billing questions. Could you please ask about one of these topics, or contact our support team at (555) 123-HEAL for more specific assistance?";
+            }
+
+            addMessage(text, sender) {
+                const messagesContainer = document.getElementById('chat-messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `${sender}-message`;
+
+                const avatarIcon = sender === 'bot' ? 'fa-robot' : 'fa-user';
+                const avatarClass = sender === 'bot' ? 'bg-success' : 'bg-primary';
+
+                messageDiv.innerHTML = `
+                    <div class="message-avatar ${avatarClass}">
+                        <i class="fas ${avatarIcon}"></i>
+                    </div>
+                    <div class="message-content">
+                        <p class="mb-0" style="white-space: pre-line;">${this.escapeHtml(text)}</p>
+                    </div>
+                `;
+
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                const messagesContainer = document.getElementById('chat-messages');
+                const indicator = document.createElement('div');
+                indicator.className = 'bot-message';
+                indicator.id = 'typing-indicator';
+                indicator.innerHTML = `
+                    <div class="message-avatar bg-success">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(indicator);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // Initialize the assistant when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new HealthOPSAssistant();
+        });
+    </script>
+}

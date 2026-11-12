@@ -1,0 +1,136 @@
+﻿@model HealthOps_Project.Models.Treatment
+
+@{
+    ViewData["Title"] = "Delete Treatment";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">🗑️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Delete Treatment</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Permanently remove treatment record</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Warning Alert -->
+                <div class="alert alert-danger rounded-3 mb-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <span class="fs-4 me-3">⚠️</span>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-2">Critical Action Required</h5>
+                            <p class="mb-0">You are about to permanently delete this treatment record. This action cannot be undone.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Treatment Summary -->
+                <div class="professional-stat-card mb-4" style="border-left: 4px solid #e74c3c;">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-dark mb-2">
+                                @{
+                                    var p = Model.Patient;
+                                    string patientName = p != null ? $"{p.FirstName ?? ""} {p.LastName ?? ""}".Trim() : "Unknown Patient";
+                                }
+                                @patientName
+                            </h4>
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="professional-status-badge professional-badge-critical">
+                                    🏥 @Model.TreatmentType
+                                </span>
+                                <span class="text-muted">
+                                    📅 @Model.TreatmentDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="professional-entity-icon" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); margin: 0 auto;">
+                                💊
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Preview -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">Treatment Information</h6>
+                            <div class="space-y-2">
+                                <div>
+                                    <small class="text-muted fw-semibold">Type</small>
+                                    <div class="fw-bold text-dark">@Model.TreatmentType</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Performed By</small>
+                                    <div class="fw-bold text-dark">@Model.PerformedBy</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">Patient Information</h6>
+                            <div class="space-y-2">
+                                <div>
+                                    <small class="text-muted fw-semibold">Patient Name</small>
+                                    <div class="fw-bold text-dark">@patientName</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Treatment Date</small>
+                                    <div class="fw-bold text-dark">@Model.TreatmentDate.ToString("MMM dd, yyyy 'at' h:mm tt")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Treatment Details Preview -->
+                <div class="professional-info-card mb-4">
+                    <h6 class="fw-bold text-dark mb-3">Treatment Details</h6>
+                    <div class="bg-light rounded-3 p-3">
+                        <p class="mb-0 text-dark">@Model.Details</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <div class="professional-info-card mb-4">
+                        <h6 class="fw-bold text-dark mb-3">Clinical Notes</h6>
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                            <p class="mb-0 text-dark">@Model.Notes</p>
+                        </div>
+                    </div>
+                }
+
+                <!-- Delete Form -->
+                <form asp-action="Delete" method="post" class="text-center mt-5 pt-4 border-top">
+                    <input type="hidden" asp-for="TreatmentId" />
+
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button type="submit" class="btn-professional-action btn-professional-delete">
+                            <span>🗑️</span>
+                            <span>Confirm Delete</span>
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.TreatmentId" class="btn-professional-secondary">
+                            <span>👁️</span>
+                            <span>View Details</span>
+                        </a>
+                        <a asp-action="Index" class="btn-professional-secondary">
+                            <span>📋</span>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

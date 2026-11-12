@@ -1,0 +1,119 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Prescription>
+<partial name="_BackButton" />
+@{
+    ViewData["Title"] = "Script Management";
+}
+
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-prescription-bottle-alt me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <a asp-action="PendingScripts" class="btn btn-warning me-2">
+                        <i class="fas fa-clock me-1"></i>View Pending
+                    </a>
+                    <a asp-action="GenerateAllPdf" class="btn btn-info me-2">
+                        <i class="fas fa-file-pdf me-1"></i>Export All PDF
+                    </a>
+                    <a asp-action="GeneratePendingPdf" class="btn btn-secondary">
+                        <i class="fas fa-file-pdf me-1"></i>Export Pending PDF
+                    </a>
+                </div>
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Medication</th>
+                        <th>Dosage</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Doctor</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.PrescriptionId</td>
+                            <td>@item.Patient?.FirstName @item.Patient?.LastName</td>
+                            <td>@item.MedicationName</td>
+                            <td>@item.Dosage</td>
+                            <td>
+                                <span class="badge @GetStatusBadgeClass(item.Status)">@item.Status</span>
+                            </td>
+                            <td>
+                                <span class="badge @GetPriorityBadgeClass(item.Priority)">@item.Priority</span>
+                            </td>
+                            <td>@item.PrescribingDoctor</td>
+                            <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@item.PrescriptionId" class="btn btn-info" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="GeneratePdf" asp-route-id="@item.PrescriptionId" class="btn btn-warning" title="Generate PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                    @if (item.Status == "New" || item.Status == "Pending")
+                                    {
+                                        <form asp-action="MarkAsProcessed" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@item.PrescriptionId" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-success" title="Mark as Processed">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                    @if (item.Status == "Processed")
+                                    {
+                                        <form asp-action="MarkAsDispensed" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@item.PrescriptionId" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-primary" title="Mark as Dispensed">
+                                                <i class="fas fa-check-double"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "new" => "bg-success",
+            "pending" => "bg-warning",
+            "processed" => "bg-info",
+            "dispensed" => "bg-primary",
+            "active" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetPriorityBadgeClass(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "urgent" or "high" => "bg-danger",
+            "medium" => "bg-warning",
+            "routine" or "low" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}

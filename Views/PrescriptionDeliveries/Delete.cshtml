@@ -1,0 +1,81 @@
+﻿@model HealthOps_Project.Models.PrescriptionDelivery
+
+@{
+    ViewData["Title"] = "Delete Delivery";
+}
+
+<h1>Delete Delivery</h1>
+
+<h3>Are you sure you want to delete this delivery record?</h3>
+<div>
+    <h4>Prescription Delivery</h4>
+    <hr />
+
+    <div class="alert alert-warning">
+        <strong>Warning:</strong> This action cannot be undone.
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">
+            Delivery ID
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt class="col-sm-3">
+            Patient Name
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Prescription.Patient.FirstName)
+        </dd>
+
+        <dt class="col-sm-3">
+            Medication
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Prescription.MedicationName)
+        </dd>
+
+        <dt class="col-sm-3">
+            Dosage
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Prescription.Dosage)
+        </dd>
+
+        <dt class="col-sm-3">
+            Status
+        </dt>
+        <dd class="col-sm-9">
+            <span class="badge badge-@(Model.Status == "Delivered" ? "success" : Model.Status == "Cancelled" ? "danger" : "warning")">
+                @Html.DisplayFor(model => model.Status)
+            </span>
+        </dd>
+
+        <dt class="col-sm-3">
+            Requested At
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RequestedAt)
+        </dd>
+
+        @if (Model.DeliveredAt.HasValue)
+        {
+            <dt class="col-sm-3">
+                Delivered At
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.DeliveredAt)
+            </dd>
+        }
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

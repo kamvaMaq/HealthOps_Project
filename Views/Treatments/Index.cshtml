@@ -1,0 +1,95 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Treatment>
+@{
+    ViewData["Title"] = "Treatments";
+    string patientName = ViewData["PatientName"] as string;
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">💊</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">
+                    @if (!string.IsNullOrEmpty(patientName))
+                    {
+                        <text>Treatments for @patientName</text>
+                    }
+                    else
+                    {
+                        <text>Medical Treatments</text>
+                    }
+                </h1>
+                <p class="lead mb-0 fs-6 opacity-90">Comprehensive tracking of patient treatments</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    @if (!string.IsNullOrEmpty(patientName))
+                    {
+                        <a class="btn-professional-secondary" asp-action="Index">All Treatments</a>
+                    }
+                    <a class="btn-professional-primary" asp-action="Create">New Treatment</a>
+                </div>
+                <a asp-controller="Dashboard" asp-action="Nurse" class="btn-professional-secondary">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var treatment in Model)
+                        {
+                            <tr class="professional-table-row">
+                                <td>
+                                    @{
+                                        var p = treatment.Patient;
+                                        string displayName = p != null
+                                        ? $"{p.FirstName ?? ""} {p.LastName ?? ""}".Trim()
+                                        : "Unknown Patient";
+                                    }
+                                    @displayName
+                                </td>
+                                <td>@treatment.TreatmentDate.ToShortDateString()</td>
+                                <td>@treatment.TreatmentType</td>
+                                <td class="professional-truncate-text" title="@treatment.Details">
+                                    @treatment.Details
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a class="btn-professional-action btn-professional-details"
+                                           asp-action="Details" asp-route-id="@treatment.TreatmentId">View</a>
+                                        <a class="btn-professional-action btn-professional-edit"
+                                           asp-action="Edit" asp-route-id="@treatment.TreatmentId">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

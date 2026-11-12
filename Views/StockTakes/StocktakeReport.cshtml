@@ -1,0 +1,104 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Stocktake>
+
+@{
+    ViewData["Title"] = "Stocktake Report";
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+
+<div class="professional-management-container" style="background: white; min-height: auto; padding: 20px 0;">
+    <div class="container">
+        <div class="professional-glass-card" style="box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div class="professional-header">
+                <h1 class="display-5 fw-bold mb-3 text-center">
+                    <i class="fas fa-clipboard-check me-3"></i>Stocktake Report
+                </h1>
+                <p class="lead mb-0 text-center">Inventory Stocktake Summary</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Summary Statistics -->
+                <div class="row professional-stagger mb-4">
+                    <div class="col-md-3">
+                        <div class="professional-stat-card">
+                            <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                            <p class="text-muted mb-0">Total Records</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="professional-stat-card">
+                            <h3 class="fw-bold text-success">@Model.Sum(s => s.QuantityCounted)</h3>
+                            <p class="text-muted mb-0">Total Quantity</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="professional-stat-card">
+                            <h3 class="fw-bold text-warning">@Model.Select(s => s.WardName).Distinct().Count()</h3>
+                            <p class="text-muted mb-0">Unique Wards</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="professional-stat-card">
+                            <h3 class="fw-bold text-info">@Model.Select(s => s.ConsumableId).Distinct().Count()</h3>
+                            <p class="text-muted mb-0">Unique Consumables</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Table -->
+                <div class="table-responsive">
+                    <table class="table professional-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Consumable</th>
+                                <th>Ward</th>
+                                <th>Quantity Counted</th>
+                                <th>Date Taken</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="professional-table-row">
+                                    <td>@item.Id</td>
+                                    <td>@item.Consumable?.Name</td>
+                                    <td>
+                                        <span class="professional-status-badge professional-badge-normal">
+                                            @item.WardName
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold @(item.QuantityCounted <= 10 ? "text-warning" : "text-success")">
+                                        @item.QuantityCounted
+                                    </td>
+                                    <td>@item.DateTaken.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@item.Notes</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Report Footer -->
+                <div class="mt-4 pt-4 border-top">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="text-muted mb-1">Generated on: @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+                            <p class="text-muted mb-0">Total Pages: 1</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <p class="text-muted mb-0">HealthOps Stocktake System</p>
+                            <p class="text-muted mb-0">Confidential Report</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+}

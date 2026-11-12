@@ -1,0 +1,1247 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Ward>
+
+@{
+    ViewData["Title"] = "Wards Management";
+}
+
+<style>
+    .wards-management-container {
+        background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .wards-management-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 15% 25%, rgba(142, 45, 226, 0.4) 0%, transparent 50%), radial-gradient(circle at 85% 75%, rgba(74, 0, 224, 0.3) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: floatBackground 18s ease-in-out infinite;
+        }
+
+    .professional-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+        .professional-glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+    .professional-header {
+        background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+        color: white;
+        padding: 35px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: professionalShimmer 4s infinite;
+        }
+
+    .professional-action-bar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 25px;
+        margin: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+        .professional-action-bar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        }
+
+    .btn-professional-primary {
+        background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 28px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-professional-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-professional-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-professional-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-professional-secondary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 28px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-professional-secondary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .professional-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        background: transparent;
+    }
+
+        .professional-table th {
+            background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-size: 0.85rem;
+            border: none;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .professional-table th:hover {
+                background: linear-gradient(135deg, #5a0db5 0%, #1c68e8 100%);
+            }
+
+            .professional-table th::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 10%;
+                width: 80%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            }
+
+        .professional-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            vertical-align: middle;
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+    .professional-table-row {
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: pointer;
+        position: relative;
+    }
+
+        .professional-table-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #6A11CB, #2575FC);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .professional-table-row:nth-child(even) {
+            background: rgba(248, 249, 250, 0.9);
+        }
+
+        .professional-table-row:hover {
+            transform: translateX(8px) translateY(-2px);
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.15);
+            border-left: 4px solid #6A11CB;
+        }
+
+            .professional-table-row:hover::before {
+                transform: scaleY(1);
+            }
+
+    .btn-professional-action {
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border: none;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 75px;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-professional-details {
+        background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+        box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+    }
+
+    .btn-professional-edit {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+    }
+
+    .btn-professional-delete {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-professional-action::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        transform: translate(-50%, -50%);
+    }
+
+    .btn-professional-action:hover::before {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    .btn-professional-action:hover {
+        transform: translateY(-2px) scale(1.08);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+        text-decoration: none;
+        color: white;
+    }
+
+    .professional-status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.3px;
+    }
+
+    .professional-badge-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    .professional-badge-inactive {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+    }
+
+    .professional-status-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .professional-status-badge:hover::before {
+        left: 100%;
+    }
+
+    .professional-status-badge:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .professional-empty-state {
+        padding: 70px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 18px;
+        margin: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-empty-state::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: emptyStateShine 3s infinite;
+        }
+
+    .professional-empty-state-icon {
+        font-size: 4.5rem;
+        margin-bottom: 25px;
+        opacity: 0.8;
+        animation: professionalBounce 2.5s infinite;
+        position: relative;
+        z-index: 2;
+    }
+
+    .professional-stat-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+        border-radius: 16px;
+        padding: 22px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC, #6A11CB);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .professional-stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .professional-stat-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+    .professional-search-box {
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 13px 20px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+    }
+
+        .professional-search-box:focus {
+            border-color: #6A11CB;
+            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.2);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 1);
+        }
+
+    .professional-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 55px;
+        height: 55px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        margin-right: 15px;
+        transition: all 0.4s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .professional-icon-wrapper:hover {
+            transform: rotate(12deg) scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+    .professional-ward-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-ward-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .professional-ward-icon:hover::before {
+            left: 100%;
+            top: 100%;
+        }
+
+        .professional-ward-icon:hover {
+            transform: rotate(-8deg) scale(1.1);
+            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.6);
+        }
+
+    .professional-pulse {
+        animation: professionalPulse 2.5s infinite;
+    }
+
+    .professional-float {
+        animation: professionalFloat 4s ease-in-out infinite;
+    }
+
+    /* Professional Animations */
+    @@keyframes floatBackground {
+        0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+
+        33% {
+            transform: translate(20px, -15px) scale(1.02);
+        }
+
+        66% {
+            transform: translate(-15px, 10px) scale(0.98);
+        }
+    }
+
+    @@keyframes professionalShimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @@keyframes professionalBounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        40% {
+            transform: translateY(-12px) rotate(5deg);
+        }
+
+        60% {
+            transform: translateY(-6px) rotate(-3deg);
+        }
+    }
+
+    @@keyframes professionalPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.6);
+        }
+
+        70% {
+            box-shadow: 0 0 0 12px rgba(106, 17, 203, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(106, 17, 203, 0);
+        }
+    }
+
+    @@keyframes professionalFloat {
+        0%, 100% {
+            transform: translate(0px, 0px) rotate(0deg);
+        }
+
+        33% {
+            transform: translate(25px, -20px) rotate(120deg);
+        }
+
+        66% {
+            transform: translate(-18px, 15px) rotate(240deg);
+        }
+    }
+
+    @@keyframes emptyStateShine {
+        0% {
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+
+        100% {
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+    }
+
+    @@keyframes professionalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .professional-animate-in {
+        animation: professionalSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .professional-stagger > * {
+        opacity: 0;
+        animation: professionalSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+        .professional-stagger > *:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .professional-stagger > *:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .professional-stagger > *:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .professional-stagger > *:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+    /* Professional Filter Section */
+    .professional-filter-section {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        border-radius: 14px;
+        padding: 20px;
+        margin: 20px 25px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .professional-filter-btn {
+        background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        margin: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-filter-btn.active {
+            background: linear-gradient(135deg, #6A11CB 0%, #2575FC 100%);
+            color: white;
+            box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .professional-filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+    /* Professional Loading Animation */
+    .professional-loading {
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: professionalSpin 1s ease-in-out infinite;
+    }
+
+    @@keyframes professionalSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Additional Info Cards */
+    .info-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+        border-radius: 14px;
+        padding: 18px;
+        margin: 10px 0;
+        border-left: 4px solid #6A11CB;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+    .utilization-chart {
+        height: 8px;
+        background: #ecf0f1;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 8px 0;
+    }
+
+    .utilization-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6A11CB, #2575FC);
+        border-radius: 10px;
+        transition: width 1s ease;
+    }
+
+    .ward-capacity-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .capacity-low {
+        background: #27ae60;
+    }
+
+    .capacity-medium {
+        background: #f39c12;
+    }
+
+    .capacity-high {
+        background: #e74c3c;
+    }
+
+
+    /* Fix for table header and data alignment */
+    .table.professional-table th,
+    .table.professional-table td {
+        padding-left: 1.25rem !important; /* Match inner content spacing */
+        padding-right: 1.25rem !important;
+        vertical-align: middle;
+    }
+
+    /* Align header text with body text */
+    .table.professional-table th {
+        text-align: left !important;
+    }
+
+        /* Center align only the actions column */
+        .table.professional-table th:last-child,
+        .table.professional-table td:last-child {
+            text-align: center !important;
+        }
+
+    .professional-ward-icon {
+        margin-left: 0 !important;
+    }
+
+
+</style>
+
+<div class="wards-management-container">
+    <div class="container">
+        <!-- Main Professional Glass Card -->
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Professional Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">🏥</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Hospital Ward Management</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Comprehensive management and monitoring of hospital ward resources and capacity</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mx-4 mt-4" role="alert" style="border-radius: 12px; border: none;">
+                    <strong>✅ @TempData["SuccessMessage"]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Professional Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search by ward name, capacity, or status..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-action="Create" class="btn-professional-primary">
+                        <span>➕</span>
+                        <span>Add New Ward</span>
+                    </a>
+                     @if (User.IsInRole("Admin"))
+
+                    {
+                        <a asp-controller="Dashboard" asp-action="Admin" class="btn-professional-secondary">
+                            <span>📊</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+
+                    }
+
+                    else if (User.IsInRole("WardAdmin"))
+
+                    {
+                        <a asp-controller="Dashboard" asp-action="WardAdmin" class="btn-professional-secondary">
+                            <span>📊</span>
+                            <span> Dashboard</span>
+                        </a>
+
+                    }
+                </div>
+            </div>
+
+            <!-- Professional Filter Section -->
+            <div class="professional-filter-section">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h6 class="mb-3 fw-bold text-dark">🎯 Quick Filters:</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">
+                                <span>📋</span> All Wards
+                            </button>
+                            <button class="professional-filter-btn" data-filter="surgical">
+                                <span>🔪</span> Surgical
+                            </button>
+                            <button class="professional-filter-btn" data-filter="medical">
+                                <span>💊</span> Medical
+                            </button>
+                            <button class="professional-filter-btn" data-filter="pediatric">
+                                <span>👶</span> Pediatric
+                            </button>
+                            <button class="professional-filter-btn" data-filter="icu">
+                                <span>🚨</span> ICU
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Professional Statistics Cards -->
+            <div class="row g-4 px-4 pb-4 professional-stagger">
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-primary fw-bold" style="font-size: 2.4rem;">@Model.Count()</div>
+                        <div class="text-muted fw-semibold mb-2">Total Wards</div>
+                        <div class="utilization-chart">
+                            <div class="utilization-fill" style="width: 100%"></div>
+                        </div>
+                        <small class="text-success">📈 Operational</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-success fw-bold" style="font-size: 2.4rem;">
+                            @{
+                                var surgicalWards = Model.Count(w => w.Name?.ToLower().Contains("surgical") == true);
+                            }
+                            @surgicalWards
+                        </div>
+                        <div class="text-muted fw-semibold mb-2">Surgical Wards</div>
+                        <div class="utilization-chart">
+                            @{
+                                var surgicalPercent = Model.Any() ? (surgicalWards * 100 / Model.Count()) : 0;
+                            }
+                            <div class="utilization-fill" style="width: @surgicalPercent%"></div>
+                        </div>
+                        <small class="text-success">🔪 Surgical Care</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-info fw-bold" style="font-size: 2.4rem;">
+                            @{
+                                var icuWards = Model.Count(w => w.Name?.ToLower().Contains("icu") == true || w.Name?.ToLower().Contains("intensive") == true);
+                            }
+                            @icuWards
+                        </div>
+                        <div class="text-muted fw-semibold mb-2">ICU Wards</div>
+                        <div class="utilization-chart">
+                            @{
+                                var icuPercent = Model.Any() ? (icuWards * 100 / Model.Count()) : 0;
+                            }
+                            <div class="utilization-fill" style="width: @icuPercent%; background: linear-gradient(90deg, #e74c3c, #c0392b);"></div>
+                        </div>
+                        <small class="text-warning">🚨 Critical Care</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-warning fw-bold" style="font-size: 2.4rem;">
+                            @{
+                                var totalBeds = Model.Sum(w => w.Beds?.Count ?? 0);
+                            }
+                            @totalBeds
+                        </div>
+                        <div class="text-muted fw-semibold mb-2">Total Beds</div>
+                        <div class="utilization-chart">
+                            <div class="utilization-fill" style="width: 65%; background: linear-gradient(90deg, #f39c12, #e67e22);"></div>
+                        </div>
+                        <small class="text-info">🛏️ Bed Capacity</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information Cards -->
+            <div class="row px-4 pb-4">
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0">📊 Ward Distribution</h6>
+                            <span class="badge bg-primary">Analysis</span>
+                        </div>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Surgical: @surgicalWards wards</small>
+                                <small>@surgicalPercent%</small>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>ICU: @icuWards wards</small>
+                                <small>@icuPercent%</small>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <small>Other: @(Model.Count() - surgicalWards - icuWards) wards</small>
+                                <small>@(100 - surgicalPercent - icuPercent)%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0">⏱️ Capacity Management</h6>
+                            <span class="badge bg-success">Optimal</span>
+                        </div>
+                        <p class="mb-0 mt-2 text-muted">Average bed utilization: <strong>@(totalBeds > 0 ? (totalBeds / Model.Count()) : 0) beds per ward</strong></p>
+                        <small class="text-muted">Based on current ward configuration</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wards Table Professional Card -->
+        <!-- Wards Table Professional Card -->
+        <div class="professional-glass-card professional-animate-in" style="animation-delay: 0.2s;">
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%"></th>
+                            <th style="width: 25%">Ward Information</th>
+                            <th style="width: 20%">Capacity & Status</th>
+                            <th style="width: 25%">Department Details</th>
+                            <th style="width: 30%" class="text-center">Management Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professionalWardsTableBody">
+                        @if (Model.Any())
+                        {
+                            var animationDelay = 0.3;
+                            @foreach (var ward in Model)
+                            {
+                                var bedCount = ward.Beds?.Count ?? 0;
+                                var capacityLevel = bedCount < 10 ? "low" : bedCount < 20 ? "medium" : "high";
+                                var capacityColor = capacityLevel == "low" ? "#27ae60" : capacityLevel == "medium" ? "#f39c12" : "#e74c3c";
+
+                                <tr class="professional-table-row" style="animation-delay: @(animationDelay)s;">
+                                    <!-- Column 1: Ward Information -->
+                                    <td style="width:25%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-ward-icon professional-pulse me-2">
+                                                🏥
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@ward.Name</div>
+                                              @*   <small class="text-muted">ID: @ward.WardId.ToString("D3")</small> *@
+                                                @* <div class="mt-1">
+                                                    <small class="badge bg-light text-dark border">Ward #@ward.WardId</small>
+                                                </div> *@
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Column 2: Capacity & Status -->
+                                    <td style="width:20%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="ward-capacity-indicator capacity-@capacityLevel"></span>
+                                                <span class="fw-semibold ms-1">@bedCount Beds</span>
+                                            </div>
+                                            <span class="professional-status-badge @(bedCount > 0 ? "professional-badge-active" : "professional-badge-inactive")">
+                                                @(bedCount > 0 ? "🟢 Operational" : "⚪ No Beds")
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Column 3: Department Details -->
+                                    <td style="width:25%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <strong class="text-dark fs-6">@GetWardDepartment(ward.Name)</strong>
+                                            <small class="text-muted">Floor: @(ward.WardId % 5 + 1)F • Section @(ward.WardId % 3 + 1)</small>
+                                            <div class="mt-1">
+                                                <small class="badge bg-info text-white">@GetWardType(ward.Name)</small>
+                                                <small class="badge bg-warning text-dark ms-1">@capacityLevel capacity</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Column 4: Management Actions -->
+                                    <td style="width:30%;" class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Details" asp-route-id="@ward.WardId"
+                                               class="btn-professional-action btn-professional-details">
+                                                <span>👁️</span>
+                                                <span>View</span>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@ward.WardId"
+                                               class="btn-professional-action btn-professional-edit">
+                                                <span>✏️</span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@ward.WardId"
+                                               class="btn-professional-action btn-professional-delete">
+                                                <span>🗑️</span>
+                                                <span>Remove</span>
+                                            </a>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">Last updated: @DateTime.Now.ToString("MMM dd, yyyy")</small>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                animationDelay += 0.1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    <div class="professional-empty-state text-center py-5">
+                                        <div class="professional-empty-state-icon">🏥</div>
+                                        <h3 class="fw-bold text-dark mb-3">No Ward Configuration Found</h3>
+                                        <p class="text-muted fs-6 mb-4">Initialize your hospital's ward management system by adding the first ward</p>
+                                        <a asp-action="Create" class="btn-professional-primary">
+                                            <span>🚀</span>
+                                            <span>Initialize Ward System</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Professional search functionality with enhanced debouncing
+        let professionalSearchTimeout;
+        $(document).ready(function () {
+            $('#professionalSearchInput').on('keyup', function () {
+                clearTimeout(professionalSearchTimeout);
+                professionalSearchTimeout = setTimeout(() => {
+                    var query = $(this).val().toLowerCase();
+                    var visibleRows = 0;
+
+                    $('.professional-table-row').each(function () {
+                        var rowText = $(this).text().toLowerCase();
+                        if (rowText.indexOf(query) > -1) {
+                            $(this).slideDown(400);
+                            visibleRows++;
+                        } else {
+                            $(this).slideUp(400);
+                        }
+                    });
+
+                    // Update statistics in real-time
+                    updateSearchStatistics(visibleRows);
+                }, 350);
+            });
+        });
+
+        // Enhanced professional interactions
+        document.addEventListener('DOMContentLoaded', function () {
+            // Professional filter functionality
+            document.querySelectorAll('.professional-filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.professional-filter-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    let visibleCount = 0;
+
+                    $('.professional-table-row').each(function () {
+                        const $row = $(this);
+                        const wardName = $row.find('td:first-child').text().toLowerCase();
+
+                        switch (filter) {
+                            case 'all':
+                                $row.fadeIn(500);
+                                visibleCount++;
+                                break;
+                            case 'surgical':
+                                $row.toggle(wardName.includes('surgical'));
+                                if (wardName.includes('surgical')) visibleCount++;
+                                break;
+                            case 'medical':
+                                $row.toggle(wardName.includes('medical'));
+                                if (wardName.includes('medical')) visibleCount++;
+                                break;
+                            case 'pediatric':
+                                $row.toggle(wardName.includes('pediatric') || wardName.includes('children'));
+                                if (wardName.includes('pediatric') || wardName.includes('children')) visibleCount++;
+                                break;
+                            case 'icu':
+                                $row.toggle(wardName.includes('icu') || wardName.includes('intensive'));
+                                if (wardName.includes('icu') || wardName.includes('intensive')) visibleCount++;
+                                break;
+                        }
+                    });
+
+                    // Update filter statistics
+                    updateFilterStatistics(filter, visibleCount);
+                });
+            });
+
+            // Enhanced hover effects for professional stat cards
+            document.querySelectorAll('.professional-stat-card').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-6px) scale(1.02)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Professional ripple effect for action buttons
+            document.querySelectorAll('.btn-professional-action').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    // Create professional ripple element
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.cssText = `
+                                position: absolute;
+                                border-radius: 50%;
+                                background: rgba(255, 255, 255, 0.6);
+                                transform: scale(0);
+                                animation: professionalRipple 0.6s linear;
+                                width: ${size}px;
+                                height: ${size}px;
+                                left: ${x}px;
+                                top: ${y}px;
+                            `;
+
+                    this.appendChild(ripple);
+
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Enhanced professional search box interactions
+            const professionalSearchBox = document.getElementById('professionalSearchInput');
+            if (professionalSearchBox) {
+                professionalSearchBox.addEventListener('focus', function () {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 12px 30px rgba(106, 17, 203, 0.25)';
+                });
+
+                professionalSearchBox.addEventListener('blur', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.08)';
+                });
+            }
+
+            // Professional status badge interactions
+            document.querySelectorAll('.professional-status-badge').forEach(badge => {
+                badge.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                    this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.25)';
+                });
+
+                badge.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    if (this.classList.contains('professional-badge-active')) {
+                        this.style.boxShadow = '0 4px 15px rgba(39, 174, 96, 0.3)';
+                    } else {
+                        this.style.boxShadow = '0 4px 15px rgba(149, 165, 166, 0.3)';
+                    }
+                });
+            });
+
+            // Professional table row interactions
+            document.querySelectorAll('.professional-table-row').forEach(row => {
+                row.addEventListener('click', function (e) {
+                    if (!e.target.closest('a')) {
+                        this.style.background = 'linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%)';
+                        setTimeout(() => {
+                            this.style.background = '';
+                        }, 500);
+                    }
+                });
+            });
+
+            // Add professional CSS for ripple animation
+            const professionalStyle = document.createElement('style');
+            professionalStyle.textContent = `
+                        @@keyframes professionalRipple {
+                            to {
+                                transform: scale(4);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+            document.head.appendChild(professionalStyle);
+
+            // Professional auto-refresh simulation
+            setInterval(() => {
+                console.log('🔄 Professional auto-refresh: Checking for ward status updates...');
+                // In a real application, this would fetch new data from the server
+                updateLiveIndicators();
+            }, 45000);
+
+            // Initialize professional functions
+            function updateSearchStatistics(visibleCount) {
+                console.log(`🔍 Professional search: ${visibleCount} wards match your criteria`);
+            }
+
+            function updateFilterStatistics(filter, count) {
+                console.log(`🎯 Professional filter "${filter}": Showing ${count} wards`);
+            }
+
+            function updateLiveIndicators() {
+                // Update live indicators with subtle animations
+                document.querySelectorAll('.professional-pulse').forEach(element => {
+                    element.style.animation = 'none';
+                    setTimeout(() => {
+                        element.style.animation = 'professionalPulse 2.5s infinite';
+                    }, 10);
+                });
+            }
+        });
+    </script>
+}
+
+@functions {
+    private string GetWardDepartment(string wardName)
+    {
+        if (string.IsNullOrEmpty(wardName)) return "General Department";
+
+        var name = wardName.ToLower();
+        if (name.Contains("surgical")) return "Surgery Department";
+        if (name.Contains("medical")) return "Internal Medicine";
+        if (name.Contains("pediatric") || name.Contains("children")) return "Pediatrics";
+        if (name.Contains("icu") || name.Contains("intensive")) return "Critical Care";
+        if (name.Contains("cardiac") || name.Contains("heart")) return "Cardiology";
+        if (name.Contains("ortho")) return "Orthopedics";
+        if (name.Contains("neuro")) return "Neurology";
+        if (name.Contains("maternity")) return "Obstetrics";
+        return "General Medicine";
+    }
+
+    private string GetWardType(string wardName)
+    {
+        if (string.IsNullOrEmpty(wardName)) return "General";
+
+        var name = wardName.ToLower();
+        if (name.Contains("surgical")) return "Surgical";
+        if (name.Contains("medical")) return "Medical";
+        if (name.Contains("pediatric") || name.Contains("children")) return "Pediatric";
+        if (name.Contains("icu") || name.Contains("intensive")) return "ICU";
+        if (name.Contains("cardiac") || name.Contains("heart")) return "Cardiac";
+        if (name.Contains("ortho")) return "Orthopedic";
+        if (name.Contains("neuro")) return "Neurology";
+        if (name.Contains("maternity")) return "Maternity";
+        return "General";
+    }
+}

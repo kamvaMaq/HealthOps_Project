@@ -1,0 +1,193 @@
+﻿@model HealthOps_Project.Models.Medication
+
+@{
+    ViewData["Title"] = "Edit Medication";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">✏️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Medication</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Update medication information and inventory details</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="EditMedication" method="post" class="professional-stagger">
+                    <input type="hidden" asp-for="MedicationId" />
+
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="alert alert-danger rounded-3 mb-4">
+                            <strong>⚠️ Please correct the following errors:</strong>
+                            <div asp-validation-summary="All" class="mb-0 mt-2"></div>
+                        </div>
+                    }
+
+                    <!-- Current Status Card -->
+                    <div class="professional-stat-card mb-4" style="border-left: 4px solid #f39c12;">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4 class="fw-bold text-dark mb-2">@Model.Name</h4>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <span class="professional-status-badge @(Model.IsScheduledMedication() ? "professional-badge-warning" : "professional-badge-normal")">
+                                        @(Model.IsScheduledMedication() ? "📅 Scheduled" : "💊 Non-Scheduled") (@Model.Schedule)
+                                    </span>
+                                    <span class="text-muted">
+                                        📦 @Model.Quantity units in stock
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="professional-entity-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); margin: 0 auto;">
+                                    💊
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Medication Name -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Name" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📝</span>
+                                    Medication Name
+                                </label>
+                                <input asp-for="Name" class="form-control professional-search-box" />
+                                <span asp-validation-for="Name" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Medication Type -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Type" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">🏷️</span>
+                                    Medication Type
+                                </label>
+                                <select asp-for="Type" asp-items="ViewBag.TypeList" class="form-control professional-search-box">
+                                    <option value="">-- Select Medication Type --</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Schedule -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Schedule" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Medication Schedule
+                                </label>
+                                <select asp-for="Schedule" asp-items="ViewBag.ScheduleList" class="form-control professional-search-box">
+                                    <option value="">-- Select Schedule --</option>
+                                </select>
+                                <span asp-validation-for="Schedule" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Quantity" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📦</span>
+                                    Quantity in Stock
+                                </label>
+                                <input asp-for="Quantity" type="number" class="form-control professional-search-box" min="0" />
+                                <span asp-validation-for="Quantity" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Expiry Date -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="ExpiryDate" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Expiry Date
+                                </label>
+                                <input asp-for="ExpiryDate" type="date" class="form-control professional-search-box" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="DeletionStatus" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📊</span>
+                                    Medication Status
+                                </label>
+                                <select asp-for="DeletionStatus" asp-items="ViewBag.StatusList" class="form-control professional-search-box">
+                                    <option value="">-- Select Status --</option>
+                                </select>
+                                <span asp-validation-for="DeletionStatus" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <label asp-for="Description" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📋</span>
+                                    Description & Notes
+                                </label>
+                                <textarea asp-for="Description" class="form-control professional-search-box" rows="4"></textarea>
+                                <span asp-validation-for="Description" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Save Changes</span>
+                            </button>
+                            <a asp-action="DetailsMedication" asp-route-id="@Model.MedicationId" class="btn-professional-secondary">
+                                <span>👁️</span>
+                                <span>View Details</span>
+                            </a>
+                            <a asp-action="Medications" class="btn-professional-secondary">
+                                <span>📋</span>
+                                <span>Back to List</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Show loading state
+                submitBtn.innerHTML = '<span class="professional-loading"></span><span>Saving Changes...</span>';
+                submitBtn.disabled = true;
+
+                // Re-enable after 3 seconds if still processing
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 3000);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,185 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Allergy>
+@{
+    ViewData["Title"] = "Allergies";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">⚠️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Allergies Management</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Manage and track patient allergies and reactions</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Filter Form -->
+                <div class="professional-info-card mb-4">
+                    <h6 class="fw-bold text-dark mb-3">
+                        <span class="me-2">🔍</span>
+                        Search & Filter Allergies
+                    </h6>
+
+                    <form method="get" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label class="professional-form-label">Search by Name</label>
+                            <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control professional-form-control" placeholder="Enter allergy name" />
+                        </div>
+
+                        <a asp-controller="Dashboard" asp-action="Admin" class="btn-professional-secondary">
+                            <span>📊</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <div class="col-md-3">
+                            <label class="professional-form-label">Allergen Type</label>
+                            <select name="allergenType" class="form-control professional-form-control">
+                                <option value="">All Types</option>
+                                @foreach (var type in Enum.GetValues(typeof(HealthOps_Project.Models.AllergenType)))
+                                {
+                                    if (ViewBag.AllergenType != null && ViewBag.AllergenType.ToString() == type.ToString())
+                                    {
+                                        <option value="@type" selected>@type</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@type">@type</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="professional-form-label">Severity</label>
+                            <select name="severity" class="form-control professional-form-control">
+                                <option value="">All Severities</option>
+                                @foreach (var sev in Enum.GetValues(typeof(HealthOps_Project.Models.AllergySeverity)))
+                                {
+                                    if (ViewBag.Severity != null && ViewBag.Severity.ToString() == sev.ToString())
+                                    {
+                                        <option value="@sev" selected>@sev</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@sev">@sev</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 d-grid">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>🔍</span>
+                                <span>Filter</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a asp-action="Create" class="btn-professional-success">
+                        <span>➕</span>
+                        <span>Create New Allergy</span>
+                    </a>
+                </div>
+
+                <!-- Allergies Table -->
+                @if (Model != null && Model.Any())
+                {
+                    <div class="professional-table-container">
+                        <table class="table professional-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Allergy Name</th>
+                                    <th>Type</th>
+                                    <th>Severity</th>
+                                    <th>Active</th>
+                                    <th style="width: 220px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="fw-bold">@item.AllergyName</td>
+                                        <td>
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                @item.AllergenType
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var severityBadgeClass = "professional-badge-completed";
+                                                if (item.SeverityLevel.ToString().Contains("Severe") || item.SeverityLevel.ToString().Contains("High"))
+                                                {
+                                                    severityBadgeClass = "professional-badge-urgent";
+                                                }
+                                                else if (item.SeverityLevel.ToString().Contains("Moderate"))
+                                                {
+                                                    severityBadgeClass = "professional-badge-warning";
+                                                }
+                                            }
+                                            <span class="professional-status-badge @severityBadgeClass">
+                                                @item.SeverityLevel
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (item.IsActive)
+                                            {
+                                                <span class="professional-status-badge professional-badge-completed">
+                                                    ✅ Active
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="professional-status-badge professional-badge-warning">
+                                                    ⏳ Inactive
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <a asp-action="Details" asp-route-id="@item.AllergyId" class="btn-professional-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>👁️</span>
+                                                    <span>Details</span>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.AllergyId" class="btn-professional-primary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>✏️</span>
+                                                    <span>Edit</span>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.AllergyId" class="btn-professional-danger" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                    <span>🗑️</span>
+                                                    <span>Delete</span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <div class="professional-entity-icon" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); margin: 0 auto 1rem; width: 80px; height: 80px;">
+                            ⚠️
+                        </div>
+                        <h4 class="fw-bold text-dark mb-3">No Allergies Found</h4>
+                        <p class="text-muted mb-4">Get started by adding your first allergy record.</p>
+                        <a asp-action="Create" class="btn-professional-success">
+                            <span>➕</span>
+                            <span>Add First Allergy</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

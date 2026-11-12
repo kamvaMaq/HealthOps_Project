@@ -1,0 +1,121 @@
+﻿@model IEnumerable<HealthOps_Project.Models.WardStock>
+
+@{
+    ViewData["Title"] = "Low Stock Items";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">
+                                    <i class="fas fa-exclamation-triangle me-3"></i>Low Stock Alert
+                                </h1>
+                                <p class="lead mb-0">Items requiring immediate attention</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="professional-icon-wrapper">
+                                    <i class="fas fa-exclamation-circle fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 pb-4">
+                        @if (!Model.Any())
+                        {
+                            <div class="professional-empty-state">
+                                <i class="fas fa-check-circle professional-empty-state-icon text-success"></i>
+                                <h3 class="fw-bold text-muted">All Stock Levels Adequate</h3>
+                                <p class="text-muted mb-4">No ward stocks are below the threshold.</p>
+                                <a asp-action="Index" class="btn btn-professional-primary">
+                                    <i class="fas fa-arrow-left me-2"></i> Back to All Stocks
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table professional-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ward Name</th>
+                                            <th>Consumable</th>
+                                            <th>Quantity On Hand</th>
+                                            <th>Stock Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Where(x => x.QuantityOnHand < 10))
+                                        {
+                                            <tr class="professional-table-row professional-pulse">
+                                                <td class="professional-truncate-text">@item.WardName</td>
+                                                <td class="professional-truncate-text">@item.Consumable?.Name</td>
+                                                <td>@item.QuantityOnHand</td>
+                                                <td>
+                                                    <span class="professional-status-badge @GetStockStatusBadge(item.QuantityOnHand)">
+                                                        @GetStockStatus(item.QuantityOnHand)
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex justify-content-center">
+                                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-edit me-2">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-details me-2">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-delete">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a asp-action="Index" class="btn btn-professional-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i> Back to All Stocks
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+}
+
+@functions {
+    public string GetStockStatus(int quantityOnHand)
+    {
+        if (quantityOnHand == 0) return "Out of Stock";
+        if (quantityOnHand < 5) return "Very Low";
+        if (quantityOnHand < 10) return "Low";
+        return "Adequate";
+    }
+
+    public string GetStockStatusBadge(int quantityOnHand)
+    {
+        if (quantityOnHand == 0) return "professional-badge-inactive";
+        if (quantityOnHand < 5) return "professional-badge-critical";
+        if (quantityOnHand < 10) return "professional-badge-warning";
+        return "professional-badge-normal";
+    }
+}

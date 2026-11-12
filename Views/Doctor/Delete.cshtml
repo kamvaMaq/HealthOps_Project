@@ -1,0 +1,406 @@
+﻿@model HealthOps_Project.Models.Doctor
+@{
+    ViewData["Title"] = "Delete Doctor";
+}
+
+<style>
+    .doctor-delete-container {
+        background: linear-gradient(135deg, #8A2387 0%, #E94057 50%, #F27121 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .doctor-delete-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(138, 35, 135, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(233, 64, 87, 0.2) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
+        }
+
+    .professional-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .professional-header {
+        background: linear-gradient(135deg, #8A2387 0%, #E94057 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: professionalShimmer 4s infinite;
+        }
+
+    .delete-content {
+        padding: 40px;
+        text-align: center;
+    }
+
+    .warning-section {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
+        border: 2px solid rgba(231, 76, 60, 0.3);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
+
+        .warning-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(231, 76, 60, 0.2);
+        }
+
+    .warning-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+
+    .doctor-info {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+        .doctor-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .info-value {
+        font-weight: 500;
+        color: #8A2387;
+    }
+
+    .btn-danger-glow {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-danger-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-danger-glow:hover::before {
+            left: 100%;
+        }
+
+        .btn-danger-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    /* Animations */
+    @@keyframes floatBackground {
+        0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+
+        33% {
+            transform: translate(20px, -15px) scale(1.02);
+        }
+
+        66% {
+            transform: translate(-15px, 10px) scale(0.98);
+        }
+    }
+
+    @@keyframes professionalShimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+</style>
+
+<div class="doctor-delete-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 animate-slide-in">
+            <!-- Professional Header -->
+            <div class="professional-header">
+                <h1 class="display-5 fw-bold mb-3">⚠️ Delete Doctor</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Confirm doctor deactivation from the system</p>
+            </div>
+
+            <!-- Delete Content -->
+            <div class="delete-content">
+                <!-- Warning Section -->
+                <div class="warning-section animate-slide-in" style="animation-delay: 0.2s;">
+                    <div class="warning-icon">🚨</div>
+                    <h3 class="text-danger mb-3">Critical Action Required</h3>
+                    <p class="lead text-dark mb-3">
+                        You are about to deactivate <strong>Dr. @Model.FirstName @Model.LastName</strong> from the system.
+                    </p>
+                    <p class="text-muted">
+                        This action will remove the doctor from active duty but preserve their records for historical purposes.
+                    </p>
+                </div>
+
+                <!-- Doctor Information -->
+                <div class="doctor-info animate-slide-in" style="animation-delay: 0.3s;">
+                    <h4 class="mb-4 text-primary">Doctor Information</h4>
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value">Dr. @Model.FirstName @Model.LastName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Specialty</span>
+                        <span class="info-value">@Model.Specialty</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Contact Number</span>
+                        <span class="info-value">@Model.PhoneNumber</span>
+                    </div>
+                @*     <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">@Model.Email</span>
+                    </div> *@
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="info-value">
+                            @if (Model.IsActive)
+
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+
+                            else
+
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons animate-slide-in" style="animation-delay: 0.4s;">
+                    <!-- The form MUST use the same action name and include the DoctorId -->
+                    <form asp-action="Delete" method="post" id="deleteForm">
+                        <input type="hidden" asp-for="DoctorId" />
+                        <button type="submit" class="btn-danger-glow" id="deleteButton">
+                            <span>🗑️</span>
+                            <span>Confirm Deactivation</span>
+                        </button>
+                    </form>
+                    <a asp-action="Index" class="btn-secondary-glow" id="cancelButton">
+                        <span>❌</span>
+                        <span>Cancel</span>
+                    </a>
+                </div>
+
+                <!-- Additional Warning -->
+                <div class="mt-4 text-center animate-slide-in" style="animation-delay: 0.5s;">
+                    <small class="text-muted">
+                        ⚠️ Note: This action can be reversed by contacting system administration.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteForm = document.getElementById('deleteForm');
+            const deleteButton = document.getElementById('deleteButton');
+            const cancelButton = document.getElementById('cancelButton');
+
+            // Enhanced warning section interaction
+            const warningSection = document.querySelector('.warning-section');
+            if (warningSection) {
+                warningSection.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-3px)';
+                });
+
+                warningSection.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            }
+
+            // Doctor info section interaction
+            const doctorInfo = document.querySelector('.doctor-info');
+            if (doctorInfo) {
+                doctorInfo.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-3px)';
+                });
+
+                doctorInfo.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            }
+
+            // Handle form submission - show loading state
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function (e) {
+                    // Show loading state
+                    if (deleteButton) {
+                        deleteButton.innerHTML = '<span>⏳</span><span>Deactivating...</span>';
+                        deleteButton.disabled = true;
+                        deleteButton.classList.add('loading');
+                    }
+
+                    if (cancelButton) {
+                        cancelButton.style.opacity = '0.5';
+                        cancelButton.style.pointerEvents = 'none';
+                    }
+
+                    // Form will submit normally - no prevention
+                    // The user has already confirmed by being on this page and clicking the button
+                });
+            }
+
+            // Add some visual feedback when hovering over delete button
+            if (deleteButton) {
+                deleteButton.addEventListener('mouseenter', function () {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(-3px) scale(1.05)';
+                    }
+                });
+
+                deleteButton.addEventListener('mouseleave', function () {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            }
+        });
+    </script>
+}

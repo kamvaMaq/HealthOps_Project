@@ -1,0 +1,615 @@
+﻿@model HealthOps_Project.Models.Admission
+@{
+    ViewData["Title"] = "Admission Details";
+}
+
+<style>
+    .admissions-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+        animation: gradientShift 8s ease infinite;
+        background-size: 200% 200%;
+    }
+
+    @@keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #9b59b6 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: headerGlow 3s ease-in-out infinite alternate;
+    }
+
+    @@keyframes headerGlow {
+        from { background: linear-gradient(135deg, #2c3e50 0%, #9b59b6 100%); }
+        to { background: linear-gradient(135deg, #34495e 0%, #8e44ad 100%); }
+    }
+
+    .btn-warning-glow {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+    }
+
+        .btn-warning-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(243, 156, 18, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .detail-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        animation: fadeInLeft 0.6s ease-out;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        color: #34495e;
+        margin-bottom: 15px;
+        animation: fadeInRight 0.6s ease-out;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        display: inline-block;
+        animation: flipInX 0.6s ease-out;
+    }
+
+    .badge-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .badge-discharged {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+    }
+
+    .patient-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        animation: rotateIn 0.8s ease-out;
+        margin: 0 auto 20px;
+    }
+
+    .info-icon {
+        font-size: 1.2rem;
+        margin-right: 8px;
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    /* Enhanced Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes flipInX {
+        from {
+            transform: perspective(400px) rotateX(90deg);
+            opacity: 0;
+        }
+        to {
+            transform: perspective(400px) rotateX(0deg);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes rotateIn {
+        from {
+            opacity: 0;
+            transform: rotate(-180deg) scale(0.3);
+        }
+        to {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    @@keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .detail-row {
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+        .detail-row:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateX(5px);
+            border-radius: 10px;
+        }
+
+        .detail-row:nth-child(1) { animation-delay: 0.1s; }
+        .detail-row:nth-child(2) { animation-delay: 0.2s; }
+        .detail-row:nth-child(3) { animation-delay: 0.3s; }
+        .detail-row:nth-child(4) { animation-delay: 0.4s; }
+        .detail-row:nth-child(5) { animation-delay: 0.5s; }
+        .detail-row:nth-child(6) { animation-delay: 0.6s; }
+        .detail-row:nth-child(7) { animation-delay: 0.7s; }
+
+    .section-title {
+        color: #2c3e50;
+        border-bottom: 2px solid #9b59b6;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d1e7f7 100%);
+        border: 2px solid #9b59b6;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        animation: slideInDown 0.6s ease-out;
+    }
+
+    @@keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        font-size: 1.8rem;
+        margin: 0 auto 15px;
+        animation: rotateIn 0.8s ease-out;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 15px;
+        animation: fadeInRight 0.6s ease-out;
+    }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #9b59b6;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: #9b59b6;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+</style>
+
+<div class="admissions-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <div class="icon-wrapper">
+                    📋
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Admission Details</h1>
+                <p class="lead mb-0">Complete information about patient admission</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Patient Information Card -->
+                <div class="info-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="text-primary mb-2">📊 Admission Overview</h5>
+                            <p class="mb-1">
+                                <strong>Status:</strong>
+                                @if (Model.IsActive)
+                                {
+                                    <span class="status-badge badge-active">🟢 Active</span>
+                                }
+                                else if (Model.DischargeDate.HasValue)
+                                {
+                                    <span class="status-badge badge-discharged">🟡 Discharged</span>
+                                }
+                                else
+                                {
+                                   @*  <span class="status-badge badge-active">🟢 Active</span> *@
+                                }
+                            </p>
+                          @*   <p class="mb-1"><strong>Admission ID:</strong> @Model.Id</p> *@
+                            <p class="mb-0"><strong>Last Updated:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="bg-light rounded-3 p-3">
+                                <small class="text-muted">Admission record details</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Patient Information -->
+                    <div class="col-md-4">
+                        <div class="detail-card text-center">
+                            <div class="patient-avatar">
+                                @Model.Patient?.FirstName?[0]@Model.Patient?.LastName?[0]
+                            </div>
+                            <h4 class="text-primary">@Model.Patient?.FirstName @Model.Patient?.LastName</h4>
+                            <p class="text-muted">Patient</p>
+                        @*     <div class="timeline-item">
+                                <small class="text-muted">Patient ID: @Model.PatientId</small>
+                            </div> *@
+                        </div>
+                    </div>
+
+                    <!-- Admission Information -->
+                    <div class="col-md-8">
+                        <div class="detail-card">
+                            <h4 class="section-title">🏥 Admission Information</h4>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">👤</span> Patient Name</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">@Model.Patient?.FirstName @Model.Patient?.LastName</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">🏢</span> Ward</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">@Model.Ward?.Name</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">🛏️</span> Bed Number</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">
+                                            <span class="badge bg-light text-dark border p-2">@Model.Bed?.BedNumber</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">👨‍⚕️</span> Doctor</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">@Model.DoctorId</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">📅</span> Admission Date</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">
+                                            <strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</strong>
+                                            <br>
+                                            <small class="text-muted">@Model.AdmissionDate.ToString("HH:mm")</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="detail-label"><span class="info-icon">📅</span> Discharge Date</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="detail-value">
+                                            @if (Model.DischargeDate.HasValue)
+                                            {
+                                                <strong class="text-success">@Model.DischargeDate.Value.ToString("dd/MM/yyyy")</strong>
+                                                <br>
+                                                <small class="text-muted">@Model.DischargeDate.Value.ToString("HH:mm")</small>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not discharged</span>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+@* 
+                            @if (!string.IsNullOrEmpty(Model.Notes))
+                            {
+                                <div class="detail-row">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <span class="detail-label"><span class="info-icon">📝</span> Notes</span>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <span class="detail-value">@Model.Notes</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            } *@
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admission Timeline -->
+                <div class="detail-card">
+                    <h4 class="section-title">⏰ Admission Timeline</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="timeline-item">
+                                <strong>Admission Created</strong>
+                                <div class="text-muted">@Model.AdmissionDate.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Current Status</strong>
+                                <div class="text-muted">
+                                    @if (!Model.IsActive)
+                                    {
+                                        <span>Inactive Record</span>
+                                    }
+                                    else if (Model.DischargeDate.HasValue)
+                                    {
+                                        <span>Discharged on @Model.DischargeDate.Value.ToString("dd/MM/yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Currently Admitted</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="timeline-item">
+                                <strong>Duration</strong>
+                                <div class="text-muted">
+                                    @if (Model.DischargeDate.HasValue)
+                                    {
+                                        var duration = Model.DischargeDate.Value - Model.AdmissionDate;
+                                        <span>@duration.Days days, @duration.Hours hours</span>
+                                    }
+                                    else
+                                    {
+                                        var duration = DateTime.Now - Model.AdmissionDate;
+                                        <span>@duration.Days days, @duration.Hours hours (ongoing)</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-warning-glow me-3">
+                                ✏️ Edit Admission
+                            </a>
+                            <a asp-action="Index" class="btn-secondary-glow">
+                                ↩️ Back to List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add interactive effects to detail rows
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailRows = document.querySelectorAll('.detail-row');
+
+            detailRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.background = 'rgba(255, 255, 255, 0.5)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.background = '';
+                });
+            });
+
+            // Add click animation to buttons
+            const buttons = document.querySelectorAll('.btn-warning-glow, .btn-secondary-glow');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Add parallax effect to patient avatar
+            const avatar = document.querySelector('.patient-avatar');
+            if (avatar) {
+                document.addEventListener('mousemove', function(e) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+                    avatar.style.transform = `rotate(${x}deg) translate(${x}px, ${y}px)`;
+                });
+            }
+
+            // Add hover effects to info card
+            const infoCard = document.querySelector('.info-card');
+            if (infoCard) {
+                infoCard.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 25px rgba(155, 89, 182, 0.2)';
+                });
+
+                infoCard.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            }
+        });
+    </script>
+}

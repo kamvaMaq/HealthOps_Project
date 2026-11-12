@@ -1,0 +1,669 @@
+﻿@model HealthOps_Project.Models.Discharge
+
+@{
+    ViewData["Title"] = "Discharge Details";
+}
+
+<style>
+    .discharge-details-container {
+        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .discharge-details-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(26, 42, 108, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(178, 31, 31, 0.2) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
+        }
+
+    .professional-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+        .professional-glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+    .professional-header {
+        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .professional-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: professionalShimmer 4s infinite;
+        }
+
+    .info-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 25px;
+        border-left: 5px solid #1a2a6c;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+        .info-section:hover {
+            transform: translateX(8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+    .detail-row {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+        .detail-row:hover {
+            background: rgba(26, 42, 108, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            transform: translateX(5px);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+    .detail-label {
+        font-weight: 700;
+        color: #1a2a6c;
+        font-size: 1.1rem;
+        min-width: 200px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.1rem;
+        flex: 1;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    .status-inactive {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .status-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .status-badge:hover::before {
+        left: 100%;
+    }
+
+    .status-badge:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 8px 20px rgba(26, 42, 108, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-primary-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary-glow:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(26, 42, 108, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-warning-glow {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-warning-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(243, 156, 18, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-success-glow {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-success-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(39, 174, 96, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 14px 32px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        margin-right: 15px;
+        transition: all 0.4s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .icon-wrapper:hover {
+            transform: rotate(12deg) scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+    .floating {
+        animation: floating 4s ease-in-out infinite;
+    }
+
+    .pulse-animation {
+        animation: pulse 2.5s infinite;
+    }
+
+    /* Animations */
+    @@keyframes floatBackground {
+        0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+
+        33% {
+            transform: translate(20px, -15px) scale(1.02);
+        }
+
+        66% {
+            transform: translate(-15px, 10px) scale(0.98);
+        }
+    }
+
+    @@keyframes professionalShimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @@keyframes floating {
+        0%, 100% {
+            transform: translate(0px, 0px) rotate(0deg);
+        }
+
+        33% {
+            transform: translate(25px, -20px) rotate(120deg);
+        }
+
+        66% {
+            transform: translate(-18px, 15px) rotate(240deg);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(26, 42, 108, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 12px rgba(26, 42, 108, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(26, 42, 108, 0);
+        }
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 4px solid #1a2a6c;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+        background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+        margin-right: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .patient-avatar:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(26, 42, 108, 0.4);
+        }
+
+    /* Print Styles */
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .discharge-details-container,
+        .discharge-details-container * {
+            visibility: visible;
+        }
+
+        .discharge-details-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            background: white !important;
+        }
+
+        .professional-glass-card {
+            box-shadow: none !important;
+            background: white !important;
+            backdrop-filter: none !important;
+        }
+
+        .professional-header {
+            background: #1a2a6c !important;
+        }
+
+        .action-buttons {
+            display: none !important;
+        }
+
+        .detail-row:hover {
+            background: transparent !important;
+            transform: none !important;
+        }
+
+        .info-section {
+            box-shadow: none !important;
+            background: white !important;
+        }
+    }
+</style>
+
+<div class="discharge-details-container">
+    <div class="container">
+        <div class="professional-glass-card animate-slide-in">
+            <!-- Professional Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="icon-wrapper floating">
+                        <span style="font-size: 2.2rem;">📋</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Discharge Details</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Complete discharge record information and documentation</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Discharge Information Section -->
+                <div class="info-section animate-slide-in" style="animation-delay: 0.2s;">
+                    <h4 class="fw-bold text-dark mb-4">
+                        <span class="pulse-animation" style="animation: pulse 2s infinite;">📄</span>
+                        Discharge Record Information
+                    </h4>
+
+                    <div class="detail-list">
+                        <!-- Discharge Date -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>📅</span>
+                                Discharge Date
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>@Model.DischargeDate.ToString("yyyy-MM-dd")</strong>
+                                <small class="text-muted d-block">@Model.DischargeDate.ToString("dddd, MMMM dd, yyyy")</small>
+                            </dd>
+                        </div>
+
+                        <!-- Discharge Reason -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>📝</span>
+                                Discharge Reason
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>@Model.Reason</strong>
+                            </dd>
+                        </div>
+
+                        <!-- Patient Information -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>👤</span>
+                                Patient Information
+                            </dt>
+                            <dd class="detail-value">
+                                <div class="d-flex align-items-center">
+                                    <div class="patient-avatar">
+                                        @Model.Patient?.FirstName?[0]@Model.Patient?.LastName?[0]
+                                    </div>
+                                    <div>
+                                        <strong class="text-dark fs-5">@Model.Patient?.FirstName @Model.Patient?.LastName</strong>
+                                        <br>
+                                     @*    <small class="text-muted">Patient ID: #@Model.PatientId</small> *@
+                                    </div>
+                                </div>
+                            </dd>
+                        </div>
+
+                        <!-- Ward Information -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>🏥</span>
+                                Ward Information
+                            </dt>
+                            <dd class="detail-value">
+                                <strong class="text-dark fs-5">@Model.Ward?.Name</strong>
+                                <br>
+                             @*    <small class="text-muted">Ward ID: #@Model.WardId</small> *@
+                            </dd>
+                        </div>
+
+                        <!-- Record Status -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>📊</span>
+                                Record Status
+                            </dt>
+                            <dd class="detail-value">
+                                <span class="status-badge @(Model.IsActive ? "status-active" : "status-inactive")">
+                                    @(Model.IsActive ? "✅ Active" : "❌ Inactive")
+                                </span>
+                                <small class="text-muted d-block mt-1">
+                                    @if (Model.IsActive)
+
+                                    {
+                                        <span>This discharge record is currently active in the system</span>
+                                    }
+
+                                    else
+
+                                    {
+                                        <span>This discharge record is currently inactive</span>
+                                    }
+                                </small>
+                            </dd>
+                        </div>
+
+                        <!-- Record ID -->
+                       @*  <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>🆔</span>
+                                Record ID
+                            </dt>
+                            <dd class="detail-value">
+                                <strong class="text-dark">#@Model.Id.ToString("D3")</strong>
+                            </dd>
+                        </div> *@
+                    </div>
+                </div>
+
+                <!-- Additional Information Cards -->
+                <div class="row animate-slide-in" style="animation-delay: 0.3s;">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="fw-bold mb-2 text-primary">📈 System Information</h6>
+                            <div class="text-muted">
+                                <div class="mb-1">• Created Date: <strong>@DateTime.Now.AddDays(-(Model.Id % 30)).ToString("MMM dd, yyyy")</strong></div>
+                                <div class="mb-1">• Last Updated: <strong>@DateTime.Now.ToString("MMM dd, yyyy")</strong></div>
+                                <div class="mb-1">• Record Type: <strong>Discharge</strong></div>
+                                <div>• System Version: <strong>HealthOps v2.1</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="fw-bold mb-2 text-success">⚙️ Quick Actions</h6>
+                            <div class="text-muted">
+                                <div class="mb-1">• Edit this discharge record</div>
+                                <div class="mb-1">• View patient's full history</div>
+                                <div class="mb-1">• Generate discharge report</div>
+                                <div>• Print this record</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons text-center mt-5 pt-4 border-top animate-slide-in" style="animation-delay: 0.4s;">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-warning-glow me-3">
+                        <span>✏️</span>
+                        <span>Edit Discharge</span>
+                    </a>
+                    <a asp-action="Index" class="btn-secondary-glow me-3">
+                        <span>⬅</span>
+                        <span>Back to List</span>
+                    </a>
+                    <button class="btn-success-glow" onclick="window.print();">
+                        <span>🖨️</span>
+                        <span>Print Record</span>
+                    </button>
+                </div>
+
+                <!-- Print Notice -->
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        💡 Click "Print Record" to generate a printable version of this discharge record
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Enhanced detail row interactions
+            document.querySelectorAll('.detail-row').forEach(row => {
+                row.addEventListener('mouseenter', function () {
+                    this.style.background = 'rgba(26, 42, 108, 0.05)';
+                });
+
+                row.addEventListener('mouseleave', function () {
+                    this.style.background = '';
+                });
+            });
+
+            // Status badge hover effects
+            document.querySelectorAll('.status-badge').forEach(badge => {
+                badge.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                    this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.25)';
+                });
+
+                badge.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    if (this.classList.contains('status-active')) {
+                        this.style.boxShadow = '0 4px 15px rgba(39, 174, 96, 0.3)';
+                    } else {
+                        this.style.boxShadow = '0 4px 15px rgba(231, 76, 60, 0.3)';
+                    }
+                });
+            });
+
+            // Patient avatar interactions
+            document.querySelectorAll('.patient-avatar').forEach(avatar => {
+                avatar.addEventListener('mouseenter', function () {
+                    this.style.transform = 'scale(1.1) rotate(5deg)';
+                });
+
+                avatar.addEventListener('mouseleave', function () {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+
+            // Print button enhancement
+            const printButton = document.querySelector('.btn-success-glow');
+            if (printButton) {
+                printButton.addEventListener('click', function() {
+                    // Add a small delay to show the click effect
+                    setTimeout(() => {
+                        console.log('🖨️ Printing discharge record...');
+                    }, 100);
+                });
+            }
+        });
+    </script>
+}

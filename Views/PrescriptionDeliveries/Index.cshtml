@@ -1,0 +1,554 @@
+﻿@model IEnumerable<HealthOps_Project.Models.PrescriptionDelivery>
+<partial name="_BackButton" />
+@{
+    ViewData["Title"] = "Prescription Deliveries";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <!-- Header Card with Animated Gradient -->
+            <div class="card professional-header-card mb-4 animate-fade-in">
+                <div class="card-body p-4 p-md-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="professional-title mb-2">
+                                <i class="fas fa-pills me-3"></i>Prescription Deliveries
+                            </h1>
+                            <p class="professional-subtitle mb-0">Manage and track prescription deliveries efficiently</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="btn-group-stacked" role="group">
+                                <a asp-action="Create" class="btn btn-success btn-lg mb-2 animate-pop-in" style="animation-delay: 0.1s">
+                                    <i class="fas fa-plus me-2"></i>New Delivery
+                                </a>
+                                <a asp-action="GenerateReport" class="btn btn-primary btn-lg mb-2 animate-pop-in" style="animation-delay: 0.2s">
+                                    <i class="fas fa-file-pdf me-2"></i>Generate PDF
+                                </a>
+                                <a asp-action="DeliveryReport" class="btn btn-info btn-lg animate-pop-in" style="animation-delay: 0.3s">
+                                    <i class="fas fa-chart-line me-2"></i>View Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="alertContainer" class="mb-4">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show animate-slide-down" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show animate-slide-down" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["Info"] != null)
+                {
+                    <div class="alert alert-info alert-dismissible fade show animate-slide-down" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>@TempData["Info"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
+
+            <!-- Main Content Card -->
+            <div class="card professional-content-card animate-fade-in" style="animation-delay: 0.2s">
+                <div class="card-body p-0">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover professional-table mb-0">
+                                <thead class="professional-table-header">
+                                    <tr>
+                                        <th class="ps-4">Patient Name</th>
+                                        <th>Medication</th>
+                                        <th>Dosage</th>
+                                        <th>Status</th>
+                                        <th>Requested At</th>
+                                        <th>Delivered At</th>
+                                        <th class="text-center pe-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int index = 0;
+                                    }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="animate-fade-in-row" style="animation-delay: @(index * 0.05)s">
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="patient-icon me-3">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@Html.DisplayFor(modelItem => item.Prescription.Patient.FirstName) @Html.DisplayFor(modelItem => item.Prescription.Patient.LastName)</strong>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="medication-display">
+                                                    <i class="fas fa-pills me-2 text-primary"></i>
+                                                    @Html.DisplayFor(modelItem => item.Prescription.MedicationName)
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="dosage-badge">@Html.DisplayFor(modelItem => item.Prescription.Dosage)</span>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var statusClass = item.Status == "Delivered" ? "status-delivered" :
+                                                    item.Status == "Cancelled" ? "status-cancelled" :
+                                                    item.Status == "In Progress" ? "status-progress" : "status-pending";
+                                                }
+                                                <span class="status-badge @statusClass">
+                                                    @Html.DisplayFor(modelItem => item.Status)
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="date-display">
+                                                    <div class="date-main">@item.RequestedAt.ToString("MMM dd, yyyy")</div>
+                                                    <div class="date-time text-muted">@item.RequestedAt.ToString("HH:mm")</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if (item.DeliveredAt.HasValue)
+                                                {
+                                                    <div class="date-display">
+                                                        <div class="date-main">@item.DeliveredAt.Value.ToString("MMM dd, yyyy")</div>
+                                                        <div class="date-time text-muted">@item.DeliveredAt.Value.ToString("HH:mm")</div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fst-italic">Not delivered</span>
+                                                }
+                                            </td>
+                                            <td class="pe-4">
+                                                <div class="btn-group action-buttons" role="group">
+                                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-action btn-info" title="Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-action btn-warning" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    @if (item.Status != "Delivered" && item.Status != "Cancelled")
+                                                    {
+                                                        <form asp-action="MarkDelivered" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@item.Id" />
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="btn btn-action btn-success" title="Mark as Delivered">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-action btn-danger" title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-5 animate-fade-in">
+                            <div class="empty-state-icon mb-4">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <h4 class="text-muted mb-3">No prescription deliveries found</h4>
+                            <p class="text-muted mb-4">Start by creating your first prescription delivery record.</p>
+                            <a asp-action="Create" class="btn btn-success btn-lg">
+                                <i class="fas fa-plus me-2"></i>Create First Delivery
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Professional Color Scheme */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gradient-start: #4361ee;
+            --gradient-end: #3a0ca3;
+        }
+
+        /* Animation Keyframes */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes popIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Animation Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animate-slide-down {
+            animation: slideDown 0.5s ease-out forwards;
+        }
+
+        .animate-pop-in {
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        .animate-fade-in-row {
+            animation: fadeInRow 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Professional Header Card */
+        .professional-header-card {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+            .professional-header-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+                opacity: 0.1;
+            }
+
+        .professional-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .professional-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Content Card */
+        .professional-content-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Table Styling */
+        .professional-table {
+            margin-bottom: 0;
+        }
+
+        .professional-table-header {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-bottom: 2px solid #dee2e6;
+        }
+
+            .professional-table-header th {
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.8rem;
+                letter-spacing: 0.5px;
+                padding: 1rem 0.75rem;
+                color: #495057;
+                border: none;
+            }
+
+        .professional-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+            .professional-table tbody tr:hover {
+                background-color: #f8f9fa;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+        /* Patient Icon */
+        .patient-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #7209b7, #f72585);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Medication Display */
+        .medication-display {
+            font-weight: 600;
+            color: #4361ee;
+        }
+
+        /* Dosage Badge */
+        .dosage-badge {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-delivered {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+
+        .status-progress {
+            background: linear-gradient(135deg, #f8961e, #f3722c);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #90be6d, #43aa8b);
+            color: white;
+        }
+
+        /* Date Display */
+        .date-display {
+            line-height: 1.2;
+        }
+
+        .date-main {
+            font-weight: 600;
+        }
+
+        .date-time {
+            font-size: 0.85rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+            .btn-action:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Empty State */
+        .empty-state-icon {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Button Styling */
+        .btn-group-stacked .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .btn-group-stacked .btn:last-child {
+                margin-bottom: 0;
+            }
+
+        /* Alert Styling */
+        .alert {
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Button Styling */
+        .action-buttons form {
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .professional-title {
+                font-size: 2rem;
+            }
+
+            .btn-group-stacked {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .professional-table-header {
+                display: none;
+            }
+
+            .professional-table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 10px;
+                padding: 1rem;
+            }
+
+            .professional-table tbody td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0;
+                border: none;
+            }
+
+                .professional-table tbody td::before {
+                    content: attr(data-label);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    font-size: 0.8rem;
+                    color: #6c757d;
+                }
+
+            .action-buttons {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Add data labels for mobile view
+            if (window.innerWidth <= 768) {
+                const headers = document.querySelectorAll('.professional-table-header th');
+                const headerTexts = Array.from(headers).map(header => header.textContent.trim());
+
+                document.querySelectorAll('.professional-table tbody tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    cells.forEach((cell, index) => {
+                        if (headerTexts[index]) {
+                            cell.setAttribute('data-label', headerTexts[index]);
+                        }
+                    });
+                });
+            }
+
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+}

@@ -1,0 +1,191 @@
+﻿@model HealthOps_Project.Models.NonScheduledMedication
+
+@{
+    ViewData["Title"] = "Administer Non-Scheduled Medication";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">💊</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Administer Non-Scheduled Medication</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Schedule 1-4 medications administered on the same day only</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="CreateNonScheduled" method="post" class="professional-stagger">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="alert alert-danger rounded-3 mb-4">
+                            <strong>⚠️ Please correct the following errors:</strong>
+                            <div asp-validation-summary="All" class="mb-0 mt-2"></div>
+                        </div>
+                    }
+
+                    <!-- Information Card -->
+                    <div class="professional-info-card mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">💡</span>
+                            <div>
+                                <h6 class="fw-bold mb-2">Non-Scheduled Medication Information</h6>
+                                <p class="mb-0 text-muted">
+                                    Non-scheduled medications (Schedule 1-4) can only be administered on the same day.
+                                    These medications do not require advanced scheduling and are available for immediate administration.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Patient Selection -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="PatientId" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👤</span>
+                                    Select Patient
+                                </label>
+                                <select asp-for="PatientId" class="form-control professional-search-box" required>
+                                    <option value="">-- Select Patient --</option>
+                                    @foreach (var patient in ViewData["Patients"] as List<Patient>)
+                                    {
+                                        <option value="@patient.PatientId">
+                                            @patient.LastName - ID: @patient.PatientId
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PatientId" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Medication Selection -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="MedicationId" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">💊</span>
+                                    Select Medication
+                                </label>
+                                <select asp-for="MedicationId" class="form-control professional-search-box" required>
+                                    <option value="">-- Select Medication --</option>
+                                    @foreach (var med in ViewData["Medications"] as List<Medication>)
+                                    {
+                                        <option value="@med.MedicationId">
+                                            @med.Name (@med.Schedule) - Qty: @med.Quantity
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MedicationId" class="text-danger small mt-2 d-block"></span>
+                                <small class="text-muted mt-2 d-block">
+                                    Only Schedule 1-4 medications are available for same-day administration
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Dosage -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Dosage" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📏</span>
+                                    Dosage Information
+                                </label>
+                                <input asp-for="Dosage" class="form-control professional-search-box" placeholder="e.g., 2 tablets, 5ml, 1 capsule" />
+                                <span asp-validation-for="Dosage" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Administered Date -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="AdministeredDate" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Administration Date
+                                </label>
+                                <input asp-for="AdministeredDate" type="date" class="form-control professional-search-box"
+                                       value="@DateTime.Today.ToString("yyyy-MM-dd")" readonly />
+                                <span asp-validation-for="AdministeredDate" class="text-danger small mt-2 d-block"></span>
+                                <small class="text-muted mt-2 d-block">
+                                    Must be today's date only for non-scheduled medications
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Administered By -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="AdministeredBy" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👨‍⚕️</span>
+                                    Administered By
+                                </label>
+                                <input asp-for="AdministeredBy" class="form-control professional-search-box" placeholder="Enter staff member name" required />
+                                <span asp-validation-for="AdministeredBy" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Status" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📊</span>
+                                    Administration Status
+                                </label>
+                                <select asp-for="Status" class="form-control professional-search-box">
+                                    <option value="Active">Active</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Record Administration</span>
+                            </button>
+                            <a asp-action="NonScheduled" class="btn-professional-secondary">
+                                <span>📋</span>
+                                <span>Back to List</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Show loading state
+                submitBtn.innerHTML = '<span class="professional-loading"></span><span>Recording Administration...</span>';
+                submitBtn.disabled = true;
+
+                // Re-enable after 3 seconds if still processing
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 3000);
+            });
+
+            // Auto-set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('AdministeredDate').value = today;
+        });
+    </script>
+}
+

@@ -1,0 +1,6 @@
+@model IEnumerable<HealthOps_Project.Models.Diagnosis>
+<h2>Diagnosis List</h2>
+<p><a class="btn btn-primary" href="/Diagnoses/Create">Create new</a></p>
+<table class="table"><thead><tr><th>Id</th><th></th></tr></thead><tbody>
+@foreach(var it in Model){ <tr><td>@it.Id</td><td><a class="btn btn-sm btn-info" href="/Diagnoses/Details/@it.Id">Details</a></td></tr> }
+</tbody></table>

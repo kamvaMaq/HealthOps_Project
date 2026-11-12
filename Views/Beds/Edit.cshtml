@@ -1,0 +1,272 @@
+﻿@model HealthOps_Project.Models.Bed
+
+@{
+    ViewData["Title"] = "Edit Bed";
+}
+
+<style>
+    .bed-edit-container {
+        background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-control-glow {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .form-control-glow:focus {
+            border-color: #ff7e5f;
+            box-shadow: 0 10px 25px rgba(255, 126, 95, 0.2);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 1);
+        }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 126, 95, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+
+    .validation-text {
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 15px;
+    }
+
+    .select-option {
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin: 2px 0;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+    }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="bed-edit-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <div class="icon-wrapper">
+                    <span style="font-size: 1.5rem;">✏</span>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Edit Bed</h1>
+                <p class="lead mb-0">Update bed information and availability status</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="Edit" class="p-3">
+                    <input type="hidden" asp-for="BedId" />
+
+                    <div class="form-section">
+                        <label asp-for="BedNumber" class="form-label">🛏 Bed Number</label>
+                        <input asp-for="BedNumber" class="form-control form-control-glow" />
+                        <span asp-validation-for="BedNumber" class="text-danger validation-text"></span>
+                    </div>
+
+                    <div class="form-section">
+                        <label asp-for="IsAvailable" class="form-label">📊 Availability Status</label>
+                        <select asp-for="IsAvailable" class="form-select form-control-glow">
+                            <option value="true" class="select-option">🟢 Available</option>
+                            <option value="false" class="select-option">🔴 Occupied</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label asp-for="WardId" class="form-label">🏥 Ward</label>
+                        <select asp-for="WardId" class="form-select form-control-glow" asp-items="ViewBag.WardId">
+                            <option value="" class="select-option">-- Select Ward --</option>
+                        </select>
+                        <span asp-validation-for="WardId" class="text-danger validation-text"></span>
+                    </div>
+
+                    <div class="form-section">
+                        <label asp-for="RoomId" class="form-label">🚪 Room</label>
+                        <select asp-for="RoomId" class="form-select form-control-glow" asp-items="ViewBag.RoomId">
+                            <option value="" class="select-option">-- Select Room --</option>
+                        </select>
+                        <span asp-validation-for="RoomId" class="text-danger validation-text"></span>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="btn-primary-glow me-3">
+                            💾 Update Bed
+                        </button>
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            ⬅ Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Enhanced form interactions
+        document.addEventListener('DOMContentLoaded', function () {
+            // Form control focus effects
+            document.querySelectorAll('.form-control-glow').forEach(control => {
+                control.addEventListener('focus', function () {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 10px 25px rgba(255, 126, 95, 0.2)';
+                    this.style.background = 'rgba(255, 255, 255, 1)';
+                });
+
+                control.addEventListener('blur', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                    this.style.background = 'rgba(255, 255, 255, 0.9)';
+                });
+
+                // Hover effects
+                control.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-1px)';
+                    this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.15)';
+                });
+
+                control.addEventListener('mouseleave', function () {
+                    if (document.activeElement !== this) {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                    }
+                });
+            });
+
+            // Button hover effects
+            document.querySelectorAll('.btn-primary-glow, .btn-secondary-glow').forEach(button => {
+                button.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+
+                button.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+
+                // Click animation
+                button.addEventListener('mousedown', function () {
+                    this.style.transform = 'translateY(-1px) scale(0.98)';
+                });
+
+                button.addEventListener('mouseup', function () {
+                    this.style.transform = 'translateY(-3px) scale(1.05)';
+                });
+            });
+
+            // Form submission enhancement
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function (e) {
+                const submitButton = this.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.innerHTML = '⏳ Updating...';
+                    submitButton.disabled = true;
+
+                    // Revert after 3 seconds if still on page (form validation failed)
+                    setTimeout(() => {
+                        if (submitButton.disabled) {
+                            submitButton.innerHTML = '💾 Update Bed';
+                            submitButton.disabled = false;
+                        }
+                    }, 3000);
+                }
+            });
+
+            // Add character counter for bed number
+            const bedNumberInput = document.querySelector('#BedNumber');
+            if (bedNumberInput) {
+                const counter = document.createElement('div');
+                counter.className = 'text-muted validation-text';
+                counter.style.fontSize = '0.8rem';
+                bedNumberInput.parentNode.appendChild(counter);
+
+                const updateCounter = () => {
+                    const length = bedNumberInput.value.length;
+                    counter.textContent = `${length} characters`;
+                    counter.style.color = length > 0 ? '#27ae60' : '#95a5a6';
+                };
+
+                bedNumberInput.addEventListener('input', updateCounter);
+                updateCounter();
+            }
+        });
+    </script>
+}

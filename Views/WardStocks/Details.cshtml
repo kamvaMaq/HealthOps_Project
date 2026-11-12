@@ -1,0 +1,89 @@
+﻿@model HealthOps_Project.Models.WardStock
+
+@{
+    ViewData["Title"] = "Ward Stock Details";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-info-circle me-3"></i>Ward Stock Details
+                                </h1>
+                                <p class="mb-0">Complete stock item information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="professional-info-card mb-4">
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Ward Name:</div>
+                                <div class="col-sm-8">@Model.WardName</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Consumable:</div>
+                                <div class="col-sm-8">@Model.Consumable?.Name</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Quantity On Hand:</div>
+                                <div class="col-sm-8">@Model.QuantityOnHand</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Stock Status:</div>
+                                <div class="col-sm-8">
+                                    <span class="professional-status-badge @GetStockStatusBadge(Model.QuantityOnHand)">
+                                        @GetStockStatus(Model.QuantityOnHand)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i> Back to List
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-professional-primary">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+}
+
+@functions {
+    public string GetStockStatus(int quantityOnHand)
+    {
+        if (quantityOnHand == 0) return "Out of Stock";
+        if (quantityOnHand < 5) return "Very Low";
+        if (quantityOnHand < 10) return "Low";
+        return "Adequate";
+    }
+
+    public string GetStockStatusBadge(int quantityOnHand)
+    {
+        if (quantityOnHand == 0) return "professional-badge-inactive";
+        if (quantityOnHand < 5) return "professional-badge-critical";
+        if (quantityOnHand < 10) return "professional-badge-warning";
+        return "professional-badge-normal";
+    }
+}

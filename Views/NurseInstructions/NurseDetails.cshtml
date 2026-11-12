@@ -1,0 +1,233 @@
+﻿@model HealthOps_Project.Models.NurseInstruction
+
+@{
+    ViewData["Title"] = "Nurse Instruction Details";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👩‍⚕️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Nurse Instruction Details</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Complete nursing instruction information and status</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Status Alert -->
+                @if (Model.IsCompleted)
+                {
+                    <div class="alert alert-success rounded-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">✅</span>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-2">Instruction Completed</h5>
+                                <p class="mb-0">This nursing instruction has been successfully completed and documented.</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning rounded-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">⏳</span>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-2">Instruction Pending</h5>
+                                <p class="mb-0">This nursing instruction is awaiting completion. Please review and mark as complete when done.</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Summary Card -->
+                <div class="professional-stat-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-dark mb-2">
+                                @(Model.Patient != null
+                                    ? $"{Model.Patient.FirstName} {Model.Patient.LastName}"
+                                    : "General Instruction")
+                            </h4>
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="professional-status-badge @(Model.IsCompleted ? "professional-badge-completed" : "professional-badge-warning")">
+                                    @(Model.IsCompleted ? "✅ Completed" : "⏳ Pending")
+                                </span>
+                                <span class="text-muted">
+                                    📅 @Model.IssuedAt.ToString("MMM dd, yyyy 'at' HH:mm")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="professional-entity-icon professional-pulse" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); margin: 0 auto;">
+                                📝
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="row g-4">
+                    <!-- Patient Information -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">👤</span>
+                                Patient Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Patient Name</small>
+                                    <div class="fw-bold text-dark">
+                                        @(Model.Patient != null
+                                            ? $"{Model.Patient.FirstName} {Model.Patient.LastName}"
+                                            : "No Specific Patient")
+                                    </div>
+                                </div>
+                                @if (Model.Patient != null)
+                                {
+                                    <div>
+                                        <small class="text-muted fw-semibold">Patient ID</small>
+                                        <div class="fw-bold text-dark">@Model.Patient.PatientId</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction Details -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📋</span>
+                                Instruction Details
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Nurse Name</small>
+                                    <div class="fw-bold text-dark">@Model.NurseName</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Issued At</small>
+                                    <div class="fw-bold text-dark">@Model.IssuedAt.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Record ID</small>
+                                    <div class="fw-bold text-dark">@Model.Id</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction Content -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📝</span>
+                                Instruction / Notes
+                            </h6>
+                            <div class="bg-light rounded-3 p-4">
+                                <p class="mb-0 text-dark fs-6 lh-base">@Model.Instruction</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Completion Section -->
+                    @if (!Model.IsCompleted)
+                    {
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">✅</span>
+                                    Mark as Completed
+                                </h6>
+                                <form asp-action="MarkComplete" method="post" class="text-center">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@Model.Id" />
+                                    <div class="alert alert-info rounded-3 mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fs-5 me-3">💡</span>
+                                            <div>
+                                                <p class="mb-0">Confirm that you have completed this nursing instruction as directed.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn-professional-primary"
+                                            onclick="return confirm('Are you sure you want to mark this instruction as completed?')">
+                                        <span>✅</span>
+                                        <span>Mark as Completed</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <div class="professional-info-card">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <span class="me-2">✅</span>
+                                    Completion Status
+                                </h6>
+                                <div class="alert alert-success rounded-3 text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="fs-4 me-3">🎉</span>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Instruction Successfully Completed</h6>
+                                            <p class="mb-0">This nursing instruction has been marked as completed and documented in the system.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a asp-action="NurseIndex" class="btn-professional-secondary">
+                            <span>📋</span>
+                            <span>Back to List</span>
+                        </a>
+                        <a asp-action="Index" class="btn-professional-secondary">
+                            <span>📝</span>
+                            <span>Main Instruction List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add confirmation for mark complete
+            const completeForm = document.querySelector('form[action*="MarkComplete"]');
+            if (completeForm) {
+                completeForm.addEventListener('submit', function (e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+
+                    // Show loading state
+                    submitBtn.innerHTML = '<span class="professional-loading"></span><span>Marking Complete...</span>';
+                    submitBtn.disabled = true;
+
+                    // Re-enable after 3 seconds if still processing
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }, 3000);
+                });
+            }
+        });
+    </script>
+}
+

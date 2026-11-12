@@ -1,0 +1,35 @@
+﻿@* @model IEnumerable<HealthOps_Project.Models.Treatment>
+
+<h1 class="text-2xl font-bold mb-3">All Treatments</h1>
+
+@if (!Model.Any())
+{
+    <p>No treatments recorded yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Treatment Type</th>
+                <th>Details</th>
+                <th>Date</th>
+                <th>Performed By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                <tr>
+                    <td>@t.Patient?.FirstName</td>
+                    <td>@t.TreatmentType</td>
+                    <td>@t.Details</td>
+                    <td>@t.TreatmentDate.ToString("g")</td>
+                    <td>@t.PerformedBy</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} *@
+

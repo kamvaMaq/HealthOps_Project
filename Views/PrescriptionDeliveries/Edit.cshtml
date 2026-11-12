@@ -1,0 +1,36 @@
+﻿@model HealthOps_Project.Models.PrescriptionDelivery
+@{
+    ViewData["Title"] = "Edit Prescription Delivery";
+}
+
+<h2>Edit Prescription Delivery</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="PrescriptionId" class="control-label"></label>
+        <select asp-for="PrescriptionId" class="form-control" asp-items="@(ViewData["PrescriptionId"] as SelectList)">
+            <option value="">-- Select Prescription --</option>
+        </select>
+        <span asp-validation-for="PrescriptionId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
+        <select asp-for="Status" class="form-control">
+            <option value="Pending" selected="@Model.Status == " Pending"">Pending</option>
+            <option value="Delivered" selected="@Model.Status == " Delivered"">Delivered</option>
+            <option value="Cancelled" selected="@Model.Status == " Cancelled"">Cancelled</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

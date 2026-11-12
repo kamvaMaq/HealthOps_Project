@@ -1,0 +1,122 @@
+﻿@model HealthOps_Project.Models.Visitation
+
+@{
+    ViewData["Title"] = "Edit Visit";
+}
+
+<link rel="stylesheet" href="~/css/visitation.css" />
+
+<div class="visitation-container">
+    <div class="visitation-card">
+        <div class="visitation-header">
+            <h2><i class="bi bi-pencil-square me-2"></i>@ViewData["Title"]</h2>
+        </div>
+
+        <div class="visitation-body">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Warning:</strong> @ViewBag.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-action="Edit">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.VisitId)
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-4">
+                    <!-- Patient -->
+                    <div class="col-md-6">
+                        <label asp-for="PatientId" class="form-label">
+                            <i class="bi bi-person-badge me-1"></i>Patient *
+                        </label>
+
+                        <select asp-for="PatientId" asp-items="ViewBag.PatientList" class="form-select">
+                            <option value="">-- Select Patient --</option>
+                        </select>
+
+                        <span asp-validation-for="PatientId" class="text-danger"></span>
+                    </div>
+
+
+                    <!-- Visitor Name -->
+                    <div class="col-md-6">
+                        <label asp-for="VisitorName" class="form-label">
+                            <i class="bi bi-person-vcard me-1"></i>Doctor's Name *
+                        </label>
+                        <input asp-for="VisitorName" class="form-control" placeholder="Enter Doctor's name" />
+                        <span asp-validation-for="VisitorName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Visit Date -->
+                    <div class="col-md-6">
+                        <label asp-for="VisitDate" class="form-label">
+                            <i class="bi bi-clock-history me-1"></i>Visit Date & Time *
+                        </label>
+                        <input asp-for="VisitDate" type="datetime-local" class="form-control" id="VisitDate" />
+                        <span asp-validation-for="VisitDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Purpose -->
+                    <div class="col-md-6">
+                        <label asp-for="Purpose" class="form-label">
+                            <i class="bi bi-clipboard2-check me-1"></i>Purpose of Visit *
+                        </label>
+                        <input asp-for="Purpose" class="form-control" placeholder="Enter purpose of visit" />
+                        <span asp-validation-for="Purpose" class="text-danger"></span>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="col-12">
+                        <label asp-for="Notes" class="form-label">
+                            <i class="bi bi-journal-text me-1"></i>Additional Notes
+                        </label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any additional information..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">
+                            <i class="bi bi-toggle-on me-1"></i>Status
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option>Scheduled</option>
+                            <option>Completed</option>
+                            <option>Cancelled</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4 gap-3">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save2-fill me-1"></i>Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const datetimeInput = document.getElementById('VisitDate');
+            if (datetimeInput && !datetimeInput.value) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                datetimeInput.value = now.toISOString().slice(0, 16);
+            }
+        });
+    </script>
+}

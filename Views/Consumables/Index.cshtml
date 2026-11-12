@@ -1,0 +1,197 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Consumable>
+
+@{
+    ViewData["Title"] = "Consumables";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <!-- Main Card -->
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">
+                                    <i class="fas fa-boxes me-3"></i>Consumables Management
+                                </h1>
+                                <p class="lead mb-0">Manage medical consumables and supplies inventory</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="professional-icon-wrapper">
+                                    <i class="fas fa-pills fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="professional-action-bar">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control professional-search-box" placeholder="Search consumables...">
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <a asp-action="Create" class="btn btn-professional-primary">
+                                    <i class="fas fa-plus"></i> Create New Consumable
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row px-4 mt-3 professional-stagger">
+                        <div class="col-md-4">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                                <p class="text-muted mb-0">Total Consumables</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <h3 class="fw-bold text-success">@Model.Select(c => c.Unit).Distinct().Count()</h3>
+                                <p class="text-muted mb-0">Unique Units</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <h3 class="fw-bold text-info">@Model.Count(c => !string.IsNullOrEmpty(c.Description))</h3>
+                                <p class="text-muted mb-0">With Descriptions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Table -->
+                    <div class="px-4 pb-4">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-check-circle me-1"></i>@TempData["Success"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-exclamation-circle me-1"></i>@TempData["Error"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            <table class="table professional-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Unit</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="professional-table-row">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="professional-entity-icon me-3">
+                                                        <i class="fas fa-cube"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@item.Name</strong>
+                                                        <div class="text-muted small">ID: @item.ConsumableId</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="professional-truncate-text">
+                                                @if (!string.IsNullOrEmpty(item.Description))
+                                                {
+                                                    @item.Description
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fst-italic">No description</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    @item.Unit
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center">
+                                                    <a asp-action="Edit" asp-route-id="@item.ConsumableId" class="btn btn-professional-action btn-professional-edit me-2">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a asp-action="Details" asp-route-id="@item.ConsumableId" class="btn btn-professional-action btn-professional-details me-2">
+                                                        <i class="fas fa-eye"></i> Details
+                                                    </a>
+                                                    <a asp-action="Delete" asp-route-id="@item.ConsumableId" class="btn btn-professional-action btn-professional-delete">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        @if (!Model.Any())
+                        {
+                            <div class="professional-empty-state">
+                                <i class="fas fa-boxes professional-empty-state-icon"></i>
+                                <h3 class="fw-bold text-muted">No Consumables Found</h3>
+                                <p class="text-muted mb-4">Start by creating your first consumable record.</p>
+                                <a asp-action="Create" class="btn btn-professional-primary">
+                                    <i class="fas fa-plus me-2"></i> Create First Consumable
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Professional UI
+            if (typeof ProfessionalUI !== 'undefined') {
+                ProfessionalUI.init();
+            }
+
+            // Add custom functionality for consumables
+            const tableRows = document.querySelectorAll('.professional-table-row');
+
+            // Add animation delay to each row
+            tableRows.forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+            });
+        });
+    </script>
+}

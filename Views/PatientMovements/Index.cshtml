@@ -1,0 +1,324 @@
+﻿@model IEnumerable<HealthOps_Project.Models.PatientMovement>
+@{
+    ViewData["Title"] = "Patient Movements";
+}
+
+<style>
+    .movements-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .movement-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        .movement-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+        }
+
+        .movement-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+
+    .table-row-hover {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+
+        .table-row-hover:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 70px;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        color: white;
+    }
+
+    .search-box {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+    .action-bar {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+</style>
+
+<div class="movements-container">
+    <div class="container">
+        <div class="glass-card mb-5">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">🚑 Patient Movements</h1>
+                <p class="lead mb-0">Track and manage all patient transfers and movements</p>
+            </div>
+
+            <div class="action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 400px;">
+                    <input type="text" class="form-control search-box" placeholder="🔍 Search patients, wards, or movement types..." id="searchInput">
+                </div>
+                <a asp-action="Create" class="btn-primary-glow">
+                    ➕ New Movement
+                </a>
+
+                <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="row g-4 px-4 pb-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary">@Model.Count()</div>
+                        <div class="text-muted">Total Movements</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-success">@Model.Count(m => m.MovementDate.Date == DateTime.Today)</div>
+                        <div class="text-muted">Today</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-warning">@Model.GroupBy(m => m.PatientId).Count()</div>
+                        <div class="text-muted">Patients</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-info">@Model.GroupBy(m => m.WardId).Count()</div>
+                        <div class="text-muted">Wards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="table-responsive">
+                <table class="table movements-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Ward</th>
+                            <th>Room</th>
+                            <th>Bed</th>
+                            <th>Movement Type</th>
+                            <th>Date & Time</th>
+                         @*    <th>Doctor</th> *@
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="table-row-hover">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                 style="width: 40px; height: 40px; color: white; font-weight: bold;">
+                                                @item.Patient?.FirstName?[0]@item.Patient?.LastName?[0]
+                                            </div>
+                                            <div>
+                                                <strong>@item.Patient?.FirstName @item.Patient?.LastName</strong>
+                                                <br>
+                                             @*    <small class="text-muted">ID: @item.PatientId</small> *@
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Ward?.Name</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@item.Room?.RoomNumber</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@item.Bed?.BedNumber</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary text-white">@item.MovementType</span>
+                                    </td>
+                                    <td>
+                                        <div class="text-primary fw-bold">
+                                            @item.MovementDate.ToString("dd/MM/yyyy")
+                                        </div>
+                                        <small class="text-muted">
+                                            @item.MovementDate.ToString("HH:mm")
+                                        </small>
+                                    </td>
+                                  @*   <td>
+                                        <div class="text-info fw-bold">
+                                            @item.DoctorUser?.FullName
+                                        </div>
+                                    </td> *@
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Details" asp-route-id="@item.MovementId"
+                                               class="btn-action btn-details">
+                                                👁️ Details
+                                            </a>
+                                          @*   <a asp-action="Edit" asp-route-id="@item.MovementId"
+                                               class="btn-action btn-edit">
+                                                ✏️ Edit
+                                            </a> *@
+                                            <a asp-action="Delete" asp-route-id="@item.MovementId"
+                                               class="btn-action btn-delete">
+                                                🗑️ Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state text-center py-4">
+                                        <div class="empty-state-icon">📋</div>
+                                        <h4>No Patient Movements Found</h4>
+                                        <p class="text-muted">Start by adding the first patient movement record</p>
+                                        <a asp-action="Create" class="btn-primary-glow mt-3">
+                                            ➕ Add First Movement
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.table-row-hover');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}

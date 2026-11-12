@@ -1,0 +1,24 @@
+﻿@model HealthOps_Project.Models.Medication
+
+@{
+    ViewData["Title"] = "Delete Medication";
+}
+
+<h2>Delete Medication</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete this medication? This action will mark it as deleted.
+</div>
+
+<div class="mb-3"><strong>Name:</strong> @Model.Name</div>
+<div class="mb-3"><strong>Type:</strong> @Model.Type</div>
+<div class="mb-3"><strong>Quantity:</strong> @Model.Quantity</div>
+<div class="mb-3"><strong>Expiry Date:</strong> @Model.ExpiryDate.ToShortDateString()</div>
+<div class="mb-3"><strong>Schedule:</strong> @Model.Schedule</div>
+<div class="mb-3"><strong>Description:</strong> @(string.IsNullOrEmpty(Model.Description) ? "None" : Model.Description)</div>
+
+<form asp-action="DeleteMedication" method="post">
+    <input type="hidden" asp-for="MedicationId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Medications" class="btn btn-secondary">Cancel</a>
+</form>

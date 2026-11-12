@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Select Patient";
+    var patients = ViewBag.Patients as List<HealthOps_Project.Models.Patient>;
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-3">Select a Patient</h2>
+
+    @if (patients != null && patients.Any())
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in patients)
+                {
+                    <tr>
+                        <td>@patient.FirstName @patient.LastName</td>
+                        <td>
+                            <a asp-action="Create" asp-route-patientId="@patient.PatientId" class="btn btn-success btn-sm">
+                                Select
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No patients found.</div>
+    }
+</div>

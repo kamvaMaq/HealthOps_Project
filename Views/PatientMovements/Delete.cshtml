@@ -1,0 +1,183 @@
+﻿@model HealthOps_Project.Models.PatientMovement
+@{
+    ViewData["Title"] = "Delete Movement";
+}
+
+<style>
+    .movements-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-danger-glow {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+    }
+
+        .btn-danger-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .warning-card {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 2px solid #ffc107;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+    }
+
+    .detail-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        color: #34495e;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="movements-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">🗑️ Delete Movement</h1>
+                <p class="lead mb-0">Remove patient movement record from the system</p>
+            </div>
+
+            <div class="p-4">
+                <div class="warning-card">
+                    <div class="text-center">
+                        <h3 class="text-warning mb-3">⚠️ Warning</h3>
+                        <p class="mb-3">
+                            <strong>You are about to delete this patient movement record.</strong>
+                        </p>
+                        <p class="mb-0">
+                            This action will mark the movement as inactive and free up the associated bed.
+                            The record will be preserved but hidden from active views.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Movement Details -->
+                    <div class="col-md-6">
+                        <div class="detail-card">
+                            <h5 class="text-primary mb-3">Movement Details</h5>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Patient</div>
+                                    <div class="detail-value">@Model.Patient?.FirstName @Model.Patient?.LastName</div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Movement Type</div>
+                                    <div class="detail-value">@Model.MovementType</div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Date & Time</div>
+                                    <div class="detail-value">@Model.MovementDate.ToString("dd/MM/yyyy HH:mm")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Details -->
+                    <div class="col-md-6">
+                        <div class="detail-card">
+                            <h5 class="text-primary mb-3">Location Details</h5>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Ward</div>
+                                    <div class="detail-value">@Model.Ward?.Name</div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Room</div>
+                                    <div class="detail-value">@Model.Room?.RoomNumber</div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="detail-label">Bed</div>
+                                    <div class="detail-value">@Model.Bed?.BedNumber</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <strong>Note:</strong> This is a soft delete. The bed <strong>@Model.Bed?.BedNumber</strong> will be marked as available after deletion.
+                </div>
+
+                <form asp-action="Delete" method="post" class="mt-4">
+                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MovementId" />
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn-danger-glow">
+                            🗑️ Confirm Delete
+                        </button>
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            ↩️ Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@model HealthOps_Project.Models.WardStock
+
+@{
+    ViewData["Title"] = "Create Ward Stock";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-plus-circle me-3"></i>Create Ward Stock
+                                </h1>
+                                <p class="mb-0">Add new stock item to inventory</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <form asp-action="Create" method="post">
+                            <div class="professional-info-card mb-4">
+                                <div class="mb-3">
+                                    <label asp-for="ConsumableId" class="form-label fw-bold">Consumable</label>
+                                    <select asp-for="ConsumableId" class="form-control professional-search-box" asp-items="@(ViewData["ConsumableId"] as SelectList)">
+                                        <option value="">-- Select Consumable --</option>
+                                    </select>
+                                    <span asp-validation-for="ConsumableId" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="WardName" class="form-label fw-bold">Ward Name</label>
+                                    <input asp-for="WardName" class="form-control professional-search-box" placeholder="Enter ward name" />
+                                    <span asp-validation-for="WardName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="QuantityOnHand" class="form-label fw-bold">Quantity On Hand</label>
+                                    <input asp-for="QuantityOnHand" class="form-control professional-search-box" type="number" placeholder="Enter quantity" />
+                                    <span asp-validation-for="QuantityOnHand" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                    <i class="fas fa-arrow-left me-2"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-professional-primary">
+                                    <i class="fas fa-save me-2"></i> Create Stock
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

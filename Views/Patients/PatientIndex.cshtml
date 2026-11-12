@@ -1,0 +1,440 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Patient>
+@{
+    ViewData["Title"] = "Patient Management";
+}
+
+<style>
+    .movements-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .movement-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        .movement-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+        }
+
+        .movement-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+
+    .table-row-hover {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+
+        .table-row-hover:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 70px;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    .btn-discharge {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        color: white;
+    }
+
+    .search-box {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+    .action-bar {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+    .patient-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .badge-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .badge-inactive {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="movements-container">
+    <div class="container">
+        <div class="glass-card mb-5">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">👥 Patients Folder</h1>
+                <p class="lead mb-0">Manage and monitor all patient records and information</p>
+            </div>
+
+            <div class="action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 400px;">
+                    <form asp-action="Search" method="get" class="search-form">
+                        <input type="text" name="query" class="form-control search-box" placeholder="🔍 Search by patient ID or name..." />
+                        <button type="submit" class="btn-primary-glow">Search</button>
+                    </form>
+                </div>
+                <div class="d-flex gap-3">
+                   @*  <a asp-controller="Patients" asp-action="Create" class="btn-primary-glow">
+                        ➕ Add Patient
+                    </a> *@
+                    <a asp-controller="Dashboard" asp-action="Doctor" class="btn-secondary-glow">
+                        🏠 Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4 px-4 pb-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary">@Model.Count()</div>
+                        <div class="text-muted">Total Patients</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-success">@Model.Count(p => p.IsActive)</div>
+                        <div class="text-muted">Active Patients</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-warning">@Model.Count(p => !p.IsActive)</div>
+                        <div class="text-muted">Inactive Patients</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-info">@Model.Select(p => p.Gender).Distinct().Count()</div>
+                        <div class="text-muted">Gender Types</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="table-responsive">
+                <table class="table movement-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>ID Number</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Medical History</th>
+                            <th>Allergies</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var patient in Model)
+                            {
+                                <tr class="table-row-hover">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="patient-avatar me-3">
+                                                @patient.FirstName?[0]@patient.LastName?[0]
+                                            </div>
+                                            <div>
+                                                <strong>@patient.FirstName @patient.LastName</strong>
+                                                <br>
+                                                <small class="text-muted">ID: @patient.PatientId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong>@patient.SouthAfricanID</strong>
+                                    </td>
+                                    <td>@patient.Email</td>
+                                    <td>@patient.Age</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@patient.Gender</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(patient.MedicalHistory))
+                                        {
+                                            <span class="text-truncate" style="max-width: 150px; display: inline-block;">
+                                                @patient.MedicalHistory
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">None</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(patient.Allergies))
+                                        {
+                                            <span class="text-truncate" style="max-width: 150px; display: inline-block;">
+                                                @patient.Allergies
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">None</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (patient.IsActive)
+                                        {
+                                            <span class="status-badge badge-active">🟢 Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-inactive">🔴 Inactive</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="PatientDetails" asp-route-id="@patient.PatientId"
+                                               class="btn-action btn-details">
+                                                <span>👁️</span>
+                                                <span>View</span>
+                                            </a>
+                                          @*   <a asp-action="Edit" asp-route-id="@patient.PatientId"
+                                               class="btn-action btn-edit">
+                                                <span>✏️</span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a asp-action="Discharge" asp-route-id="@patient.PatientId"
+                                               class="btn-action btn-discharge">
+                                                <span>🏥</span>
+                                                <span>Discharge</span>
+                                            </a> *@
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <div class="empty-state text-center py-4">
+                                        <div class="empty-state-icon">👥</div>
+                                        <h4>No Patients Found</h4>
+                                        <p class="text-muted">Start by adding the first patient record</p>
+                                        <a asp-controller="Patients" asp-action="Create" class="btn-primary-glow mt-3">
+                                            ➕ Add First Patient
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Search functionality for table rows
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.querySelector('input[name="query"]');
+            if (searchInput) {
+                searchInput.addEventListener('input', function (e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('.table-row-hover');
+
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Add hover effects to stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add loading animation to buttons
+            document.querySelectorAll('.btn-action').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+}

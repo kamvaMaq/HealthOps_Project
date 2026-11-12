@@ -1,0 +1,108 @@
+﻿@model HealthOps_Project.Models.Patient
+@{
+    ViewData["Title"] = "Discharge Patient";
+}
+
+<style>
+    /* Hide navbar */
+    .navbar {
+        display: none;
+    }
+
+    /* General page styling */
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    /* Header styling */
+    .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 0;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        position: relative;
+        text-align: center;
+    }
+
+    h1 {
+        font-weight: 700;
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    /* Confirmation card */
+    .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        text-decoration: none;
+        margin: 5px;
+    }
+
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231,76,60,0.3);
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+    .patient-info {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+
+    <div class="card">
+        <p class="patient-info">
+            Are you sure you want to discharge <strong>@Model.FirstName @Model.LastName</strong> ?
+        </p>
+
+        <form asp-controller="Visitation" asp-action="Discharge" asp-route-id="@Model.PatientId" method="post">
+            @Html.AntiForgeryToken()
+            <button  type="submit" class="btn btn-danger">Confirm Discharge</button>
+            <a asp-controller="Visitation" asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+
+    </div>
+</div>

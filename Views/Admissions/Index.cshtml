@@ -1,0 +1,474 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Admission>
+@{
+    ViewData["Title"] = "Admissions Management";
+}
+
+<style>
+    .movements-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .movement-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        .movement-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+        }
+
+        .movement-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            vertical-align: middle;
+        }
+
+    .table-row-hover {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+
+        .table-row-hover:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 70px;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        color: white;
+    }
+
+    .search-box {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+    .action-bar {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+    .patient-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .badge-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .badge-discharged {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .success-alert {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 2px solid #28a745;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="movements-container">
+    <div class="container">
+        <div class="glass-card mb-5">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">🏥 Admissions Management</h1>
+                <p class="lead mb-0">Track and manage all patient admissions and discharges</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="success-alert">
+                    <strong>✅ @TempData["SuccessMessage"]</strong>
+                </div>
+            }
+
+            <div class="action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 400px;">
+                    <input type="text" class="form-control search-box" placeholder="🔍 Search patients, wards, or status..." id="searchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-action="Create" class="btn-primary-glow">
+                        ➕ New Admission
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn-secondary-glow">
+                        🏠 Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4 px-4 pb-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary">@Model.Count()</div>
+                        <div class="text-muted">Total Admissions</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary">@Model.Count()</div>
+                        <div class="text-muted">Currently Admitted</div>
+                    </div>
+                </div>
+              @*   <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-warning">@Model.Count(a => a.DischargeDate.HasValue)</div>
+                        <div class="text-muted">Discharged</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number text-info">@Model.Count(a => !a.IsActive)</div>
+                        <div class="text-muted">Inactive Records</div>
+                    </div>
+                </div> *@
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="table-responsive">
+                <table class="table movement-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Ward</th>
+                            <th>Bed</th>
+                            <th>Admission Date</th>
+                            <th>Discharge Date</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admissionsTableBody">
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="table-row-hover">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="patient-avatar me-3">
+                                                @item.Patient?.FirstName?[0]@item.Patient?.LastName?[0]
+                                            </div>
+                                            <div>
+                                                <strong>@item.Patient?.FirstName @item.Patient?.LastName</strong>
+                                                <br>
+                                             @*    <small class="text-muted">ID: @item.PatientId</small> *@
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Ward?.Name</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border p-2">@item.Bed?.BedNumber</span>
+                                    </td>
+                                    <td>
+                                        <div class="text-primary fw-bold">
+                                            @item.AdmissionDate.ToString("dd/MM/yyyy")
+                                        </div>
+                                        <small class="text-muted">
+                                            @item.AdmissionDate.ToString("HH:mm")
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if (item.DischargeDate.HasValue)
+                                        {
+                                            <div class="text-success fw-bold">
+                                                @item.DischargeDate.Value.ToString("dd/MM/yyyy")
+                                            </div>
+                                            <small class="text-muted">
+                                                @item.DischargeDate.Value.ToString("HH:mm")
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="status-badge badge-active">🟢 Active</span>
+                                        }
+                                        else if (item.DischargeDate.HasValue)
+                                        {
+                                            <span class="status-badge badge-discharged">🟡 Discharged</span>
+                                        }
+                                        else
+                                        {
+                                           @*  <span class="status-badge badge-active">🟢 Active</span> *@
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Details" asp-route-id="@item.Id"
+                                               class="btn-action btn-details">
+                                                👁️ Details
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.Id"
+                                               class="btn-action btn-edit">
+                                                ✏️ Edit
+                                            </a>
+                                          @*   <a asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn-action btn-delete">
+                                                🗑️ Delete
+                                            </a> *@
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state text-center py-4">
+                                        <div class="empty-state-icon">🏥</div>
+                                        <h4>No Admissions Found</h4>
+                                        <p class="text-muted">Start by adding the first admission record</p>
+                                        <a asp-action="Create" class="btn-primary-glow mt-3">
+                                            ➕ Add First Admission
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Live search functionality
+        $(document).ready(function () {
+            $('#searchInput').on('keyup', function () {
+                var query = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("LiveSearch", "Admissions")',
+                    type: 'GET',
+                    data: { query: query },
+                    success: function (data) {
+                        $('#admissionsTableBody').html(data);
+
+                        // Re-add hover effects to new rows
+                        $('.table-row-hover').hover(
+                            function () {
+                                $(this).css({
+                                    'transform': 'translateY(-3px)',
+                                    'background': 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+                                    'box-shadow': '0 8px 25px rgba(0, 0, 0, 0.1)'
+                                });
+                            },
+                            function () {
+                                $(this).css({
+                                    'transform': 'translateY(0)',
+                                    'background': '',
+                                    'box-shadow': 'none'
+                                });
+                            }
+                        );
+                    }
+                });
+            });
+        });
+
+        // Enhanced interactions
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add hover effects to stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add loading animation to buttons
+            document.querySelectorAll('.btn-action').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Enhanced search box focus
+            const searchBox = document.getElementById('searchInput');
+            if (searchBox) {
+                searchBox.addEventListener('focus', function () {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.2)';
+                });
+
+                searchBox.addEventListener('blur', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                });
+            }
+        });
+    </script>
+}

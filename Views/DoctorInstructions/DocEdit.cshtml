@@ -1,0 +1,87 @@
+﻿@model HealthOps_Project.Models.DoctorInstruction
+@{
+    ViewData["Title"] = "Edit Doctor Instruction";
+}
+
+<style>
+    /* Optional: slightly dim readonly/disabled inputs */
+    .readonly-field {
+        background-color: #f8f9fa; /* light gray */
+        color: #6c757d; /* muted text */
+        pointer-events: none; /* prevent interaction */
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Doctor Instruction</h4>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <form asp-action="DocEdit" asp-route-id="@Model.DoctorInstructionId" method="post">
+                        <input type="hidden" asp-for="DoctorInstructionId" />
+                        <input type="hidden" asp-for="CreatedDate" />
+
+                        <!-- Patient field -->
+                        <div class="mb-3">
+                            <label asp-for="PatientId" class="form-label fw-bold">Patient</label>
+                            <select asp-for="PatientId" class="form-select readonly-field" asp-items="ViewBag.PatientList" disabled></select>
+                            <input type="hidden" asp-for="PatientId" />
+                        </div>
+
+                        <!-- Doctor Name -->
+                        <div class="mb-3">
+                            <label asp-for="DoctorName" class="form-label fw-bold">Doctor Name</label>
+                            <input asp-for="DoctorName" class="form-control readonly-field" readonly />
+                        </div>
+
+                        <!-- Visit Date -->
+                        <div class="mb-3">
+                            <label asp-for="VisitDate" class="form-label fw-bold">Visit Date</label>
+                            <input asp-for="VisitDate" type="date" class="form-control readonly-field" readonly />
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="mb-3">
+                            <label asp-for="Instructions" class="form-label fw-bold">Instructions</label>
+                            <textarea asp-for="Instructions" class="form-control readonly-field" rows="4" readonly></textarea>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-3">
+                            <label asp-for="Priority" class="form-label fw-bold">Priority</label>
+                            <select asp-for="Priority" class="form-select readonly-field" disabled>
+                                <option value="Normal" selected="@(Model.Priority == "Normal")">Normal</option>
+                                <option value="High" selected="@(Model.Priority == "High")">High</option>
+                                <option value="Urgent" selected="@(Model.Priority == "Urgent")">Urgent</option>
+                            </select>
+                            <input type="hidden" asp-for="Priority" />
+                        </div>
+
+                        <!-- IsCompleted -->
+                        <div class="form-check mb-4">
+                            <input asp-for="IsCompleted" class="form-check-input" type="checkbox" value="true" />
+                            <input type="hidden" asp-for="IsCompleted" value="false" />
+                            <label asp-for="IsCompleted" class="form-check-label fw-bold">Mark as Completed</label>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-save me-2"></i>Update Instruction</button>
+                            <a asp-action="DoctorIndex" class="btn btn-secondary"><i class="bi bi-x-circle me-2"></i>Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

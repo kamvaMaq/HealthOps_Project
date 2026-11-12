@@ -1,0 +1,134 @@
+@model HealthOps_Project.Models.Prescription
+
+@{
+    ViewData["Title"] = "Prescription Details";
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Prescriptions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        </ol>
+    </nav>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-prescription-bottle-alt me-2"></i>@ViewData["Title"]
+            </div>
+            <div>
+                <a asp-action="GeneratePdf" asp-route-id="@Model.PrescriptionId" class="btn btn-sm btn-light" title="Generate PDF">
+                    <i class="fas fa-file-pdf me-1"></i>Download PDF
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <h5>Prescription Information</h5>
+                        <span class="badge bg-info">ID: @Model.PrescriptionId</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    @if (User.IsInRole("ScriptManager") || User.IsInRole("Admin"))
+                    {
+                        <div class="btn-group">
+                            <form asp-action="ProcessScript" method="post" class="d-inline" onsubmit="return confirm('Process this script and forward to pharmacy?');">
+                                <input type="hidden" name="id" value="@Model.PrescriptionId" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success btn-sm" title="Process Script">
+                                    <i class="fas fa-paper-plane me-1"></i>Process Script
+                                </button>
+                            </form>
+                            <form asp-action="MarkAsDispensed" method="post" class="d-inline" onsubmit="return confirm('Mark medication as dispensed?');">
+                                <input type="hidden" name="id" value="@Model.PrescriptionId" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-secondary btn-sm" title="Mark Dispensed">
+                                    <i class="fas fa-check-circle me-1"></i>Mark Dispensed
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <dl class="row">
+                <dt class="col-sm-3">Patient</dt>
+                <dd class="col-sm-9">@Model.Patient?.SouthAfricanID @Model.Patient?.SouthAfricanID</dd>
+                <dt class="col-sm-3">Medication</dt>
+                <dd class="col-sm-9">@Model.MedicationName</dd>
+                <dt class="col-sm-3">Dosage</dt>
+                <dd class="col-sm-9">@Model.Dosage</dd>
+                <dt class="col-sm-3">Frequency</dt>
+                <dd class="col-sm-9">@Model.Frequency</dd>
+                <dt class="col-sm-3">Start Date</dt>
+                <dd class="col-sm-9">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
+                <dt class="col-sm-3">End Date</dt>
+                <dd class="col-sm-9">@Model.EndDate?.ToString("yyyy-MM-dd")</dd>
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @GetStatusBadgeClass(Model.Status)">@Model.Status</span>
+                </dd>
+                <dt class="col-sm-3">Priority</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @GetPriorityBadgeClass(Model.Priority)">@Model.Priority</span>
+                </dd>
+                <dt class="col-sm-3">Instructions</dt>
+                <dd class="col-sm-9">@Model.Instructions</dd>
+                <dt class="col-sm-3">Notes</dt>
+                <dd class="col-sm-9">@Model.Notes</dd>
+                <dt class="col-sm-3">Prescribing Doctor</dt>
+                <dd class="col-sm-9"> DR @Model.PrescribingDoctor</dd>
+                <dt class="col-sm-3">Created at</dt>
+                <dd class="col-sm-9">@Model.CreatedAt.ToString("g") </dd>
+            </dl>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.PrescriptionId" class="btn btn-warning me-2"><i class="fas fa-edit me-1"></i>Edit</a>
+                    <a asp-action="GeneratePdf" asp-route-id="@Model.PrescriptionId" class="btn btn-info"><i class="fas fa-file-pdf me-1"></i>Generate PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "new" => "bg-success",
+            "pending" => "bg-warning",
+            "processed" => "bg-info",
+            "dispensed" => "bg-primary",
+            "completed" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetPriorityBadgeClass(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "low" => "bg-secondary",
+            "medium" => "bg-warning",
+            "high" => "bg-danger",
+            "urgent" => "bg-danger",
+            "stat" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

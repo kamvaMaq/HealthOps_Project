@@ -1,0 +1,71 @@
+﻿@model HealthOps_Project.Models.ProfileEditViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 600px; border-radius: 1.5rem; background: linear-gradient(135deg, #fff7d6, #ffe6a7);">
+        <h2 class="text-center mb-4 text-primary border-bottom pb-2">Edit Profile</h2>
+
+        <form asp-action="EditProfile" method="post">
+            <div class="mb-3">
+                <label asp-for="FirstName" class="form-label fw-bold text-dark">First Name</label>
+                <input asp-for="FirstName" class="form-control border-primary shadow-sm" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label fw-bold text-dark">Last Name</label>
+                <input asp-for="LastName" class="form-control border-primary shadow-sm" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-bold text-dark">Email</label>
+                <input asp-for="Email" class="form-control border-primary shadow-sm" readonly />
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success rounded-pill px-4 me-2 shadow-sm">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+                <a asp-action="Profile" class="btn btn-secondary rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-arrow-left-circle"></i> Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    /* Card styling same as Profile */
+    .card {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+    h2 {
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    input.form-control {
+        border-radius: 0.5rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .btn {
+        font-weight: 600;
+    }
+</style>

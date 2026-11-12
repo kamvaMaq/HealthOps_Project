@@ -1,0 +1,165 @@
+﻿@model HealthOps_Project.Models.Prescription
+<partial name="_BackButton" />
+@{
+    ViewData["Title"] = "Prescription Details";
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Script Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4><i class="fas fa-prescription-bottle-alt me-2"></i>Prescription #@Model.PrescriptionId</h4>
+            <div>
+                <a asp-action="GeneratePdf" asp-route-id="@Model.PrescriptionId" class="btn btn-light btn-sm">
+                    <i class="fas fa-file-pdf me-1"></i>Generate PDF
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Patient Information</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Patient Name:</dt>
+                        <dd class="col-sm-8">@Model.Patient?.FirstName @Model.Patient?.LastName</dd>
+
+                        <dt class="col-sm-4">Patient ID:</dt>
+                        <dd class="col-sm-8">@Model.Patient?.SouthAfricanID</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <h5>Prescription Details</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Medication:</dt>
+                        <dd class="col-sm-8">@Model.MedicationName</dd>
+
+                        <dt class="col-sm-4">Dosage:</dt>
+                        <dd class="col-sm-8">@Model.Dosage</dd>
+
+                        <dt class="col-sm-4">Frequency:</dt>
+                        <dd class="col-sm-8">@Model.Frequency</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h5>Treatment Information</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Instructions:</dt>
+                        <dd class="col-sm-8">@Model.Instructions</dd>
+
+                        <dt class="col-sm-4">Quantity:</dt>
+                        <dd class="col-sm-8">@Model.Quantity</dd>
+
+                        <dt class="col-sm-4">Start Date:</dt>
+                        <dd class="col-sm-8">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
+
+                        <dt class="col-sm-4">End Date:</dt>
+                        <dd class="col-sm-8">@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "Not specified")</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <h5>Administrative</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @GetStatusBadgeClass(Model.Status)">@Model.Status</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Priority:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @GetPriorityBadgeClass(Model.Priority)">@Model.Priority</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Prescribing Doctor:</dt>
+                        <dd class="col-sm-8">@Model.PrescribingDoctor</dd>
+
+                        <dt class="col-sm-4">Created:</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Last Updated:</dt>
+                        <dd class="col-sm-8">@(Model.UpdatedAt?.ToString("yyyy-MM-dd HH:mm") ?? "Never")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Notes))
+            {
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h5>Notes</h5>
+                        <div class="alert alert-info">
+                            @Model.Notes
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="btn-group">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to List
+                        </a>
+                        @if (Model.Status == "New" || Model.Status == "Pending")
+                        {
+                            <form asp-action="MarkAsProcessed" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.PrescriptionId" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check me-1"></i>Mark as Processed
+                                </button>
+                            </form>
+                        }
+                        @if (Model.Status == "Processed")
+                        {
+                            <form asp-action="MarkAsDispensed" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.PrescriptionId" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check-double me-1"></i>Mark as Dispensed
+                                </button>
+                            </form>
+                        }
+                        <a asp-action="GeneratePdf" asp-route-id="@Model.PrescriptionId" class="btn btn-info">
+                            <i class="fas fa-file-pdf me-1"></i>Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "new" => "bg-success",
+            "pending" => "bg-warning",
+            "processed" => "bg-info",
+            "dispensed" => "bg-primary",
+            "active" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetPriorityBadgeClass(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "urgent" or "high" => "bg-danger",
+            "medium" => "bg-warning",
+            "routine" or "low" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}

@@ -1,0 +1,72 @@
+﻿@model HealthOps_Project.Models.Patient
+
+@{
+    ViewData["Title"] = "Discharge Patient";
+}
+
+<h1>Discharge Patient</h1>
+
+<h3>Are you sure you want to Discharge this Patient?</h3>
+
+<form asp-controller="Patients"  asp-action="Discharge">
+    <input type="hidden" asp-for="PatientId" />
+    <input type="submit" value="Discharge" class="btn btn-danger" />
+    <a asp-action="PatientIndex" class="btn btn-secondary">Cancel</a>
+</form>
+<style>
+    /* Hide navbar */
+    .navbar {
+        display: none;
+    }
+
+
+    /* Header styling */
+    h1 {
+        color: #e53e3e;
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: 700;
+        font-size: 2.2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #e53e3e, #feb2b2);
+            border-radius: 2px;
+        }
+
+    .btn-secondary {
+        background: linear-gradient(to right, #a0aec0, #718096);
+        color: white;
+        box-shadow: 0 4px 6px rgba(113, 128, 150, 0.3);
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #718096, #4a5568);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(113, 128, 150, 0.4);
+        }
+
+    /* Focus states for accessibility */
+    input[type="submit"]:focus,
+    .btn:focus {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+    }
+
+
+  
+</style>

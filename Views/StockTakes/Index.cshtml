@@ -1,0 +1,240 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Stocktake>
+
+@{
+    ViewData["Title"] = "Stocktakes";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <!-- Main Card -->
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="display-5 fw-bold mb-3">
+                                    <i class="fas fa-clipboard-check me-3"></i>Stocktake Management
+                                </h1>
+                                <p class="lead mb-0">Track and manage inventory stocktakes across hospital wards</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="professional-icon-wrapper">
+                                    <i class="fas fa-clipboard-list fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="professional-action-bar">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control professional-search-box" placeholder="Search stocktakes...">
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <a asp-action="Create" class="btn btn-professional-primary me-2">
+                                    <i class="fas fa-plus"></i> New Stocktake
+                                </a>
+                                <a asp-action="GenerateReport" class="btn btn-professional-secondary">
+                                    <i class="fas fa-file-pdf"></i> Generate PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row px-4 mt-3 professional-stagger">
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-list-alt"></i>
+                                </div>
+                                <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                                <p class="text-muted mb-0">Total Stocktakes</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <h3 class="fw-bold text-success">@Model.Select(s => s.WardName).Distinct().Count()</h3>
+                                <p class="text-muted mb-0">Unique Wards</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <h3 class="fw-bold text-warning">@Model.Select(s => s.ConsumableId).Distinct().Count()</h3>
+                                <p class="text-muted mb-0">Unique Consumables</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="professional-stat-card">
+                                <div class="professional-entity-icon mx-auto mb-3">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <h3 class="fw-bold text-info">@Model.Sum(s => s.QuantityCounted)</h3>
+                                <p class="text-muted mb-0">Total Quantity</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Section -->
+                    <div class="professional-filter-section">
+                        <h5 class="fw-bold mb-3">Filter by Ward</h5>
+                        <div class="d-flex flex-wrap">
+                            <button class="professional-filter-btn active" data-filter="all">All Wards</button>
+                            @foreach (var ward in Model.Select(s => s.WardName).Distinct().Take(5))
+                            {
+                                <button class="professional-filter-btn" data-filter="@ward">@ward</button>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Main Table -->
+                    <div class="px-4 pb-4">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-check-circle me-1"></i>@TempData["Success"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show professional-animate-in" role="alert">
+                                <i class="fas fa-exclamation-circle me-1"></i>@TempData["Error"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            <table class="table professional-table">
+                                <thead>
+                                    <tr>
+                                        <th>Consumable</th>
+                                        <th>Ward</th>
+                                        <th>Quantity Counted</th>
+                                        <th>Date Taken</th>
+                                        <th>Notes</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="professional-table-row" data-ward="@item.WardName">
+                                            <td class="professional-truncate-text">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="professional-entity-icon me-3">
+                                                        <i class="fas fa-box"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@item.Consumable?.Name</strong>
+                                                        <div class="text-muted small">ID: @item.Id</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="professional-status-badge professional-badge-normal">
+                                                    @item.WardName
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold @(item.QuantityCounted <= 10 ? "text-warning" : "text-success")">
+                                                    @item.QuantityCounted
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted">@item.DateTaken.ToString("MMM dd, yyyy")</div>
+                                                <div class="small">@item.DateTaken.ToString("HH:mm")</div>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Notes))
+                                                {
+                                                    <span class="professional-truncate-text" style="max-width: 150px;">
+                                                        @item.Notes
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted fst-italic">No notes</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center">
+                                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-details me-2">
+                                                        <i class="fas fa-eye"></i> Details
+                                                    </a>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-edit me-2">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-professional-action btn-professional-delete">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        @if (!Model.Any())
+                        {
+                            <div class="professional-empty-state">
+                                <i class="fas fa-clipboard-list professional-empty-state-icon"></i>
+                                <h3 class="fw-bold text-muted">No Stocktakes Found</h3>
+                                <p class="text-muted mb-4">Start by creating your first stocktake record.</p>
+                                <a asp-action="Create" class="btn btn-professional-primary">
+                                    <i class="fas fa-plus me-2"></i> Create First Stocktake
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Professional UI
+            if (typeof ProfessionalUI !== 'undefined') {
+                ProfessionalUI.init();
+            }
+
+            // Add custom functionality for stocktakes
+            const tableRows = document.querySelectorAll('.professional-table-row');
+
+            // Add animation delay to each row
+            tableRows.forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+            });
+
+            // Add low quantity warning pulse
+            const lowQuantityCells = document.querySelectorAll('.text-warning');
+            lowQuantityCells.forEach(cell => {
+                cell.classList.add('professional-pulse');
+            });
+        });
+    </script>
+}

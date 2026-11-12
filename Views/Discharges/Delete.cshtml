@@ -1,0 +1,668 @@
+﻿@model HealthOps_Project.Models.Discharge
+
+@{
+    ViewData["Title"] = "Delete Discharge";
+}
+
+<style>
+    .discharge-delete-container {
+        background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .discharge-delete-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(139, 0, 0, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        animation: floatBackground 15s ease-in-out infinite;
+    }
+
+    .professional-glass-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow:
+            0 25px 50px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .professional-glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow:
+            0 35px 60px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .professional-header {
+        background: linear-gradient(135deg, #dc281e 0%, #8b0000 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .professional-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: professionalShimmer 4s infinite;
+    }
+
+    .warning-section {
+        background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 30px;
+        border: 2px solid #dc3545;
+        border-left: 6px solid #dc281e;
+        transition: all 0.4s ease;
+        box-shadow: 0 15px 35px rgba(220, 53, 69, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .warning-section::before {
+        content: '⚠️';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 6rem;
+        opacity: 0.1;
+        transform: rotate(15deg);
+        animation: warningFloat 3s ease-in-out infinite;
+    }
+
+    .warning-section:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(220, 53, 69, 0.15);
+    }
+
+    .btn-danger-glow {
+        background: linear-gradient(135deg, #dc281e 0%, #8b0000 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 16px 40px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 10px 30px rgba(220, 40, 30, 0.4);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-danger-glow::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s;
+    }
+
+    .btn-danger-glow:hover::before {
+        left: 100%;
+    }
+
+    .btn-danger-glow:hover {
+        transform: translateY(-3px) scale(1.08);
+        box-shadow: 0 20px 40px rgba(220, 40, 30, 0.6);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 16px 40px;
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-secondary-glow:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(108, 117, 125, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .discharge-info-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 30px;
+        border-left: 4px solid #dc281e;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .discharge-info-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        margin-right: 15px;
+        transition: all 0.4s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .icon-wrapper:hover {
+        transform: rotate(15deg) scale(1.1);
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .pulse-danger {
+        animation: pulseDanger 2s infinite;
+    }
+
+    .shake-animation {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    .floating {
+        animation: floating 4s ease-in-out infinite;
+    }
+
+    /* Animations */
+    @@keyframes floatBackground {
+        0%, 100% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(20px, -15px) scale(1.02); }
+        66% { transform: translate(-15px, 10px) scale(0.98); }
+    }
+
+    @@keyframes professionalShimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    @@keyframes pulseDanger {
+        0% {
+            box-shadow: 0 0 0 0 rgba(220, 40, 30, 0.7);
+            transform: scale(1);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(220, 40, 30, 0);
+            transform: scale(1.05);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(220, 40, 30, 0);
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    @@keyframes warningFloat {
+        0%, 100% { transform: rotate(15deg) translateY(0px); }
+        50% { transform: rotate(20deg) translateY(-10px); }
+    }
+
+    @@keyframes floating {
+        0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+        33% { transform: translate(20px, -15px) rotate(120deg); }
+        66% { transform: translate(-15px, 10px) rotate(240deg); }
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .consequences-list {
+        background: rgba(220, 53, 69, 0.05);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 4px solid #dc3545;
+    }
+
+    .consequence-item {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 8px 0;
+        transition: all 0.3s ease;
+    }
+
+    .consequence-item:hover {
+        transform: translateX(5px);
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 8px;
+        padding: 8px 12px;
+    }
+
+    .danger-icon {
+        width: 24px;
+        height: 24px;
+        background: #dc3545;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.8rem;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .discharge-highlight {
+        background: linear-gradient(135deg, #dc281e, #8b0000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 1.3em;
+        padding: 0 5px;
+        border-radius: 5px;
+        animation: textPulse 2s infinite;
+    }
+
+    @@keyframes textPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    .confirmation-check {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 15px;
+        margin: 15px 0;
+        border: 2px dashed #dc3545;
+        transition: all 0.3s ease;
+    }
+
+    .confirmation-check:hover {
+        background: rgba(255, 255, 255, 1);
+        border-color: #dc281e;
+        transform: scale(1.02);
+    }
+
+    .detail-row {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .detail-row:hover {
+        background: rgba(220, 53, 69, 0.05);
+        border-radius: 8px;
+        padding: 12px 15px;
+        transform: translateX(5px);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 700;
+        color: #dc281e;
+        font-size: 1rem;
+        min-width: 150px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1rem;
+        flex: 1;
+    }
+
+    .patient-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        background: linear-gradient(135deg, #dc281e 0%, #8b0000 100%);
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .patient-avatar:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 15px rgba(220, 40, 30, 0.4);
+    }
+</style>
+
+<div class="discharge-delete-container">
+    <div class="container">
+        <div class="professional-glass-card animate-slide-in">
+            <!-- Professional Header -->
+            <div class="professional-header">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="icon-wrapper floating">
+                        <span style="font-size: 2.2rem;">🗑️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Delete Discharge Record</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Critical action requiring confirmation</p>
+            </div>
+
+            <div class="p-5">
+                <!-- Warning Section -->
+                <div class="warning-section animate-slide-in" style="animation-delay: 0.2s;">
+                    <div class="text-center">
+                        <div class="mb-4">
+                            <span style="font-size: 4rem;" class="pulse-danger">⚠️</span>
+                        </div>
+                        <h3 class="fw-bold text-dark mb-3">Critical Action Required</h3>
+                        <p class="fs-5 mb-4">
+                            You are about to permanently delete the discharge record for
+                            <span class="discharge-highlight">@Model.Patient?.FirstName</span>
+                        </p>
+                        <p class="text-muted fs-6">
+                            This action cannot be undone and will permanently remove all associated discharge data.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Discharge Information -->
+                <div class="discharge-info-card animate-slide-in" style="animation-delay: 0.3s;">
+                    <h5 class="fw-bold text-dark mb-3">📋 Discharge Details</h5>
+                    <div class="detail-list">
+                        <!-- Discharge Date -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>📅</span>
+                                Discharge Date
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>@Model.DischargeDate.ToString("yyyy-MM-dd")</strong>
+                                <small class="text-muted d-block">@Model.DischargeDate.ToString("MMM dd, yyyy")</small>
+                            </dd>
+                        </div>
+
+                        <!-- Discharge Reason -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>📝</span>
+                                Reason
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>@Model.Reason</strong>
+                            </dd>
+                        </div>
+
+                        <!-- Patient Information -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>👤</span>
+                                Patient
+                            </dt>
+                            <dd class="detail-value">
+                                <div class="d-flex align-items-center">
+                                    <div class="patient-avatar">
+                                        @Model.Patient?.FirstName?[0]@Model.Patient?.LastName?[0]
+                                    </div>
+                                    <div>
+                                        <strong>@Model.Patient?.FirstName @Model.Patient?.LastName</strong>
+                                        <br>
+                                    @*     <small class="text-muted">ID: #@Model.PatientId</small> *@
+                                    </div>
+                                </div>
+                            </dd>
+                        </div>
+
+                        <!-- Ward Information -->
+                        <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>🏥</span>
+                                Ward
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>@Model.Ward?.Name</strong>
+                                <br>
+                              @*   <small class="text-muted">Ward ID: #@Model.WardId</small> *@
+                            </dd>
+                        </div>
+
+                        <!-- Record ID -->
+                     @*    <div class="detail-row">
+                            <dt class="detail-label">
+                                <span>🆔</span>
+                                Record ID
+                            </dt>
+                            <dd class="detail-value">
+                                <strong>#@Model.Id.ToString("D3")</strong>
+                            </dd>
+                        </div> *@
+                    </div>
+                </div>
+
+                <!-- Consequences Warning -->
+                <div class="consequences-list animate-slide-in" style="animation-delay: 0.4s;">
+                    <h6 class="fw-bold text-danger mb-3">🚨 Consequences of This Action:</h6>
+                    <div class="consequence-item">
+                        <div class="danger-icon">❗</div>
+                        <span>Discharge record will be permanently removed from the system</span>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="danger-icon">❗</div>
+                        <span>Patient's discharge history will be affected</span>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="danger-icon">❗</div>
+                        <span>Ward discharge statistics will be updated</span>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="danger-icon">❗</div>
+                        <span>This action cannot be reversed or recovered</span>
+                    </div>
+                </div>
+
+                <!-- Confirmation Check -->
+                <div class="confirmation-check animate-slide-in" style="animation-delay: 0.5s;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmationCheck" style="width: 20px; height: 20px;">
+                        <label class="form-check-label fw-semibold" for="confirmationCheck">
+                            I understand that this action is permanent and cannot be undone
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <form asp-action="Delete" method="post" class="text-center mt-5 animate-slide-in" style="animation-delay: 0.6s;" id="deleteForm">
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn-danger-glow me-3" id="deleteButton" disabled>
+                        <span>🗑️</span>
+                        <span>Confirm Permanent Delete</span>
+                    </button>
+
+                    <a asp-action="Index" class="btn-secondary-glow">
+                        <span>⬅</span>
+                        <span>Cancel & Return</span>
+                    </a>
+                </form>
+
+                <!-- Additional Warning -->
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        ⏰ This action will be processed immediately upon confirmation
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmationCheck = document.getElementById('confirmationCheck');
+            const deleteButton = document.getElementById('deleteButton');
+            const deleteForm = document.getElementById('deleteForm');
+            const dischargeHighlight = document.querySelector('.discharge-highlight');
+
+            // Confirmation checkbox logic
+            confirmationCheck.addEventListener('change', function() {
+                deleteButton.disabled = !this.checked;
+
+                if (this.checked) {
+                    deleteButton.classList.add('pulse-danger');
+                    dischargeHighlight.style.animation = 'textPulse 1s infinite';
+                } else {
+                    deleteButton.classList.remove('pulse-danger');
+                    dischargeHighlight.style.animation = 'none';
+                }
+            });
+
+            // Delete button click effects
+            deleteButton.addEventListener('mouseenter', function() {
+                if (!this.disabled) {
+                    this.classList.add('shake-animation');
+                }
+            });
+
+            deleteButton.addEventListener('animationend', function() {
+                this.classList.remove('shake-animation');
+            });
+
+            // Form submission enhancement
+            deleteForm.addEventListener('submit', function(e) {
+                if (!confirmationCheck.checked) {
+                    e.preventDefault();
+                    confirmationCheck.focus();
+                    confirmationCheck.parentElement.classList.add('shake-animation');
+                    setTimeout(() => {
+                        confirmationCheck.parentElement.classList.remove('shake-animation');
+                    }, 500);
+                    return;
+                }
+
+                // Show loading state
+                const originalText = deleteButton.innerHTML;
+                deleteButton.innerHTML = `
+                    <span class="professional-loading"></span>
+                    <span>Deleting Record...</span>
+                `;
+                deleteButton.disabled = true;
+
+                // Add shake animation to entire form
+                deleteForm.classList.add('shake-animation');
+
+                // Revert after 5 seconds if still on page
+                setTimeout(() => {
+                    if (deleteButton.disabled) {
+                        deleteButton.innerHTML = originalText;
+                        deleteButton.disabled = false;
+                        deleteForm.classList.remove('shake-animation');
+                    }
+                }, 5000);
+            });
+
+            // Enhanced detail row interactions
+            document.querySelectorAll('.detail-row').forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.background = 'rgba(220, 53, 69, 0.05)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.background = '';
+                });
+            });
+
+            // Patient avatar interactions
+            document.querySelectorAll('.patient-avatar').forEach(avatar => {
+                avatar.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1) rotate(5deg)';
+                });
+
+                avatar.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+
+            // Add CSS for loading animation
+            const style = document.createElement('style');
+            style.textContent = `
+                .professional-loading {
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    border-top-color: white;
+                    animation: professionalSpin 1s ease-in-out infinite;
+                    margin-right: 8px;
+                }
+
+                @@keyframes professionalSpin {
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Auto-focus on confirmation checkbox for accessibility
+            setTimeout(() => {
+                confirmationCheck.focus();
+            }, 500);
+        });
+    </script>
+}

@@ -1,0 +1,524 @@
+﻿@model HealthOps_Project.Models.Bed
+@{
+    ViewData["Title"] = "Bed Details";
+}
+
+<style>
+    .beds-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+        animation: gradientShift 8s ease infinite;
+        background-size: 200% 200%;
+    }
+
+    @@keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #9b59b6 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: headerGlow 3s ease-in-out infinite alternate;
+    }
+
+    @@keyframes headerGlow {
+        from { background: linear-gradient(135deg, #2c3e50 0%, #9b59b6 100%); }
+        to { background: linear-gradient(135deg, #34495e 0%, #8e44ad 100%); }
+    }
+
+    .btn-warning-glow {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+    }
+
+        .btn-warning-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(243, 156, 18, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .detail-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        animation: fadeInLeft 0.6s ease-out;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        color: #34495e;
+        margin-bottom: 15px;
+        animation: fadeInRight 0.6s ease-out;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        display: inline-block;
+        animation: flipInX 0.6s ease-out;
+    }
+
+    .badge-available {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .badge-occupied {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+    }
+
+    .bed-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 2rem;
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        animation: rotateIn 0.8s ease-out;
+        margin: 0 auto 20px;
+    }
+
+    .info-icon {
+        font-size: 1.2rem;
+        margin-right: 8px;
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    /* Enhanced Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes flipInX {
+        from {
+            transform: perspective(400px) rotateX(90deg);
+            opacity: 0;
+        }
+        to {
+            transform: perspective(400px) rotateX(0deg);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes rotateIn {
+        from {
+            opacity: 0;
+            transform: rotate(-180deg) scale(0.3);
+        }
+        to {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    @@keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .detail-row {
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+        .detail-row:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateX(5px);
+            border-radius: 10px;
+        }
+
+        .detail-row:nth-child(1) { animation-delay: 0.1s; }
+        .detail-row:nth-child(2) { animation-delay: 0.2s; }
+        .detail-row:nth-child(3) { animation-delay: 0.3s; }
+        .detail-row:nth-child(4) { animation-delay: 0.4s; }
+
+    .section-title {
+        color: #2c3e50;
+        border-bottom: 2px solid #9b59b6;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        color: white;
+        font-size: 1.8rem;
+        margin: 0 auto 15px;
+        animation: rotateIn 0.8s ease-out, float 3s ease-in-out infinite;
+    }
+
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d1e7f7 100%);
+        border: 2px solid #9b59b6;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        animation: slideInDown 0.6s ease-out;
+    }
+
+    @@keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bed-visual {
+        text-align: center;
+        padding: 20px;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .bed-symbol {
+        font-size: 4rem;
+        margin-bottom: 15px;
+        animation: bounceIn 1s ease-out;
+    }
+</style>
+
+<div class="beds-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <div class="icon-wrapper">
+                    📋
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Bed Details</h1>
+                <p class="lead mb-0">Complete information about hospital bed</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Bed Visual -->
+                <div class="bed-visual">
+                    <div class="bed-symbol">🛏️</div>
+                    <h3 class="text-primary">Bed @Model.BedNumber</h3>
+                    <p class="text-muted">Hospital Bed Information</p>
+                </div>
+
+                <!-- Information Card -->
+                <div class="info-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="text-primary mb-2">📊 Bed Overview</h5>
+                            <p class="mb-1">
+                                <strong>Status:</strong>
+                                <span class="status-badge @(Model.IsAvailable ? "badge-available" : "badge-occupied")">
+                                    @(Model.IsAvailable ? "🟢 Available" : "🔴 Occupied")
+                                </span>
+                            </p>
+                            <p class="mb-1"><strong>Bed ID:</strong> @Model.BedId</p>
+                            <p class="mb-0"><strong>Last Updated:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="bg-light rounded-3 p-3">
+                                <small class="text-muted">Bed record details</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bed Information -->
+                <div class="detail-card">
+                    <h4 class="section-title">🛏️ Bed Information</h4>
+
+                    <div class="detail-row">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="detail-label"><span class="info-icon">🔢</span> Bed Number</span>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="detail-value">@Model.BedNumber</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="detail-label"><span class="info-icon">📊</span> Availability Status</span>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="detail-value">
+                                    <span class="status-badge @(Model.IsAvailable ? "badge-available" : "badge-occupied")">
+                                        @(Model.IsAvailable ? "🟢 Available" : "🔴 Occupied")
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="detail-label"><span class="info-icon">🏢</span> Ward</span>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="detail-value">@Model.Ward?.Name</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <span class="detail-label"><span class="info-icon">🚪</span> Room</span>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="detail-value">@Model.Room?.RoomNumber</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Summary -->
+                <div class="detail-card">
+                    <h4 class="section-title">📍 Location Summary</h4>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <div class="text-primary fw-bold fs-4">@Model.BedNumber</div>
+                                <small class="text-muted">Bed Number</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <div class="text-info fw-bold fs-4">@Model.Ward?.Name</div>
+                                <small class="text-muted">Ward</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <div class="text-success fw-bold fs-4">@Model.Room?.RoomNumber</div>
+                                <small class="text-muted">Room</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <a asp-action="Edit" asp-route-id="@Model.BedId" class="btn-warning-glow me-3">
+                                ✏️ Edit Bed
+                            </a>
+                            <a asp-action="Index" class="btn-secondary-glow">
+                                ↩️ Back to List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add interactive effects to detail rows
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailRows = document.querySelectorAll('.detail-row');
+
+            detailRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.background = 'rgba(255, 255, 255, 0.5)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.background = '';
+                });
+            });
+
+            // Add click animation to buttons
+            const buttons = document.querySelectorAll('.btn-warning-glow, .btn-secondary-glow');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Add parallax effect to icon
+            const icon = document.querySelector('.icon-wrapper');
+            if (icon) {
+                document.addEventListener('mousemove', function(e) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                    icon.style.transform = `rotate(${x}deg) translate(${x}px, ${y}px)`;
+                });
+            }
+
+            // Add hover effects to info card
+            const infoCard = document.querySelector('.info-card');
+            if (infoCard) {
+                infoCard.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 25px rgba(155, 89, 182, 0.2)';
+                });
+
+                infoCard.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            }
+
+            // Add animation to bed symbol
+            const bedSymbol = document.querySelector('.bed-symbol');
+            if (bedSymbol) {
+                bedSymbol.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1) rotate(5deg)';
+                });
+
+                bedSymbol.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            }
+        });
+    </script>
+}

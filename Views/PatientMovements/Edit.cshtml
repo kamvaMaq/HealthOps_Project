@@ -1,0 +1,242 @@
+﻿@model HealthOps_Project.Models.PatientMovement
+@{
+    ViewData["Title"] = "Edit Patient Movement";
+}
+
+<style>
+    .movements-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-control-custom {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid transparent;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .form-control-custom:focus {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+    .btn-primary-glow {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+    .btn-warning-glow {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+    }
+
+        .btn-warning-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(243, 156, 18, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        color: white;
+    }
+
+    .status-inactive {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+    }
+</style>
+
+<div class="movements-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">✏️ Edit Patient Movement</h1>
+                <p class="lead mb-0">Update patient movement details and location</p>
+            </div>
+
+            <div class="p-4">
+                <div class="alert alert-info mb-4">
+                    <strong>Note:</strong> Changing the bed or ward will automatically update bed availability and patient's current location.
+                </div>
+
+                <form asp-action="Edit" method="post" class="row g-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MovementId" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Patient Dropdown -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Patient</label>
+                        <select asp-for="PatientId" class="form-control form-control-custom" asp-items="ViewBag.Patients">
+                            <option value="">-- Select Patient --</option>
+                        </select>
+                        <span asp-validation-for="PatientId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Movement Type -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Movement Type</label>
+                        <select asp-for="MovementType" class="form-control form-control-custom">
+                            <option value="">-- Select Type --</option>
+                            <option value="Admission">Admission</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Discharge">Discharge</option>
+                            <option value="Internal Move">Internal Move</option>
+                        </select>
+                        <span asp-validation-for="MovementType" class="text-danger"></span>
+                    </div>
+
+                    <!-- Ward Dropdown -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Ward</label>
+                        <select asp-for="WardId" class="form-control form-control-custom" asp-items="ViewBag.Wards">
+                            <option value="">-- Select Ward --</option>
+                        </select>
+                        <span asp-validation-for="WardId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Room Dropdown -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Room</label>
+                        <select asp-for="RoomId" class="form-control form-control-custom" asp-items="ViewBag.Rooms">
+                            <option value="">-- Select Room --</option>
+                        </select>
+                        <span asp-validation-for="RoomId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Bed Dropdown -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Bed</label>
+                        <select asp-for="BedId" class="form-control form-control-custom" asp-items="ViewBag.Beds">
+                            <option value="">-- Select Bed --</option>
+                        </select>
+                        <span asp-validation-for="BedId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Movement Date -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Movement Date & Time</label>
+                        <input asp-for="MovementDate" class="form-control form-control-custom" type="datetime-local" />
+                        <span asp-validation-for="MovementDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Doctor Dropdown -->
+                  @*   <div class="col-md-6">
+                        <label class="form-label fw-bold">Responsible Doctor</label>
+                        <select asp-for="DoctorUserId" class="form-control form-control-custom" asp-items="ViewBag.Doctors">
+                            <option value="">-- Select Doctor --</option>
+                        </select>
+                        <span asp-validation-for="DoctorUserId" class="text-danger"></span>
+                    </div> *@
+
+                    <!-- Notes -->
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Notes</label>
+                        <textarea asp-for="ReasonForMovement" class="form-control form-control-custom" rows="3" placeholder="Additional notes about the movement..."></textarea>
+                        <span asp-validation-for="ReasonForMovement" class="text-danger"></span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Status</label>
+                        <div class="status-badge @(Model.IsActive ? "status-active" : "status-inactive")">
+                            @(Model.IsActive ? "🟢 Active" : "🔴 Inactive")
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn-warning-glow me-3">
+                            💾 Update Movement
+                        </button>
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            ↩️ Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

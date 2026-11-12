@@ -1,0 +1,197 @@
+﻿@model HealthOps_Project.Models.ScheduledMedication
+
+@{
+    ViewData["Title"] = "Schedule Medication";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">📅</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Schedule Medication</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Schedule 5-7 medications for future administration</p>
+            </div>
+
+            <div class="p-4">
+                <form asp-action="CreateScheduled" method="post" class="professional-stagger">
+                    @if (ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="alert alert-danger rounded-3 mb-4">
+                            <strong>⚠️ Please correct the following errors:</strong>
+                            <div asp-validation-summary="All" class="mb-0 mt-2"></div>
+                        </div>
+                    }
+
+                    <!-- Information Card -->
+                    <div class="professional-info-card mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">💡</span>
+                            <div>
+                                <h6 class="fw-bold mb-2">Scheduled Medication Information</h6>
+                                <p class="mb-0 text-muted">
+                                    Scheduled medications (Schedule 5-7) can be planned for future dates.
+                                    These are controlled substances that require proper scheduling, documentation, and monitoring.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Patient Selection -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="PatientId" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👤</span>
+                                    Select Patient
+                                </label>
+                                <select asp-for="PatientId" class="form-control professional-search-box" required>
+                                    <option value="">-- Select Patient --</option>
+                                    @foreach (var patient in ViewData["Patients"] as List<Patient>)
+                                    {
+                                        <option value="@patient.PatientId">
+                                            @patient.LastName - ID: @patient.PatientId
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PatientId" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Medication Selection -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="MedicationId" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">💊</span>
+                                    Select Medication
+                                </label>
+                                <select asp-for="MedicationId" class="form-control professional-search-box" required>
+                                    <option value="">-- Select Medication --</option>
+                                    @foreach (var med in ViewData["Medications"] as List<Medication>)
+                                    {
+                                        <option value="@med.MedicationId">
+                                            @med.Name (@med.Schedule) - Qty: @med.Quantity
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MedicationId" class="text-danger small mt-2 d-block"></span>
+                                <small class="text-muted mt-2 d-block">
+                                    Only Schedule 5-7 medications are available for future scheduling
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Dosage -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="Dosage" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📏</span>
+                                    Dosage Information
+                                </label>
+                                <input asp-for="Dosage" class="form-control professional-search-box" placeholder="e.g., 500mg twice daily, 1 tablet morning" />
+                                <span asp-validation-for="Dosage" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Scheduled Date -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="AdministeredDate" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📅</span>
+                                    Scheduled Date
+                                </label>
+                                <input asp-for="AdministeredDate" type="date" class="form-control professional-search-box"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="AdministeredDate" class="text-danger small mt-2 d-block"></span>
+                                <small class="text-muted mt-2 d-block">
+                                    Must be today or a future date for scheduled medications
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Administered By -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="AdministeredBy" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">👨‍⚕️</span>
+                                    Administered By (Optional)
+                                </label>
+                                <input asp-for="AdministeredBy" class="form-control professional-search-box" placeholder="Enter staff member name" />
+                                <span asp-validation-for="AdministeredBy" class="text-danger small mt-2 d-block"></span>
+                                <small class="text-muted mt-2 d-block">
+                                    Leave blank if not yet administered
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <div class="professional-info-card h-100">
+                                <label asp-for="ScheduledMedicationStatus" class="form-label fw-bold text-dark mb-3">
+                                    <span class="me-2">📊</span>
+                                    Schedule Status
+                                </label>
+                                <select asp-for="ScheduledMedicationStatus" class="form-control professional-search-box">
+                                    <option value="Active">Active</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                                <span asp-validation-for="ScheduledMedicationStatus" class="text-danger small mt-2 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="submit" class="btn-professional-primary">
+                                <span>💾</span>
+                                <span>Create Schedule</span>
+                            </button>
+                            <a asp-action="Scheduled" class="btn-professional-secondary">
+                                <span>📋</span>
+                                <span>Back to List</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                // Show loading state
+                submitBtn.innerHTML = '<span class="professional-loading"></span><span>Creating Schedule...</span>';
+                submitBtn.disabled = true;
+
+                // Re-enable after 3 seconds if still processing
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 3000);
+            });
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('AdministeredDate').min = today;
+        });
+    </script>
+}
+
+

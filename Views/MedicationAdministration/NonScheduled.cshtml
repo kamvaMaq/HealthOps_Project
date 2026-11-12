@@ -1,0 +1,230 @@
+﻿@model IEnumerable<HealthOps_Project.Models.NonScheduledMedication>
+
+@{
+    ViewData["Title"] = "Non-Scheduled Medications (Schedule 1-4)";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">💊</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Non-Scheduled Medications</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Schedule 1-4 medications administered on the same day</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mx-4 mt-4" role="alert" style="border-radius: 12px; border: none;">
+                    <strong>✅ @TempData["SuccessMessage"]</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Action Bar -->
+            <div class="professional-action-bar d-flex justify-content-between align-items-center">
+                <div class="search-container" style="flex: 1; max-width: 450px;">
+                    <input type="text" class="form-control professional-search-box" placeholder="🔍 Search by patient, medication, or staff..." id="professionalSearchInput">
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-action="CreateNonScheduled" class="btn-professional-primary">
+                        <span>➕</span>
+                        <span>Administer Medication</span>
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="Nurse" class="btn-professional-secondary">
+                        <span>📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 px-4 pb-4 professional-stagger">
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        <div class="stat-number text-primary fw-bold" style="font-size: 2.4rem;">@Model.Count()</div>
+                        <div class="text-muted fw-semibold mb-2">Total Administrations</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: 100%"></div>
+                        </div>
+                        <small class="text-success">📈 Today's Records</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var todayCount = Model.Count(m => m.AdministeredDate.Date == DateTime.Today);
+                            var todayPercent = Model.Any() ? (todayCount * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-success fw-bold" style="font-size: 2.4rem;">@todayCount</div>
+                        <div class="text-muted fw-semibold mb-2">Today's Admin</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @todayPercent%; background: linear-gradient(90deg, #27ae60, #2ecc71);"></div>
+                        </div>
+                        <small class="text-success">📅 Today</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var uniquePatients = Model.Select(m => m.PatientId).Distinct().Count();
+                            var patientPercent = Model.Any() ? (uniquePatients * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-info fw-bold" style="font-size: 2.4rem;">@uniquePatients</div>
+                        <div class="text-muted fw-semibold mb-2">Patients Served</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @patientPercent%; background: linear-gradient(90deg, #3498db, #2980b9);"></div>
+                        </div>
+                        <small class="text-info">👥 Patients</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="professional-stat-card">
+                        @{
+                            var uniqueMeds = Model.Select(m => m.MedicationId).Distinct().Count();
+                            var medPercent = Model.Any() ? (uniqueMeds * 100 / Model.Count()) : 0;
+                        }
+                        <div class="stat-number text-warning fw-bold" style="font-size: 2.4rem;">@uniqueMeds</div>
+                        <div class="text-muted fw-semibold mb-2">Medication Types</div>
+                        <div class="professional-utilization-chart">
+                            <div class="professional-utilization-fill" style="width: @medPercent%; background: linear-gradient(90deg, #f39c12, #e67e22);"></div>
+                        </div>
+                        <small class="text-warning">💊 Medications</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications Table -->
+            <div class="table-responsive">
+                <table class="table professional-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%">Patient Information</th>
+                            <th style="width: 20%">Medication Details</th>
+                            <th style="width: 15%">Dosage & Schedule</th>
+                            <th style="width: 15%">Administration</th>
+                            <th style="width: 10%">Status</th>
+                            <th style="width: 10%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="professionalNonScheduledTableBody">
+                        @if (Model.Any())
+                        {
+                            var animationDelay = 0.3;
+                            @foreach (var item in Model)
+                            {
+                                <tr class="professional-table-row" style="animation-delay: @(animationDelay)s;">
+                                    <!-- Patient Information -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon professional-pulse me-3">
+                                                👤
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@(item.Patient?.LastName ?? "N/A")</div>
+                                                @if (item.Patient != null)
+                                                {
+                                                    <small class="text-muted">ID: @item.Patient.PatientId</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Medication Details -->
+                                    <td style="width:20%;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="professional-entity-icon me-3" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                                                💊
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold fs-6 text-dark">@item.Medication?.Name</div>
+                                                <small class="text-muted">@item.Medication?.Type</small>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Dosage & Schedule -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <span class="fw-bold text-dark mb-1">@item.Dosage</span>
+                                            <span class="professional-status-badge professional-badge-normal">
+                                                📅 @item.Medication?.Schedule
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Administration -->
+                                    <td style="width:15%;">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div class="fw-bold text-dark mb-1">@item.AdministeredDate.ToString("MMM dd, yyyy")</div>
+                                            <small class="text-muted">By: @item.AdministeredBy</small>
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td style="width:10%;">
+                                        <span class="professional-status-badge professional-badge-normal">
+                                            ✅ @item.Status
+                                        </span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td style="width:10%;" class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="DetailsNonScheduled" asp-route-id="@item.Id"
+                                               class="btn-professional-action btn-professional-details">
+                                                <span>👁️</span>
+                                                <span>View</span>
+                                            </a>
+                                            <a asp-action="DeleteNonScheduled" asp-route-id="@item.Id"
+                                               class="btn-professional-action btn-professional-delete">
+                                                <span>🗑️</span>
+                                                <span>Remove</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                animationDelay += 0.1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="professional-empty-state text-center py-5">
+                                        <div class="professional-empty-state-icon">💊</div>
+                                        <h3 class="fw-bold text-dark mb-3">No Non-Scheduled Medications</h3>
+                                        <p class="text-muted fs-6 mb-4">No Schedule 1-4 medication administrations recorded yet</p>
+                                        <a asp-action="CreateNonScheduled" class="btn-professional-primary">
+                                            <span>🚀</span>
+                                            <span>Administer First Medication</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Additional Action Buttons -->
+            <div class="text-center mt-4 px-4">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a asp-action="Scheduled" class="btn-professional-secondary">
+                        <span>📅</span>
+                        <span>View Scheduled Medications</span>
+                    </a>
+                    <a asp-action="Medications" class="btn-professional-secondary">
+                        <span>💊</span>
+                        <span>Manage Medications</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

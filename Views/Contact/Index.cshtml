@@ -1,0 +1,11 @@
+@model HealthOps_Project.Models.ContactMessage
+@{ ViewData["Title"] = "Contact"; }
+<h2>Contact Us</h2>
+@if(TempData["Message"] != null){ <div class="alert alert-success">@TempData["Message"]</div> }
+<form method="post">
+    <div class="mb-3"><label>Name</label><input asp-for="Name" class="form-control"/></div>
+    <div class="mb-3"><label>Email</label><input asp-for="Email" class="form-control"/></div>
+    <div class="mb-3"><label>Subject</label><input asp-for="Subject" class="form-control"/></div>
+    <div class="mb-3"><label>Message</label><textarea asp-for="Message" class="form-control"></textarea></div>
+    <button class="btn btn-primary">Send</button>
+</form>

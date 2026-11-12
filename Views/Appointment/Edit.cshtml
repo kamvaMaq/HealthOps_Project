@@ -1,0 +1,230 @@
+﻿@model Appointment  //ADDED BY SHEZI
+
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+
+<style>
+    .navbar {
+        display: none;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 30px;
+        margin-top: 20px;
+    }
+
+    h1 {
+        color: #2c6fbb;
+        font-weight: 600;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eaeaea;
+        text-align: center;
+    }
+
+    hr {
+        background: linear-gradient(to right, #2c6fbb, #a4c6f2);
+        height: 2px;
+        opacity: 1;
+        margin: 25px 0;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #4a8bfc;
+            box-shadow: 0 0 0 0.25rem rgba(74, 139, 252, 0.25);
+        }
+
+    label.control-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .text-danger {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .btn-warning {
+        background: linear-gradient(120deg, #ffc107 0%, #ff9800 100%);
+        border: none;
+        padding: 12px 25px;
+        font-weight: 600;
+        border-radius: 8px;
+        color: #212529;
+        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+        transition: all 0.3s;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(120deg, #6c757d 0%, #5a6268 100%);
+        border: none;
+        padding: 12px 25px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        transition: all 0.3s;
+    }
+
+    .btn-warning:hover {
+        background: linear-gradient(120deg, #e0a800 0%, #e68900 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(255, 193, 7, 0.4);
+        color: #212529;
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(120deg, #5a6268 0%, #4a5056 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(108, 117, 125, 0.4);
+    }
+
+    .form-icon {
+        color: #2c6fbb;
+        margin-right: 10px;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group-text {
+        background-color: #f7fafc;
+        border: 2px solid #e2e8f0;
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+        border-radius: 0 8px 8px 0;
+    }
+
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    }
+</style>
+
+<h1>Edit Appointment</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AppointmentId" />
+
+            <!-- Doctor Selection -->
+            <div class="form-group">
+                <label asp-for="DoctorId" class="control-label">Doctor</label>
+                <select asp-for="DoctorId" asp-items="ViewBag.DoctorList" class="form-control">
+                    <option value="">Select Doctor</option>
+                </select>
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+
+            <!-- Patient Information -->
+            <div class="form-group">
+                <label asp-for="PatientName" class="control-label"></label>
+                <input asp-for="PatientName" class="form-control" />
+                <span asp-validation-for="PatientName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PatientIdNumber" class="control-label"></label>
+                <input asp-for="PatientIdNumber" class="form-control" />
+                <span asp-validation-for="PatientIdNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PatientEmail" class="control-label"></label>
+                <input asp-for="PatientEmail" class="form-control" />
+                <span asp-validation-for="PatientEmail" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PatientPhone" class="control-label"></label>
+                <input asp-for="PatientPhone" class="form-control" />
+                <span asp-validation-for="PatientPhone" class="text-danger"></span>
+            </div>
+
+            <!-- Appointment Details -->
+            <div class="form-group">
+                <label asp-for="AppointmentDate" class="control-label"></label>
+                <input asp-for="AppointmentDate" type="date" class="form-control" />
+                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AppointmentTime" class="control-label"></label>
+                <input asp-for="AppointmentTime" type="time" class="form-control" />
+                <span asp-validation-for="AppointmentTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

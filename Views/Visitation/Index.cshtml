@@ -1,0 +1,256 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Visitation>
+
+@{
+    ViewData["Title"] = "Scheduled Visits";
+}
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>@ViewData["Title"]</h1>
+        <div id="docInstr">
+            <a href="@Url.Action("Doctor", "Dashboard")" class="back-btn">
+                <span>←</span> Dashboard
+            </a>
+
+
+        </div>
+        <a asp-action="Create" class="btn btn-primary">Schedule New Visit</a>
+    </div>
+
+
+    <!-- Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Number</th>
+                <th>Patient</th>
+                <th>Visitor Name</th>
+                <th>Visit Date & Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Patient?.SouthAfricanID</td>
+                    <td>@item.Patient.LastName @item.Patient.FirstName</td>
+                    <td>@Html.DisplayFor(modelItem => item.VisitorName)</td>
+                    <td>@item.VisitDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                    <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+                    <td>
+                        <span class="badge @(
+                              item.Status == "Completed" ? "bg-success" :
+                              item.Status == "Pending" ? "bg-warning" : "bg-info")">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </span>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.VisitId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.VisitId" class="btn btn-danger btn-sm">Remove Visit</a>
+
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<style>
+
+   /* Hide navbar */
+    .navbar {
+        display: none;
+    }
+    #docInstr{
+        float:right;
+    }
+    /* General page styling */
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    /* Header styling */
+    .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 0;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 2.5rem;
+    }
+
+    /* Button styling */
+    .btn {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #4CAF50, #45a049);
+        color: white;
+        margin-bottom: 20px;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+
+    .back-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+            color: white;
+        }
+
+    /* Table styling */
+    .table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table th {
+            padding: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                background-color: #f8f9fa;
+                transform: scale(1.01);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+    /* Badge styling */
+    .badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .bg-success {
+        background: linear-gradient(45deg, #4CAF50, #45a049);
+    }
+
+    .bg-warning {
+        background: linear-gradient(45deg, #ff9800, #f57c00);
+        color: white;
+    }
+
+    /* Action buttons */
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+        margin: 2px;
+        border-radius: 6px;
+    }
+
+    .btn-info {
+        background: linear-gradient(45deg, #17a2b8, #138496);
+        color: white;
+    }
+
+    .btn-warning {
+        background: linear-gradient(45deg, #ffc107, #e0a800);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        color: white;
+    }
+
+        .btn-info:hover,
+        .btn-warning:hover,
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+
+
+    .header .col-md-6 {
+        margin-bottom: 15px;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+
+
+
+
+    .table tbody tr {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+
+  </style>

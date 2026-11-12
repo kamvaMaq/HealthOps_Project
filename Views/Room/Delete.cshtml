@@ -1,0 +1,148 @@
+﻿@model HealthOps_Project.Models.Room
+@{
+    ViewData["Title"] = "Delete Room";
+}
+
+<style>
+    .delete-room-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .warning-card {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        border: 2px solid #e74c3c;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+    }
+
+    .detail-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-danger-glow {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+    }
+
+        .btn-danger-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4);
+            color: white;
+        }
+
+    .btn-secondary-glow {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 20px rgba(149, 165, 166, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+</style>
+
+<div class="delete-room-container">
+    <div class="container">
+        <div class="glass-card">
+            <div class="header-gradient">
+                <h1 class="display-5 fw-bold mb-3">🗑️ Delete Room</h1>
+                <p class="lead mb-0">Remove room from the system</p>
+            </div>
+
+            <div class="p-4">
+                <div class="warning-card">
+                    <div class="text-center">
+                        <h3 class="text-danger mb-3">⚠️ Warning</h3>
+                        <p class="mb-3">
+                            <strong>You are about to delete this room from the system.</strong>
+                        </p>
+                        <p class="mb-0">
+                            This action will mark the room as inactive. It will no longer appear in available room lists.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h5 class="text-primary mb-3">Room Information</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <strong>Room Number:</strong> @Model.RoomNumber
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <strong>Capacity:</strong> @Model.Capacity
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <strong>Status:</strong>
+                            @if (Model.IsAvailable)
+
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+
+                            else
+
+                            {
+                                <span class="badge bg-danger">Unavailable</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post" class="mt-4">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RoomId" />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn-secondary-glow">
+                            ↩️ Cancel
+                        </a>
+                        <button type="submit" class="btn-danger-glow">
+                            🗑️ Confirm Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

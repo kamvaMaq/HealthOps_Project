@@ -1,0 +1,106 @@
+﻿@model IEnumerable<HealthOps_Project.Models.DoctorInstruction>
+
+@{
+    ViewData["Title"] = "Doctor Instructions";
+}
+
+<h2 class="mb-4 text-primary fw-bold">@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="mb-4 d-flex justify-content-between">
+    
+    <div>
+        <a asp-controller="Dashboard" asp-action="Doctor" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<table class="table table-hover table-striped align-middle shadow-sm rounded-4">
+    <thead class="table-primary text-dark">
+        <tr>
+            <th>Patient</th>
+            <th>Doctor Name</th>
+            <th>Visit Date</th>
+            <th>Priority</th>
+            <th>Completed</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var instruction in Model)
+        {
+            <tr>
+                <td>@instruction.Patient.FirstName @instruction.Patient.LastName (@instruction.Patient.SouthAfricanID)</td>
+                <td>@instruction.DoctorName</td>
+                <td>@instruction.VisitDate.ToString("yyyy-MM-dd")</td>
+                <td>@instruction.Priority</td>
+                <td>@(instruction.IsCompleted ? "Yes" : "No")</td>
+                <td>@instruction.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    <a asp-action="DocEdit" asp-route-id="@instruction.DoctorInstructionId" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+
+
+    table.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table.table th, table.table td {
+    vertical-align: middle;
+}
+
+table.table th {
+    font-weight: 600;
+}
+
+.btn-success {
+    background: #20c997;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #198754;
+}
+
+.btn-warning {
+    background: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+}
+
+.btn-info {
+    background: #0d6efd;
+    border: none;
+}
+
+.btn-info:hover {
+    background: #0b5ed7;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+</style>

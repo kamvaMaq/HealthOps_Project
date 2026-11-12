@@ -1,0 +1,44 @@
+﻿@model IEnumerable<HealthOps_Project.Models.Medication>
+
+@{
+    ViewData["Title"] = "Medications";
+}
+
+<h2>Medications</h2>
+
+<p>
+    <a asp-action="CreateMedication" class="btn btn-primary">New Medication</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+            <th>Schedule</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var med in Model)
+        {
+            <tr>
+                <td>@med.Name</td>
+                <td>@med.Type</td>
+                <td>@med.Quantity</td>
+                <td>@med.ExpiryDate.ToShortDateString()</td>
+                <td>@med.Schedule</td>
+                <td>@med.Description</td>
+                <td>
+                    <a asp-action="DetailsMedication" asp-route-id="@med.MedicationId" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="EditMedication" asp-route-id="@med.MedicationId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="DeleteMedication" asp-route-id="@med.MedicationId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

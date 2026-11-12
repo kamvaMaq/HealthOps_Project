@@ -1,0 +1,173 @@
+﻿@model IEnumerable<HealthOps_Project.Models.DoctorInstruction>
+@{
+    ViewData["Title"] = "Doctor Instructions";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👨‍⚕️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Doctor Instructions</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Manage and track medical instructions from doctors</p>
+            </div>
+
+            <div class="p-4">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success rounded-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 me-3">✅</span>
+                            <div>
+                                <h5 class="alert-heading fw-bold mb-2">Success!</h5>
+                                <p class="mb-0">@TempData["SuccessMessage"]</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a asp-action="Create" class="btn-professional-primary">
+                            <span>➕</span>
+                            <span>Add New Instruction</span>
+                        </a>
+                    </div>
+                    <div>
+                        <a asp-controller="Dashboard" asp-action="Nurse" class="btn-professional-secondary">
+                            <span>🏠</span>
+                            <span>Back to Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Instructions Table -->
+                <div class="professional-table-container">
+                    <table class="table professional-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor Name</th>
+                                <th>Visit Date</th>
+                                <th>Priority</th>
+                                <th>Completed</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var instruction in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@instruction.Patient?.FirstName @instruction.Patient?.LastName</div>
+                                        <small class="text-muted">@instruction.Patient?.SouthAfricanID</small>
+                                    </td>
+                                    <td class="fw-semibold">@instruction.DoctorName</td>
+                                    <td>
+                                        <span class="fw-semibold">@instruction.VisitDate.ToString("yyyy-MM-dd")</span>
+                                    </td>
+                                    <td>
+                                        <span class="professional-status-badge @(instruction.Priority == "Urgent" ? "professional-badge-urgent" : instruction.Priority == "High" ? "professional-badge-warning" : "professional-badge-completed")">
+                                            @instruction.Priority
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (instruction.IsCompleted)
+                                        {
+                                            <span class="professional-status-badge professional-badge-completed">
+                                                ✅ Completed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="professional-status-badge professional-badge-warning">
+                                                ⏳ Pending
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">@instruction.CreatedDate.ToString("yyyy-MM-dd HH:mm")</small>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a asp-action="Edit" asp-route-id="@instruction.DoctorInstructionId" class="btn-professional-success" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                <span>✏️</span>
+                                                <span>Edit</span>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@instruction.DoctorInstructionId" class="btn-professional-danger" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                <span>🗑️</span>
+                                                <span>Delete</span>
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@instruction.DoctorInstructionId" class="btn-professional-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                                                <span>👁️</span>
+                                                <span>Details</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center py-5">
+                            <div class="professional-entity-icon" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); margin: 0 auto 1rem; width: 80px; height: 80px;">
+                                📝
+                            </div>
+                            <h4 class="fw-bold text-dark mb-3">No Instructions Found</h4>
+                            <p class="text-muted mb-4">Get started by adding your first doctor instruction.</p>
+                            <a asp-action="Create" class="btn-professional-primary">
+                                <span>➕</span>
+                                <span>Add First Instruction</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('.professional-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateX(5px)';
+                });
+                row.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+
+            // Add loading states to action buttons
+            const actionButtons = document.querySelectorAll('.btn-professional-primary, .btn-professional-secondary, .btn-professional-success, .btn-professional-danger');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    if (!this.href && this.type === 'submit') {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<span class="professional-loading"></span><span>Processing...</span>';
+                        this.disabled = true;
+
+                        setTimeout(() => {
+                            this.disabled = false;
+                            this.innerHTML = originalText;
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+

@@ -1,0 +1,91 @@
+﻿@model HealthOps_Project.Models.Consumable
+
+@{
+    ViewData["Title"] = "Consumable Details";
+}
+
+<link rel="stylesheet" href="~/css/professional-styles.css" />
+<partial name="_BackButton" />
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="professional-glass-card professional-animate-in">
+                    <!-- Header -->
+                    <div class="professional-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="display-6 fw-bold mb-2">
+                                    <i class="fas fa-info-circle me-3"></i>Consumable Details
+                                </h1>
+                                <p class="mb-0">Complete consumable information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="professional-info-card mb-4">
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Consumable ID:</div>
+                                <div class="col-sm-8">@Model.ConsumableId</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Name:</div>
+                                <div class="col-sm-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="professional-entity-icon me-3">
+                                            <i class="fas fa-cube"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="fs-5">@Model.Name</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Description:</div>
+                                <div class="col-sm-8">
+                                    @if (!string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        <div class="professional-info-card bg-light p-3">
+                                            @Model.Description
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No description provided</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 fw-bold">Unit:</div>
+                                <div class="col-sm-8">
+                                    <span class="professional-status-badge professional-badge-normal">
+                                        @Model.Unit
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-professional-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i> Back to List
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@Model.ConsumableId" class="btn btn-professional-primary">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/professional-scripts.js"></script>
+}

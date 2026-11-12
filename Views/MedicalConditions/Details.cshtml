@@ -1,0 +1,195 @@
+﻿@model HealthOps_Project.Models.MedicalCondition
+@{
+    ViewData["Title"] = "Condition Details";
+}
+
+<div class="professional-management-container">
+    <div class="container">
+        <div class="professional-glass-card mb-5 professional-animate-in" style="max-width: 900px; margin: 0 auto;">
+            <!-- Header -->
+            <div class="professional-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-4">
+                    <div class="professional-icon-wrapper professional-float">
+                        <span style="font-size: 2.2rem;">👁️</span>
+                    </div>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Condition Details</h1>
+                <p class="lead mb-0 fs-6 opacity-90">Complete medical condition information</p>
+            </div>
+
+            <div class="p-4">
+                <!-- Status Badge -->
+                <div class="professional-stat-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="fw-bold text-dark mb-2">@Model.ConditionName</h4>
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="professional-status-badge @(Model.IsActive ? "professional-badge-completed" : "professional-badge-warning")">
+                                    @(Model.IsActive ? "✅ Active" : "⏳ Inactive")
+                                </span>
+                                <span class="professional-status-badge professional-badge-completed">
+                                    @Model.Category
+                                </span>
+                                <span class="text-muted">
+                                    📅 Created: @Model.CreatedDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="professional-entity-icon professional-pulse" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); margin: 0 auto;">
+                                🏥
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="row g-4">
+                    <!-- Basic Information -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📋</span>
+                                Basic Information
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Condition Name</small>
+                                    <div class="fw-bold text-dark">@Model.ConditionName</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Category</small>
+                                    <div class="fw-bold text-dark">@Model.Category</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">ICD-10 Code</small>
+                                    <div class="fw-bold text-dark">
+                                        <code class="bg-light px-2 py-1 rounded">@Model.ICD10Code</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status & Dates -->
+                    <div class="col-md-6">
+                        <div class="professional-info-card h-100">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">⚙️</span>
+                                Status & Dates
+                            </h6>
+                            <div class="space-y-3">
+                                <div>
+                                    <small class="text-muted fw-semibold">Requires Monitoring</small>
+                                    <div class="fw-bold text-dark">@(Model.RequiresMonitoring ? "Yes" : "No")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Active Status</small>
+                                    <div class="fw-bold text-dark">@(Model.IsActive ? "Active" : "Inactive")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Created Date</small>
+                                    <div class="fw-bold text-dark">@Model.CreatedDate.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt")</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">Modified Date</small>
+                                    <div class="fw-bold text-dark">
+                                        @if (Model.ModifiedDate.HasValue)
+                                        {
+                                            @Model.ModifiedDate.Value.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not modified</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">📝</span>
+                                Condition Description
+                            </h6>
+                            <div class="bg-light rounded-3 p-4">
+                                <p class="mb-0 text-dark fs-6 lh-base">
+                                    @if (!string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        @Model.Description
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No description provided</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Treatment Guidelines -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">💊</span>
+                                Treatment Guidelines
+                            </h6>
+                            <div class="bg-light rounded-3 p-4">
+                                <p class="mb-0 text-dark fs-6 lh-base">
+                                    @if (!string.IsNullOrEmpty(Model.TreatmentGuidelines))
+                                    {
+                                        @Model.TreatmentGuidelines
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No treatment guidelines provided</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Symptoms -->
+                    <div class="col-12">
+                        <div class="professional-info-card">
+                            <h6 class="fw-bold text-dark mb-3">
+                                <span class="me-2">🤒</span>
+                                Common Symptoms
+                            </h6>
+                            <div class="bg-light rounded-3 p-4">
+                                <p class="mb-0 text-dark fs-6 lh-base">
+                                    @if (!string.IsNullOrEmpty(Model.CommonSymptoms))
+                                    {
+                                        @Model.CommonSymptoms
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No common symptoms listed</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a asp-action="Edit" asp-route-id="@Model.ConditionId" class="btn-professional-primary">
+                            <span>✏️</span>
+                            <span>Edit Condition</span>
+                        </a>
+                        <a asp-action="Index" class="btn-professional-secondary">
+                            <span>📋</span>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
